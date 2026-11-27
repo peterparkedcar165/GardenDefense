@@ -28,21 +28,24 @@ public class Rhodiola : Shooter
     public const string OvergrowthUnlock      = "rhodiola_overgrowth";
     public const string WidespreadBloomUnlock = "rhodiola_widespread_bloom";
 
-    // heals and shields she gives grow with her grass damage
+    // Attack path max level bonus (Tommy, 2026-11-27): this share of her grass damage goes to the heals and shields she gives
     public float GrassConversion => RData?.baseGrassConversion ?? 0.5f;
 
     // ---------- attack: drain ----------
     // her drain heals her for this share of the damage the hit really dealt
-    public float DrainHealShare => RData?.drainHealShare ?? 0.25f;
+    public float DrainHealShare => RData?.drainHealShare ?? 0.3f;
     private float DrainMoteSpeed => RData?.drainMoteSpeed ?? 5f;
 
     // ---------- passive: golden sap and the channel ----------
     public float SapCap        => (RData?.goldenSapCap ?? 200f) + (RData?.path2GoldenSapCapPerLevel ?? 40f) * effectivePath2Level;
-    public float SapConversion => (RData?.sapConversion ?? 1f) + (RData?.path2SapConversionPerLevel ?? 0.5f) * effectivePath2Level;
+    public float SapConversion => (RData?.sapConversion ?? 1f) + (RData?.path2SapConversionPerLevel ?? 0.1f) * effectivePath2Level;
     public float SapToChannel  => RData?.sapToChannel ?? 0.1f;
     public float LowHealthThreshold => RData?.lowHealthThreshold ?? 0.5f;
-    public float ChannelHealMP => (RData?.channelHealMPScaling ?? 0.1f) * magicPower;
-    public float ChannelHealPerSecond => (RData?.channelHealPerSecond ?? 30f) + ChannelHealMP;
+    public float ChannelHealMP => (RData?.channelHealMPScaling ?? 0.05f) * magicPower;
+    public float ChannelHealPerSecond => (RData?.channelHealPerSecond ?? 40f) + ChannelHealMP;
+    // healing to sap depletion ratio (Tommy, 2026-11-27): each Attack path level makes the channel heal more for each point
+    // of sap it spends, 1 at level 0 (sap goes as fast as the healing)
+    public float SapEfficiency => 1f + (RData?.path1SapEfficiencyPerLevel ?? 0.1f) * effectivePath1Level;
     private float ChannelTickInterval => Mathf.Max(0.05f, RData?.channelTickInterval ?? 0.25f);
 
     private float _storedSap;
@@ -59,9 +62,10 @@ public class Rhodiola : Shooter
     public float BurgeonHealPerSecond => (RData?.burgeonHealPerSecond ?? 12f) + (RData?.path2BurgeonHealPerLevel ?? 2f) * effectivePath2Level;
     public float BurgeonDuration      => RData?.baseBurgeonDuration  ?? 4f;
     public float BurgeonTickInterval  => RData?.burgeonTickInterval   ?? 0.5f;
-    // burgeon armor scales straight with her grass damage: +100% grass damage doubles it
+    // burgeon armor scales straight with her magic power: 100 magic power doubles it (Tommy, 2026-11-27: it was her grass damage)
     public float BurgeonArmorBase     => (RData?.burgeonBaseArmor ?? 16f) + (RData?.path2BurgeonArmorPerLevel ?? 8f) * effectivePath2Level;
-    public float BurgeonArmor         => BurgeonArmorBase * (1f + grassDamage);
+    public float BurgeonArmorMP       => BurgeonArmorBase * magicPower / 100f;
+    public float BurgeonArmor         => BurgeonArmorBase + BurgeonArmorMP;
 
     public float RevivalBaseHeal     => RData?.revivalBaseHeal     ?? 40f;
     public float RevivalHealPerLevel => RData?.revivalHealPerLevel ?? 20f;
@@ -129,9 +133,9 @@ public class Rhodiola : Shooter
         _sapGlow.color = c;
     }
 
-    // healing she gets from her attack or from her own Rejuvenating Burgeon fills the sap by the
-    // conversion: the heal she'd get (with her heal bonuses and the healing she receives), counted in full
-    // even when she's already at full health
+    // healing she gets from her attack fills the sap by the conversion (Tommy, 2026-11-27: only her attacks, her own
+    // Rejuvenating Burgeon no longer does): the heal she'd get (with her heal bonuses and the healing she receives),
+    // counted in full even when she's already at full health
     public void AddSap(float healing)
     {
         if (healing <= 0f) return;
@@ -162,8 +166,8 @@ public class Rhodiola : Shooter
         if (IsPath2Maxed && health >= maxHealth)
             grassDamage += MaxLevelGrassDamageBonus;
 
-        // heals and shields she gives are increased by a portion of grass damage
-        healingBonus += grassDamage * GrassConversion;
+        // Attack path max level bonus: heals and shields she gives are increased by a portion of grass damage
+        if (IsPath1Maxed) healingBonus += grassDamage * GrassConversion;
     }
 
     // ---------- attack: drain ----------
@@ -248,7 +252,7 @@ public class Rhodiola : Shooter
     }
 
     // the orb reaches her staff: all at that moment, and all of it even when she's at full health, she's healed,
-    // her sap fills by the heal she'd get, and she gains Rejuvenating Burgeon (which fills the sap as it ticks)
+    // her sap fills by the heal she'd get, and she gains Rejuvenating Burgeon
     private void OnDrainReturned(float heal)
     {
         if (!IsAlive) return;
@@ -356,7 +360,7 @@ public class Rhodiola : Shooter
 
     private void TryStartChannel()
     {
-        if (IsStunned || Time.time < _channelRecoverUntil || _storedSap <= SapCap * SapToChannel) return;
+        if (IsStunned || Time.time < _channelRecoverUntil || _storedSap < SapCap * SapToChannel) return;
         Plant low = LowestPlant(true);
         if (low != null) { StartChannel(low, true); return; }
         if (InsectInRange()) return;
@@ -437,14 +441,16 @@ public class Rhodiola : Shooter
         }
     }
 
-    // one heal of the channel: as much sap as it heals, never more than the ally is missing. while
-    // she has Rejuvenating Burgeon herself, it passes the burgeon on. the heal ray shows it (no motes any more)
+    // one heal of the channel, never more than the ally is missing, spending the heal divided by her healing to sap
+    // depletion ratio (SapEfficiency). while she has Rejuvenating Burgeon herself, it passes the burgeon on. the heal
+    // ray shows it (no motes any more)
     private void ChannelTick(float interval)
     {
         Entity ally = _channelTarget;
-        float amount = Mathf.Min(_storedSap, ChannelHealPerSecond * interval, ally.maxHealth - ally.health);
+        float efficiency = Mathf.Max(0.01f, SapEfficiency);
+        float amount = Mathf.Min(_storedSap * efficiency, ChannelHealPerSecond * interval, ally.maxHealth - ally.health);
         if (amount <= 0f) { StopChannel(); return; }
-        _storedSap -= amount;
+        _storedSap = Mathf.Max(0f, _storedSap - amount / efficiency);
         FaceAttackTarget(ally.gameObject);
         ally.Heal(amount, this);
         ReturnMaxLevelHealing(amount);
@@ -488,10 +494,11 @@ public class Rhodiola : Shooter
 
     public override void OnPath1Upgrade(int level)
     {
-        // attack damage, attack range (back as her old path had it, Tommy 2026-11-27: no attack speed) and grass damage
+        // attack damage and attack range (back as her old path had it, Tommy 2026-11-27: no attack speed); its third
+        // upgrade, the channel's healing to sap ratio, is SapEfficiency (the grass damage per level is gone, Tommy)
         baseAttackDamage    = data.baseAttackDamage + level * (RData?.path1AttackDamagePerLevel ?? 2f);
         baseAttackRange     = data.baseAttackRange  + level * (RData?.path1AttackRangePerLevel  ?? 0.3f);
-        baseGrassDamage     = data.baseGrassDamage  + level * (RData?.path1GrassDamagePerLevel  ?? 0.05f);
+        baseGrassDamage     = data.baseGrassDamage;
         baseAttackSpeed     = data.baseAttackSpeed;
         baseProjectileSpeed = data.baseProjectileSpeed;
     }
@@ -569,14 +576,15 @@ public class Rhodiola : Shooter
     private string GoldenSapLabel => "<color=#FFD700><b>Golden Sap</b></color>";
     private string BurgeonLabel => "<color=green><b>Rejuvenating Burgeon</b></color>";
 
+    // Tommy's tooltips (2026-11-27)
     public override string GetAttackDescription() =>
-        $"Flicks her wand at an insect, dealing <color=green><b>{attackDamage:F0}</b></color> damage. When the drained life reaches her staff, it heals her for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\n\n" +
-        $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>.";
+        $"Absorbs the life essence of an insect, dealing <color=green><b>{attackDamage:F0}</b></color> damage, and heals herself for <color=green><b>{DrainHealShare * 100f:F0}%</b></color> of the damage dealt.\n\n" +
+        $"As long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> Health.\n\n" +
+        $"While targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second.";
 
     public override string GetPassiveDescription() =>
-        $"Healing she gets from her attack and from {BurgeonLabel} on herself fills her {GoldenSapLabel} by <color=#FFD700><b>{SapConversion * 100f:F0}%</b></color> of the healing, even at full health, up to <color=#FFD700><b>{SapCap:F0}</b></color>.\n\n" +
-        $"When a plant in range drops below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> health, or no insects are in range and a plant is hurt, she channels {GoldenSapLabel} into it, healing <color=green><b>{ChannelHealPerSecond - ChannelHealMP:F0}</b></color> [<color=#FFB6C1><b>+{ChannelHealMP:F0}</b></color>] health per second until it's healed or the sap runs out. She needs over <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> sap to start.\n\n" +
-        $"Her attack's heal grants her {BurgeonLabel}, healing <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>+{BurgeonArmor:F0} Armor</b></color> (increased by her <color=green><b>{grassDamage * 100f:F0}%</b></color> <color=green><b>Grass Damage</b></color>). While she has it, her channel passes it on.";
+        $"Whenever the {GetName()} would get healed from her attacks, she fills up her {GoldenSapLabel} by <color=#FFD700><b>{SapConversion * 100f:F0}%</b></color> of the healing, and grants herself {BurgeonLabel}, regenerating <color=green><b>{BurgeonHealPerSecond:F0}</b></color> health per second for <color=green><b>{BurgeonDuration:F0}</b></color> seconds and granting <color=#00CED1><b>+{BurgeonArmorBase:F0}</b></color> [<color=#FFB6C1><b>+{BurgeonArmorMP:F0}</b></color>] <color=#00CED1><b>Armor</b></color>.\n\n" +
+        $"If the {GetName()} heals a plant while she is blessed by {BurgeonLabel}, she applies the buff at equal strength onto that plant.";
 
     public override string GetSkillDesription() =>
         $"Target a tile where a plant has fallen to resurrect it, with the mulches it had. The plant is then healed for <color=green><b>{RevivalHealFlat:F0}</b></color> [<color=#FFB6C1><b>+{RevivalMPHeal:F0}</b></color>] Health.";
@@ -587,18 +595,19 @@ public class Rhodiola : Shooter
 
     public override string GetPath1Description(bool details = false)
     {
-        float dmgpl   = RData?.path1AttackDamagePerLevel ?? 2f;
-        float rangepl = RData?.path1AttackRangePerLevel  ?? 0.3f;
-        float grasspl = RData?.path1GrassDamagePerLevel  ?? 0.05f;
+        float dmgpl   = RData?.path1AttackDamagePerLevel  ?? 2f;
+        float rangepl = RData?.path1AttackRangePerLevel   ?? 0.3f;
+        float effpl   = RData?.path1SapEfficiencyPerLevel ?? 0.1f;
         string desc = details
-            ? $"Flicks her wand at an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage. When the drained life reaches her staff, it heals her for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\n\n" +
-              $"Increase <color=#FF6B81><b>Heals & Shields</b></color> given by <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color>."
+            ? $"Absorbs the life essence of an insect, dealing <color=green><b>[100% Attack Damage]</b></color> damage, and heals herself for <color=green><b>[{DrainHealShare * 100f:F0}% of the damage dealt]</b></color>.\n\n" +
+              $"As long as the {GetName()} has at least <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> {GoldenSapLabel} available, she may interrupt her attacks to heal a nearby plant below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> Health.\n\n" +
+              $"While targeting a plant for healing, she spends her {GoldenSapLabel} to heal a plant for <color=green><b>[{RData?.channelHealPerSecond ?? 40f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.05f) * 100f:F0}% Magic Power</b></color>] health per second."
             : GetAttackDescription();
         return $"Attack:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
-               $"Increase <color=green><b>Grass Damage</b></color> by <color=green><b>{grasspl * 100f:F0}%</b></color> per level. [<color=green><b>+{grasspl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path1Level)}\n\n" +
+               $"Increase the healing to {GoldenSapLabel} depletion ratio by <color=#FFD700><b>{effpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{effpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
+               $"{Level5Section(path1Level, $"Convert <color=green><b>{GrassConversion * 100f:F0}%</b></color> of <color=green><b>Grass Damage</b></color> to <color=#FF6B81><b>Heals & Shields</b></color> Bonus.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }
@@ -606,17 +615,16 @@ public class Rhodiola : Shooter
     public override string GetPath2Description(bool details = false)
     {
         float cappl   = RData?.path2GoldenSapCapPerLevel  ?? 40f;
-        float convpl  = RData?.path2SapConversionPerLevel ?? 0.5f;
+        float convpl  = RData?.path2SapConversionPerLevel ?? 0.1f;
         float burgpl  = RData?.path2BurgeonHealPerLevel   ?? 2f;
         float armorpl = RData?.path2BurgeonArmorPerLevel  ?? 8f;
         string desc = details
-            ? $"Healing she gets from her attack and from {BurgeonLabel} on herself fills her {GoldenSapLabel} by <color=#FFD700><b>[({(RData?.sapConversion ?? 1f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of the healing, even at full health, up to <color=#FFD700><b>[({RData?.goldenSapCap ?? 200f:F0}) + ({cappl:F0}/Lvl.)]</b></color>.\n\n" +
-              $"When a plant in range drops below <color=green><b>{LowHealthThreshold * 100f:F0}%</b></color> health, or no insects are in range and a plant is hurt, she channels {GoldenSapLabel} into it, healing <color=green><b>[{RData?.channelHealPerSecond ?? 30f:F0}]</b></color> [<color=#FFB6C1><b>+{(RData?.channelHealMPScaling ?? 0.1f) * 100f:F0}% Magic Power</b></color>] health per second until it's healed or the sap runs out. She needs over <color=#FFD700><b>{SapToChannel * 100f:F0}%</b></color> sap to start.\n\n" +
-              $"Her attack's heal grants her {BurgeonLabel}, healing <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}s</b></color> and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=green><b>(100% + Grass Damage)</b></color>. While she has it, her channel passes it on."
+            ? $"Whenever the {GetName()} would get healed from her attacks, she fills up her {GoldenSapLabel} by <color=#FFD700><b>[({(RData?.sapConversion ?? 1f) * 100f:F0}%) + ({convpl * 100f:F0}%/Lvl.)]</b></color> of the healing, and grants herself {BurgeonLabel}, regenerating <color=green><b>[({RData?.burgeonHealPerSecond ?? 12f:F0}) + ({burgpl:F0}/Lvl.)]</b></color> health per second for <color=green><b>{BurgeonDuration:F0}</b></color> seconds and granting <color=#00CED1><b>[({RData?.burgeonBaseArmor ?? 16f:F0}) + ({armorpl:F0}/Lvl.)] Armor</b></color>, multiplied by <color=#FFB6C1><b>(100% + 1% per Magic Power)</b></color>.\n\n" +
+              $"If the {GetName()} heals a plant while she is blessed by {BurgeonLabel}, she applies the buff at equal strength onto that plant."
             : GetPassiveDescription();
         return $"Passive:\n\n{desc}\n\n{UpgradesBreak}" +
                $"Increase {GoldenSapLabel} capacity by <color=#FFD700><b>{cappl:F0}</b></color> per level. [<color=#FFD700><b>+{cappl * effectivePath2Level:F0}</b></color>]\n\n" +
-               $"Increase {GoldenSapLabel} conversion by <color=#FFD700><b>{convpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
+               $"Increase Attack to {GoldenSapLabel} conversion ratio by <color=#FFD700><b>{convpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{convpl * effectivePath2Level * 100f:F0}%</b></color>]\n\n" +
                $"Increase {BurgeonLabel} healing by <color=green><b>{burgpl:F0}</b></color> per second per level. [<color=green><b>+{burgpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"Increase {BurgeonLabel} armor by <color=#00CED1><b>{armorpl:F0}</b></color> per level. [<color=#00CED1><b>+{armorpl * effectivePath2Level:F0}</b></color>]\n\n" +
                $"{Level5Section(path2Level, $"If fully healthy, increase <color=green><b>Grass Damage</b></color> by <color=green><b>{MaxLevelGrassDamageBonus * 100f:F0}%</b></color>. Otherwise, <color=green><b>{MaxLevelHealingReturn * 100f:F0}%</b></color> of the healing her channel and <color=green><b>Rejuvenating Burgeon</b></color> give is returned to the {GetName()}.")}\n\n" +

@@ -7,8 +7,8 @@ public class RhodiolaData : PlantData
     // and a channel that spends the sap healing a plant. numbers marked proposal are Claude's, the rest
     // are Tommy's
     [Header("Attack: Drain")]
-    [Tooltip("share of the damage her hit really dealt (after the insect's armor and resistances) that heals her when the orb reaches her staff, e.g. 0.25 = 25% (proposal)")]
-    public float drainHealShare = 0.25f;
+    [Tooltip("share of the damage her hit really dealt (after the insect's armor and resistances) that heals her when the orb reaches her staff, e.g. 0.3 = 30% (Tommy)")]
+    public float drainHealShare = 0.3f;
     [Tooltip("how fast the drained life flies back to her, units per second along the straight line (Tommy: half the first 5)")]
     public float drainMoteSpeed = 2.5f;
     [Tooltip("how high the orb's arc rises for every unit between the insect and her staff (proposal)")]
@@ -20,20 +20,22 @@ public class RhodiolaData : PlantData
     public float path1AttackDamagePerLevel = 2f;
     [Tooltip("added to her base attack range per level (Tommy: as her old path had it)")]
     public float path1AttackRangePerLevel = 0.3f;
-    [Tooltip("share of Grass Damage per level, e.g. 0.05 = 5% (proposal)")]
+    [Tooltip("unused since 2026-11-27 (Tommy's tooltips): the Attack path gave this share of Grass Damage per level")]
     public float path1GrassDamagePerLevel = 0.05f;
-    [Tooltip("share of her Grass Damage added to Heals & Shields she gives, e.g. 0.5 = 50%")]
+    [Tooltip("added per Attack path level to how much her channel heals for each point of sap it spends (the healing to sap depletion ratio, 1 at level 0), e.g. 0.1 = +10% (Tommy)")]
+    public float path1SapEfficiencyPerLevel = 0.1f;
+    [Tooltip("Attack path max level bonus: share of her Grass Damage added to Heals & Shields she gives, e.g. 0.5 = 50% (Tommy, 2026-11-27: it was always on before)")]
     public float baseGrassConversion = 0.5f;
 
     [Header("Golden Sap (passive)")]
     [Tooltip("how much golden sap she can hold at passive level 0")]
     public float goldenSapCap = 200f;
     public float path2GoldenSapCapPerLevel = 40f;
-    [Tooltip("healing she gets from her attack and from Rejuvenating Burgeon on herself becomes this much sap, e.g. 1 = 100%, even at full health")]
+    [Tooltip("healing she gets from her attack becomes this much sap, e.g. 1 = 100%, even at full health (her Rejuvenating Burgeon no longer fills it, Tommy 2026-11-27)")]
     public float sapConversion = 1f;
-    [Tooltip("added to the conversion per passive level, e.g. 0.5 = +50%")]
-    public float path2SapConversionPerLevel = 0.5f;
-    [Tooltip("she only starts a channel with more than this share of her cap, e.g. 0.1 = 10%")]
+    [Tooltip("added to the conversion per passive level, e.g. 0.1 = +10% (Tommy)")]
+    public float path2SapConversionPerLevel = 0.1f;
+    [Tooltip("she only starts a channel with at least this share of her cap, e.g. 0.1 = 10%")]
     [Range(0f, 1f)] public float sapToChannel = 0.1f;
     [Tooltip("a plant under this share of its max health makes her stop attacking and channel into it, e.g. 0.5 = 50%")]
     [Range(0f, 1f)] public float lowHealthThreshold = 0.5f;
@@ -41,10 +43,10 @@ public class RhodiolaData : PlantData
     [Range(0f, 1f)] public float sapGlowMaxAlpha = 0.6f;
 
     [Header("Channel")]
-    [Tooltip("health per second the channel heals, spending as much sap (proposal)")]
-    public float channelHealPerSecond = 30f;
-    [Tooltip("share of Magic Power added to the channel's heal per second (proposal)")]
-    public float channelHealMPScaling = 0.1f;
+    [Tooltip("health per second the channel heals, spending as much sap at Attack path level 0 (Tommy)")]
+    public float channelHealPerSecond = 40f;
+    [Tooltip("share of Magic Power added to the channel's heal per second, e.g. 0.05 = 5% (Tommy)")]
+    public float channelHealMPScaling = 0.05f;
     [Tooltip("seconds between the channel's heals (proposal)")]
     public float channelTickInterval = 0.25f;
     [Tooltip("unused since her heal ray (2026-11-27): how fast the life energy her channel sent flew, units per second")]
@@ -59,7 +61,7 @@ public class RhodiolaData : PlantData
     public float path2BurgeonHealPerLevel = 2f;
     public float baseBurgeonDuration  = 4f;
     public float burgeonTickInterval  = 0.5f;
-    [Tooltip("armor a plant holds while Rejuvenating Burgeon is on it, before her Grass Damage multiplies it (+100% grass damage doubles it)")]
+    [Tooltip("armor a plant holds while Rejuvenating Burgeon is on it, before her Magic Power multiplies it (100 Magic Power doubles it; Tommy 2026-11-27, it was her Grass Damage)")]
     public float burgeonBaseArmor = 16f;
     public float path2BurgeonArmorPerLevel = 8f;
 
