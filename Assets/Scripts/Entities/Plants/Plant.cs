@@ -2149,11 +2149,23 @@ public abstract class Plant : Entity, IAttackable
     // has no way to reach one in melee. the one exception: an insect that has already chosen to
     // attack THIS plant (see Insect.target) stays targetable, so the plant can fight back instead
     // of standing there defenseless while something flying whittles it down
+    // on high ground (Tommy, 2026-11-27) it's the other way round over low ground: a grounded insect down there is out of
+    // its reach, a flying one is at its height and can be targeted
     public virtual bool IsValidFlightTarget(Insect insect)
     {
-        if (!IsMeleeAttacker || !insect.isFlying) return true;
+        if (!IsMeleeAttacker) return true;
+        if (OnHighground && !OnHighgroundTile(insect)) return insect.isFlying;
+        if (!insect.isFlying) return true;
         return ReferenceEquals(insect.target, this);
     }
+
+    // a melee plant on high ground can't reach a grounded insect on low ground (Tommy, 2026-11-27): for the hits a melee
+    // attack lands besides its target (cleaves, slams), which don't go through IsValidFlightTarget
+    public bool MeleeOutOfReach(Insect insect) => IsMeleeAttacker && OnHighground && !insect.isFlying && !OnHighgroundTile(insect);
+
+    // whether the cell an insect is over is high ground
+    private static bool OnHighgroundTile(Insect insect) =>
+        Tile.allTiles.TryGetValue(Tile.TileKey(insect.transform.position), out Tile t) && t != null && t.isHighground;
 
     public virtual bool IsValidNightTarget(Insect insect, float distance)
     {

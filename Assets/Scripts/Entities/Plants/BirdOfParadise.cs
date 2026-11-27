@@ -104,7 +104,7 @@ public class BirdOfParadise : Aura
             if (insect == null || !insect.IsAlive || exclude.Contains(insect)) continue;
             float dist = Vector3.Distance(origin, insect.transform.position);
             if (dist > radius || dist >= nearestDist) continue;
-            if (!InSight(insect)) continue;
+            if (!InSight(insect) || MeleeOutOfReach(insect)) continue;
             nearestDist = dist;
             nearest = insect;
         }
@@ -118,7 +118,7 @@ public class BirdOfParadise : Aura
         {
             if (insect == null || exclude.Contains(insect) || !insect.IsAlive) continue;
             if (insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)) > attackRange) continue;
-            if (!InSight(insect)) continue;
+            if (!InSight(insect) || MeleeOutOfReach(insect)) continue;
             candidates.Add(insect);
         }
         candidates.Sort((a, b) =>

@@ -473,7 +473,7 @@ public class AcornKnight : Aura
 
         foreach (Insect insect in Insect.allInsects)
         {
-            if (insect == null || !insect.IsAlive) continue;
+            if (insect == null || !insect.IsAlive || MeleeOutOfReach(insect)) continue;
             Vector2 approach = insect.GetApproachPoint(origin);
             if (Vector2.Distance(origin, approach) > attackRange) continue;
             if (facingSign != 0f && (approach.x - origin.x) * facingSign < 0f) continue;
