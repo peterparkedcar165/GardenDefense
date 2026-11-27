@@ -4913,9 +4913,9 @@ MonoBehaviour:
     y: -8.504
     width: 23
     height: 17
-  densityPerTile: 0.28
-  lifeMin: 4
-  lifeMax: 7
+  densityPerTile: 0.322
+  lifeMin: 6
+  lifeMax: 10.5
   fadeIn: 0.7
   fadeOut: 1
   speedMin: 0.1
