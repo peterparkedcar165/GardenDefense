@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Level2
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfig
   levelNumber: 2
+  biome: 0
   weather:
   - type: 0
     intensity: 1
   temperature: 2
   maxWaves: 8
-  startSunCount: 170
+  startSunCount: 200
   startHealth: 200
   maxUpgradeLevel: 2
   minWaveDuration: 20
@@ -465,4 +466,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 777fd61cdf034642a3eee9bb0001921f, type: 2}
   - {fileID: 11400000, guid: 5939dec221844e7fb65fc43c0fc6cab9, type: 2}
   - {fileID: 11400000, guid: d821f48f4ef44bb8b4bfb509223b91a2, type: 2}
+  recommendedPlants: []
   ambience: {fileID: 11400000, guid: d1804b1344ff0b341aff0c11181dc078, type: 2}
