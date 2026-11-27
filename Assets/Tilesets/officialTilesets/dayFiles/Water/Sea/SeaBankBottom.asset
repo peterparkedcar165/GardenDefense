@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05fe9b4ec4f8426f8abf5f6b89eda70d, type: 3}
+  m_Name: SeaBankBottom
+  m_EditorClassIdentifier: Assembly-CSharp::SeaTile
+  frames:
+  - {fileID: 1001644476185790740, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: 374362869971980681, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: 1778010436311726469, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: 1558891865483513095, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: 9186956186541053179, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: -9131221404158955139, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: -3710407397713052514, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: -4958414135913083041, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: -7283018811392569001, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: -6610681420775335160, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: -6384234654630618837, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: -7266800159386218957, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: 2741798981044157314, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: -1156065569939872257, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: 4571568328849921681, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  - {fileID: 4562003533561924496, guid: 9e5a3023620d4d7c89944feb7bc71db0, type: 3}
+  fps: 8
+  colliderType: 0
