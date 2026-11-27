@@ -1095,6 +1095,7 @@ public abstract class Plant : Entity, IAttackable
         RecomputeEffectivePathLevels();
         UpdateTargetHighlight();
         UpdateFacingFlip();
+        UpdateSightShade();
 
         if (_light2D != null)
         {
@@ -1891,7 +1892,7 @@ public abstract class Plant : Entity, IAttackable
             // the range checks use how far it looks (Visibility), nearest is still the real distance
             float real = Vector3.Distance(transform.position, insect.transform.position);
             float dist = insect.SeenDistance(real);
-            if (IsWithinAttackRange(insect, dist) && real < nearestDist && IsValidNightTarget(insect, dist) && IsValidFlightTarget(insect))
+            if (IsWithinAttackRange(insect, dist) && real < nearestDist && IsValidNightTarget(insect, dist) && IsValidFlightTarget(insect) && InSight(insect))
             {
                 nearestDist = real;
                 nearest = insect.gameObject;
@@ -1912,7 +1913,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see FindNearest
-            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect) || !InSight(insect)) continue;
             if (insect.maxHealth > highestMaxHealth)
             {
                 highestMaxHealth = insect.maxHealth;
@@ -1941,7 +1942,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see FindNearest
-            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect) || !InSight(insect)) continue;
             inRange.Add(insect);
         }
         Insect best = PickBySpeed(inRange, fastest);
@@ -1991,7 +1992,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see FindNearest
-            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect) || !InSight(insect)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
             if (insect.currentWaypointIndex > highestWaypointIndex)
@@ -2022,7 +2023,7 @@ public abstract class Plant : Entity, IAttackable
         {
             if (insect == null || !insect.IsAlive || insect.carriedBy != null) continue;
             float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see FindNearest
-            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect)) continue;
+            if (!IsWithinAttackRange(insect, dist) || !IsValidNightTarget(insect, dist) || !IsValidFlightTarget(insect) || !InSight(insect)) continue;
             Transform waypoint = insect.GetCurrentWaypoint();
             if (waypoint == null) continue;
             if (insect.currentWaypointIndex < lowestWaypointIndex)
@@ -2050,7 +2051,60 @@ public abstract class Plant : Entity, IAttackable
     public virtual bool CanReachInsect(Insect insect)
     {
         float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see FindNearest
-        return IsWithinAttackRange(insect, dist) && IsValidNightTarget(insect, dist) && IsValidFlightTarget(insect);
+        return IsWithinAttackRange(insect, dist) && IsValidNightTarget(insect, dist) && IsValidFlightTarget(insect) && InSight(insect);
+    }
+
+    // ---------- line of sight (Tommy, 2026-11-27) ----------
+    // a plant that needs a clear line (straight and homing shooters, Stargazer, Kelp, Rhodiola: NeedsLineOfSight)
+    // can't target a ground insect or an ally it can't see. from low ground, obstacle tiles and cliff edges
+    // block the line; from high ground nothing does (it sees down over cliffs and over trees, bushes and
+    // boulders). flying insects are never hidden. what it sees is cast once from where it stands
+    // (LineOfSight) and kept until it moves or its ground changes. the part of its range it can't see shows
+    // red on its range circle (SightShade)
+    public virtual bool NeedsLineOfSight => false;
+
+    // the rays from where it stands, null when it sees everything (high ground, or it needs no clear line)
+    private float[] _sightRays;
+    private bool _sightCast;
+    private Vector3 _sightOrigin;
+    private bool _sightFromHigh;
+    private int _sightVersion;
+
+    public bool OnHighground => occupiedTile != null && occupiedTile.isHighground;
+
+    private void EnsureSight()
+    {
+        bool high = OnHighground;
+        Vector3 here = transform.position;
+        if (_sightCast && here == _sightOrigin && high == _sightFromHigh) return;
+        _sightCast = true;
+        _sightOrigin = here;
+        _sightFromHigh = high;
+        _sightVersion++;
+        if (high || !NeedsLineOfSight) { _sightRays = null; return; }
+        if (_sightRays == null) _sightRays = new float[LineOfSight.Rays];
+        LineOfSight.Cast(here, _sightRays);
+    }
+
+    // can this plant see a point on the ground (an ally, or a ground insect's spot)
+    public bool CanSee(Vector3 point)
+    {
+        if (!NeedsLineOfSight) return true;
+        EnsureSight();
+        return _sightRays == null || LineOfSight.Sees(_sightRays, _sightOrigin, point);
+    }
+
+    // a flying insect is never hidden
+    public bool InSight(Insect insect) => insect.isFlying || CanSee(insect.transform.position);
+
+    // the red part of its range circle, kept up to date while the circle shows
+    private SightShade _sightShade;
+    private void UpdateSightShade()
+    {
+        if (!NeedsLineOfSight || circleRadius == null || !circleRadius.gameObject.activeInHierarchy) return;
+        EnsureSight();
+        if (_sightShade == null) _sightShade = SightShade.On(circleRadius);
+        _sightShade.Show(_sightRays, _sightVersion, attackRange);
     }
 
     // a melee plant (see IsMeleeAttacker) can't normally pick a flying insect as a target - it

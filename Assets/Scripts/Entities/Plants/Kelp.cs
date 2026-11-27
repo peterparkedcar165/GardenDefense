@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class Kelp : Aura
 {
+    // its hit needs a clear line (Tommy, 2026-11-27: Plant's line of sight)
+    public override bool NeedsLineOfSight => true;
+
     private KelpData KData => data as KelpData;
 
     [SerializeField] private GameObject bubbleProjectilePrefab;
@@ -53,7 +56,8 @@ public class Kelp : Aura
 
         if (attackCooldownTimer < attackCooldown)
             attackCooldownTimer += Time.deltaTime;
-        else if (!IsStunned && !IsChanneling && HasInsectsInRange())
+        // an insect it can see (FindTarget checks the line of sight), not just one in range
+        else if (!IsStunned && !IsChanneling && FindTarget() != null)
             Attack();
 
         if (autoCastEnabled && SkillReady)

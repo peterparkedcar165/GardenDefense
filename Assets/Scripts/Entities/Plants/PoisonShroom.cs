@@ -90,7 +90,7 @@ public class PoisonShroom : Shooter
         {
             if (insect == null || !insect.IsAlive) continue;
             float distance = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position));
-            if (distance > attackRange || !IsValidNightTarget(insect, distance)) continue;
+            if (distance > attackRange || !IsValidNightTarget(insect, distance) || !InSight(insect)) continue;
 
             ToxicSporeEffect ownSpore = FindOwnToxicSpore(insect);
             if (ownSpore == null)

@@ -225,6 +225,8 @@ public class CliffBuilder : MonoBehaviour
                 if (!border && runStart != int.MinValue) { AddEdge(new Vector3Int(x, runStart, 0), new Vector3Int(x, y, 0)); runStart = int.MinValue; }
             }
         }
+        // in the physics world at once, so a plant's first line of sight cast already meets them
+        Physics2D.SyncTransforms();
     }
 
     // a wall between two cell corners (a cell's corner is its CellToWorld point)

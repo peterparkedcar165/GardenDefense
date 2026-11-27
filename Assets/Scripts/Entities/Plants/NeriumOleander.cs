@@ -157,7 +157,7 @@ public class NeriumOleander : Shooter
         {
             if (insect == null || !insect.IsAlive) continue;
             float dist = insect.SeenDistance(Vector3.Distance(transform.position, insect.transform.position)); // see Plant.FindNearest
-            if (dist <= attackRange && IsValidNightTarget(insect, dist))
+            if (dist <= attackRange && IsValidNightTarget(insect, dist) && InSight(insect))
             {
                 _candidates.Add(insect);
                 _directlySeen.Add(insect); // directly visible: no need to route through a sprout

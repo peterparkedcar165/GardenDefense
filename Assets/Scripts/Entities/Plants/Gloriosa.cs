@@ -96,6 +96,7 @@ public class Gloriosa : Shooter
             if (plant == this || plant == null || !plant.IsAlive) continue;
             if (plant.health >= plant.maxHealth) continue;
             if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
+            if (!CanSee(plant.transform.position)) continue;
             float frac = plant.health / plant.maxHealth;
             if (frac < bestFrac) { bestFrac = frac; bestPlant = plant; }
         }
@@ -109,6 +110,7 @@ public class Gloriosa : Shooter
             if (ally == null || !ally.IsAlive) continue;
             if (ally.health >= ally.maxHealth) continue;
             if (Vector3.Distance(transform.position, ally.transform.position) > attackRange) continue;
+            if (!CanSee(ally.transform.position)) continue;
             float frac = ally.health / ally.maxHealth;
             if (frac < bestAllyFrac) { bestAllyFrac = frac; bestAlly = ally; }
         }
@@ -122,7 +124,7 @@ public class Gloriosa : Shooter
             if (insect == null || !insect.IsAlive) continue;
             float real = Vector3.Distance(transform.position, insect.GetApproachPoint(transform.position));
             float dist = insect.SeenDistance(real);
-            if (dist <= attackRange && real < nearest && IsValidNightTarget(insect, dist)) { nearest = real; bestInsect = insect; }
+            if (dist <= attackRange && real < nearest && IsValidNightTarget(insect, dist) && InSight(insect)) { nearest = real; bestInsect = insect; }
         }
         if (bestInsect != null) return bestInsect;
 
@@ -139,6 +141,7 @@ public class Gloriosa : Shooter
                 if (plant == this || plant == null || !plant.IsAlive) continue;
                 if (plant.temperature >= 10f) continue;
                 if (Vector3.Distance(transform.position, plant.transform.position) > attackRange) continue;
+                if (!CanSee(plant.transform.position)) continue;
                 if (plant.temperature < lowestTemp) { lowestTemp = plant.temperature; coldest = plant; }
             }
             if (coldest != null) return coldest;

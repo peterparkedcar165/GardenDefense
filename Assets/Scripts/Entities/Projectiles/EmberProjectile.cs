@@ -96,7 +96,16 @@ public class EmberProjectile : MonoBehaviour
 
         Insect targetInsect = _target as Insect;
         Vector3 targetPos = targetInsect != null ? targetInsect.GetAimPoint() : ((Entity)_target).transform.position;
+        Vector3 stepFrom = transform.position;
         transform.position = Vector3.MoveTowards(transform.position, targetPos, _speed * Time.deltaTime);
+        // line of sight (Tommy, 2026-11-27): from low ground it stops at the first obstacle or cliff on its way,
+        // unless it's flying at a flying insect
+        bool atFlyer = targetInsect != null && targetInsect.isFlying;
+        if (_source != null && !_source.OnHighground && !atFlyer && LineOfSight.Blocked(stepFrom, transform.position, out _))
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         if (Vector3.Distance(transform.position, targetPos) < 0.15f)
             Detonate();

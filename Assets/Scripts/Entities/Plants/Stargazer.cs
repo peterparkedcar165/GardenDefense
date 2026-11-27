@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 public class Stargazer : Aura
 {
+    // its fire needs a clear line (Tommy, 2026-11-27: Plant's line of sight)
+    public override bool NeedsLineOfSight => true;
+
     [SerializeField] private GameObject fireWavePrefab;
     [SerializeField] private GameObject skillIndicatorPrefab; // beam aim indicator for the ultimate
     [SerializeField] private ParticleSystem fireConeParticles; // continuous cone of fire while attacking
@@ -184,6 +187,8 @@ public class Stargazer : Aura
             Vector2 to = (Vector2)insect.transform.position - (Vector2)transform.position;
             if (to.magnitude > attackRange) continue;
             if (Vector2.Angle(_facingDir, to) > halfAngle) continue;
+            // the fire doesn't pass obstacles or cliffs (line of sight)
+            if (!InSight(insect)) continue;
 
             float delay = attackRange > 0f ? Mathf.Clamp01(to.magnitude / attackRange) * attackHitDelayTime : 0f;
             if (delay > 0f)

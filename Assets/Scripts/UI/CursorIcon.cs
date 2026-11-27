@@ -216,6 +216,7 @@ public class CursorIcon : MonoBehaviour
         rangePreviewCircle.gameObject.SetActive(true);
         rangePreviewCircle.position = new Vector3(tile.transform.position.x, tile.transform.position.y, rangePreviewCircle.position.z);
         rangePreviewCircle.localScale = new Vector3(range * 2f, range * 2f, 1f);
+        ShowPreviewSight(tile, range);
 
         // same half-range darkness indicator placed plants show while selected (see Plant.cs's
         // own circleRadius/darkCircleRadius pair) - otherwise the player only discovers the
@@ -232,6 +233,27 @@ public class CursorIcon : MonoBehaviour
         {
             darkRangePreviewCircle.gameObject.SetActive(false);
         }
+    }
+
+    // the red part of the preview circle: where the plant couldn't target from this tile (line of sight,
+    // Tommy 2026-11-27). the rays are cast once per tile hovered
+    private float[] _previewRays;
+    private Tile _previewRaysTile;
+    private int _previewRaysVersion;
+    private SightShade _previewShade;
+
+    private void ShowPreviewSight(Tile tile, float range)
+    {
+        if (_previewShade == null) _previewShade = SightShade.On(rangePreviewCircle);
+        if (!cachedPlant.NeedsLineOfSight || tile.isHighground) { _previewShade.Hide(); return; }
+        if (_previewRays == null || _previewRaysTile != tile)
+        {
+            if (_previewRays == null) _previewRays = new float[LineOfSight.Rays];
+            LineOfSight.Cast(tile.transform.position, _previewRays);
+            _previewRaysTile = tile;
+            _previewRaysVersion++;
+        }
+        _previewShade.Show(_previewRays, _previewRaysVersion, range);
     }
 
     private void HideRangePreview()

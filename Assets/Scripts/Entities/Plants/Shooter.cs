@@ -4,6 +4,9 @@ using System.Collections.Generic;
 public abstract class Shooter : Plant
 {
     public override bool UsesTargeting => true;
+    // straight and homing shots need a clear line (Plant: line of sight); a shooter whose attack isn't a shot
+    // (Carrot's eruption, Waterlily's falling shot) says otherwise
+    public override bool NeedsLineOfSight => true;
     public GameObject projectilePrefab;
     // base and final (projectileSpeed lives on Entity now)
     public float baseMaxRange, maxRange;

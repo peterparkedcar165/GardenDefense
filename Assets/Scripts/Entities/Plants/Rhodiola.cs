@@ -326,7 +326,7 @@ public class Rhodiola : Shooter
     {
         Entity ally = _channelTarget;
         if (IsStunned || _storedSap <= 0f) return false;
-        if (!Alive(ally) || !InRange(ally) || !Hurt(ally)) return false;
+        if (!Alive(ally) || !InRange(ally) || !Hurt(ally) || !CanSee(ally.transform.position)) return false;
         bool isPlant = ally is Plant;
         if (!_channelUrgent && (!isPlant || HealthShare(ally) >= LowHealthThreshold))
         {
@@ -356,14 +356,15 @@ public class Rhodiola : Shooter
         float bestShare = 1f;
         foreach (Insect ally in Insect.friendlyInsects)
         {
-            if (!Alive(ally) || !Hurt(ally) || !InRange(ally)) continue;
+            if (!Alive(ally) || !Hurt(ally) || !InRange(ally) || !CanSee(ally.transform.position)) continue;
             float share = HealthShare(ally);
             if (share < bestShare) { bestShare = share; best = ally; }
         }
         return best;
     }
 
-    // the lowest health plant in her range, herself left out: under the low health line, or just hurt
+    // the lowest health plant in her range that she can see (line of sight), herself left out: under the low
+    // health line, or just hurt
     private Plant LowestPlant(bool underLine)
     {
         Plant best = null;
@@ -371,7 +372,7 @@ public class Rhodiola : Shooter
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || plant == this || !plant.IsAlive || plant.maxHealth <= 0f) continue;
-            if (!Hurt(plant) || !InRange(plant)) continue;
+            if (!Hurt(plant) || !InRange(plant) || !CanSee(plant.transform.position)) continue;
             float share = HealthShare(plant);
             if (share < bestShare) { bestShare = share; best = plant; }
         }

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class Carrot : Shooter
 {
+    // its eruption comes up under the target, no clear line needed (Tommy, 2026-11-27)
+    public override bool NeedsLineOfSight => false;
+
     [SerializeField] private GameObject eruptionVisualPrefab; // spawned at the struck insect's position
     [SerializeField] private GameObject pillarVisualPrefab;   // optional per square visual left by the furrow (skill)
     [SerializeField] private GameObject skillIndicatorPrefab; // rectangle sprite shown while aiming the furrow

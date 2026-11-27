@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class Waterlily : Shooter
 {
+    // its shot rises and falls onto the target, no clear line needed (Tommy, 2026-11-27)
+    public override bool NeedsLineOfSight => false;
+
     public float AoERange, baseAoERange, AoERangeMultiplier, AoERangeAdder;
     public float skillAoERadius;
     public float bubbleDamage;
