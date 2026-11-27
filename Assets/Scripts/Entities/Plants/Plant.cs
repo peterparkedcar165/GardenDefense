@@ -2102,6 +2102,14 @@ public abstract class Plant : Entity, IAttackable
     private SightShade _sightShade;
     private void UpdateSightShade()
     {
+#if UNITY_EDITOR
+        // F8 on a selected plant: its line of sight readout in the console (LineOfSight.LogReadout)
+        if (_isSelected && UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.f8Key.wasPressedThisFrame)
+        {
+            if (NeedsLineOfSight) EnsureSight();
+            LineOfSight.LogReadout($"{name} (needs line of sight: {NeedsLineOfSight})", transform.position, OnHighground, attackRange, _sightRays, occupiedTile);
+        }
+#endif
         if (!NeedsLineOfSight || circleRadius == null || !circleRadius.gameObject.activeInHierarchy) return;
         EnsureSight();
         if (_sightShade == null) _sightShade = SightShade.On(circleRadius);

@@ -254,6 +254,11 @@ public class CursorIcon : MonoBehaviour
             _previewRaysVersion++;
         }
         _previewShade.Show(_previewRays, _previewRaysVersion, range);
+#if UNITY_EDITOR
+        // F8 while placing or moving a plant: the preview's line of sight readout in the console
+        if (UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.f8Key.wasPressedThisFrame)
+            LineOfSight.LogReadout($"preview of {cachedPlant.name}", tile.transform.position, tile.isHighground, range, _previewRays, tile);
+#endif
     }
 
     private void HideRangePreview()

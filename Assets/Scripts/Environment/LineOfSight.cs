@@ -98,6 +98,41 @@ public static class LineOfSight
         return best < float.MaxValue;
     }
 
+#if UNITY_EDITOR
+    // F8 readout (editor only; Plant for a selected plant, CursorIcon while placing one): what the sight rays from
+    // origin meet, to find out why a plant sees past something it shouldn't (Tommy, 2026-11-27, Level 5)
+    public static void LogReadout(string who, Vector2 origin, bool fromHigh, float range, float[] rays, Tile tile)
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"[LineOfSight] {who} at ({origin.x:F3}, {origin.y:F3}), range {range:F2}, cast from high ground: {fromHigh}");
+        if (tile != null)
+            sb.AppendLine($"  tile '{tile.name}' at ({tile.transform.position.x:F3}, {tile.transform.position.y:F3}): type {tile.tileType}, isHighground {tile.isHighground}");
+        else sb.AppendLine("  no tile");
+        int blocked = 0;
+        if (rays != null) for (int i = 0; i < Rays; i++) if (rays[i] < range) blocked++;
+        sb.AppendLine("  rays blocked inside the range: " + (rays == null ? "none cast (it sees everything)" : blocked + " of " + Rays));
+        Collider2D[] near = Physics2D.OverlapCircleAll(origin, range + 1f, BlockMask);
+        sb.AppendLine($"  Obstacle layer colliders within {range + 1f:F1}: {near.Length}");
+        foreach (Collider2D c in near)
+            sb.AppendLine($"    {c.GetType().Name} '{c.name}' under '{(c.transform.parent != null ? c.transform.parent.name : "-")}' centre ({c.bounds.center.x:F2}, {c.bounds.center.y:F2}) size ({c.bounds.size.x:F2}, {c.bounds.size.y:F2})");
+        for (int k = 0; k < 8; k++)
+        {
+            float a = k * Mathf.PI / 4f;
+            RaycastHit2D hit = Physics2D.CircleCast(origin, RayRadius, new Vector2(Mathf.Cos(a), Mathf.Sin(a)), MaxDistance, BlockMask);
+            sb.AppendLine($"  ray at {k * 45} degrees: " + (hit.collider != null ? $"{hit.collider.GetType().Name} '{hit.collider.name}' under '{(hit.collider.transform.parent != null ? hit.collider.transform.parent.name : "-")}' at {hit.distance + RayRadius:F2}" : "nothing"));
+        }
+        int zones = 0, live = 0;
+        foreach (ObstacleZone z in Object.FindObjectsByType<ObstacleZone>(FindObjectsInactive.Include))
+        {
+            zones++;
+            if (z.isActiveAndEnabled && z.gameObject.layer == LayerMask.NameToLayer("Obstacle") && z.TryGetComponent(out Collider2D zc) && zc.enabled) live++;
+        }
+        sb.AppendLine($"  obstacle zones in the scene: {zones}, {live} active on the Obstacle layer; mask {BlockMask}; " +
+                      $"physics: queries start in colliders {Physics2D.queriesStartInColliders}, auto sync {Physics2D.autoSyncTransforms}, simulation {Physics2D.simulationMode}");
+        Debug.Log(sb.ToString());
+    }
+#endif
+
     private static readonly List<Vector3> Verts = new List<Vector3>();
     private static readonly List<Color> Colors = new List<Color>();
     private static readonly List<int> Tris = new List<int>();
