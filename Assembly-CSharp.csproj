@@ -344,6 +344,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\BoonOfTheWispEffect.cs" />
     <Compile Include="Assets\Scripts\SkillTree\SkillTreePlantPanel.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\MireSlowEffect.cs" />
+    <Compile Include="Assets\Scripts\Environment\PineForestTile.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Firefly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HypnotizedEffect.cs" />
     <Compile Include="Assets\Scripts\GridManagers\DesertGridManager.cs" />
