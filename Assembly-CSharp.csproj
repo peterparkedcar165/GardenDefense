@@ -506,6 +506,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Aeonium.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\HelleboreAuraEffect.cs" />
     <Compile Include="Assets\Scripts\UI\PixelLayout.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\RhodiolaHealRay.cs" />
     <Compile Include="Assets\Scripts\UI\QuickStatRow.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\GreenhouseFertilizerData.cs" />
     <Compile Include="Assets\Scripts\UI\PlantWidgetStyle.cs" />
