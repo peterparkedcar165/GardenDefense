@@ -257,7 +257,10 @@ public class CursorIcon : MonoBehaviour
 #if UNITY_EDITOR
         // F8 while placing or moving a plant: the preview's line of sight readout in the console
         if (UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.f8Key.wasPressedThisFrame)
+        {
             LineOfSight.LogReadout($"preview of {cachedPlant.name}", tile.transform.position, tile.isHighground, range, _previewRays, tile);
+            Debug.Log($"[LineOfSight] preview: version {_previewRaysVersion}; " + _previewShade.Describe());
+        }
 #endif
     }
 

@@ -57,6 +57,28 @@ public class SightShade : MonoBehaviour
         _rays = null;
     }
 
+#if UNITY_EDITOR
+    // for LineOfSight.LogReadout (F8): the red area's own state
+    public string Describe()
+    {
+        Transform circle = transform.parent;
+        return $"red area: active {gameObject.activeInHierarchy}, renderer {(_renderer == null ? "missing" : _renderer.enabled ? "on" : "off")}, " +
+               $"mesh {(_mesh == null ? "missing" : _mesh.vertexCount + " vertices")}, built for range {_range:F2} version {_version}, " +
+               $"layer {(_renderer != null ? _renderer.sortingLayerName + " " + _renderer.sortingOrder : "-")}, " +
+               $"material {(_renderer != null && _renderer.sharedMaterial != null ? _renderer.sharedMaterial.name : "none")}, " +
+               $"bounds {(_renderer != null ? _renderer.bounds.center.ToString("F2") + " " + _renderer.bounds.size.ToString("F2") : "-")}; " +
+               $"circle '{(circle != null ? circle.name : "-")}' active {(circle != null && circle.gameObject.activeInHierarchy)}, " +
+               $"scale {(circle != null ? circle.lossyScale.ToString("F2") : "-")}, children named SightShade {(circle != null ? CountShades(circle) : 0)}";
+    }
+
+    private static int CountShades(Transform circle)
+    {
+        int n = 0;
+        foreach (Transform child in circle) if (child.name == "SightShade") n++;
+        return n;
+    }
+#endif
+
     private void OnDestroy()
     {
         if (_mesh != null) Destroy(_mesh);

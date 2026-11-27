@@ -2108,6 +2108,8 @@ public abstract class Plant : Entity, IAttackable
         {
             if (NeedsLineOfSight) EnsureSight();
             LineOfSight.LogReadout($"{name} (needs line of sight: {NeedsLineOfSight})", transform.position, OnHighground, attackRange, _sightRays, occupiedTile);
+            Debug.Log($"[LineOfSight] {name}: sight version {_sightVersion}; " + (_sightShade != null ? _sightShade.Describe() : "no red area made yet") +
+                      $"; circleRadius '{(circleRadius != null ? circleRadius.name : "none")}' active {(circleRadius != null && circleRadius.gameObject.activeInHierarchy)}");
         }
 #endif
         if (!NeedsLineOfSight || circleRadius == null || !circleRadius.gameObject.activeInHierarchy) return;
