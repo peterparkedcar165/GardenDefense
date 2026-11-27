@@ -29,11 +29,10 @@ public class RejuvenatingBurgeonEffect : RegenerationEffect
         float amount = healingPerSecond * share;
         HealTarget(amount);
         // the heal goes on after rhodiola dies or is uprooted; only a living rhodiola gets anything
-        // back ("is" skips unity's destroyed check, so test it with != null as well): on another plant her
-        // max level passive returns her a share. her own burgeon on herself no longer fills her golden sap
-        // (Tommy, 2026-11-27: only her attacks do)
-        if (source is Rhodiola rhodiola && rhodiola != null && rhodiola.IsAlive && target != rhodiola)
-            rhodiola.ReturnMaxLevelHealing(amount);
+        // back ("is" skips unity's destroyed check, so test it with != null as well): with her passive at max
+        // level, her burgeon on any plant, herself included, fills her golden sap (Tommy, 2026-11-27)
+        if (source is Rhodiola rhodiola && rhodiola != null && rhodiola.IsAlive && rhodiola.BurgeonFillsSap && target is Plant)
+            rhodiola.AddSap(amount);
     }
 
     public override string GetName()        => "<color=green><b>Rejuvenating Burgeon</b></color>";

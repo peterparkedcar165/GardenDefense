@@ -126,6 +126,16 @@ public abstract class Plant : Entity, IAttackable
     protected virtual Color? PassiveBarColor => null;
     // true puts the passive bar right under the health bar, above the attack bar (rhodiola's sap)
     protected virtual bool PassiveBarFirst => false;
+
+    // a bar a path's tooltip shows between its description and its upgrades (PlantUpgradeUI), drawn and moving
+    // like the info panel's health bar: path is 1 to 3, false for none (Tommy, 2026-11-27: Rhodiola's Passive
+    // shows her Golden Sap)
+    public virtual bool TryGetPathBar(int path, out float value, out float max, out Color color)
+    {
+        value = max = 0f;
+        color = Color.white;
+        return false;
+    }
     [SerializeField] private Transform circleRadius;
     private Transform darkCircleRadius;
     private CircleCollider2D _circleCollider;

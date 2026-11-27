@@ -59,6 +59,7 @@ MonoBehaviour:
   baseMagicPenFlat: 0
   baseMagicPenPercent: 0
   baseLifesteal: 0
+  baseVisibility: 1
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.5
   baseDotDamage: 0
@@ -101,17 +102,26 @@ MonoBehaviour:
     clips: []
   skillSound:
     clips: []
-  attackHealMPScaling: 0.05
+  drainHealShare: 0.25
+  drainMoteSpeed: 2.5
+  drainArcPerUnit: 0.3
+  drainArcMin: 0.4
   path1AttackDamagePerLevel: 2
   path1AttackRangePerLevel: 0.3
-  maxMissingHealthPercent: 0.05
+  path1GrassDamagePerLevel: 0.05
+  path1SapEfficiencyPerLevel: 0.1
   baseGrassConversion: 0.5
-  path1GrassConversionPerLevel: 0.1
-  baseSapCap: 35
-  path2SapCapPerLevel: 5
-  sapStoreShare: 0.35
-  sapReleaseThreshold: 0.25
+  goldenSapCap: 200
+  path2GoldenSapCapPerLevel: 40
+  sapConversion: 1
+  path2SapConversionPerLevel: 0.1
+  sapToChannel: 0.1
+  lowHealthThreshold: 0.5
   sapGlowMaxAlpha: 0.6
+  channelHealPerSecond: 30
+  channelHealMPScaling: 0.1
+  channelTickInterval: 0.25
+  channelMoteSpeed: 5
   maxLevelGrassDamageBonus: 0.25
   maxLevelHealingReturn: 0.33
   burgeonHealPerSecond: 12

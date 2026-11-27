@@ -1339,14 +1339,22 @@ public class PlantUpgradeUI : EntityInfoPanel
     // path tooltips call this every frame while hovered: it lays the panel out again only when the
     // text or the screen size changed. an Attack, Passive or Skill text (one a plant marked with
     // Plant.MaxLevelBreak) is shown in sections (LayoutSections), anything else as one text
-    public void ShowTooltip(string text)
+    public void ShowTooltip(string text) => ShowTooltip(text, null, 0);
+
+    // barPlant and barPath: whose path tooltip this is (path 1 to 3), for a bar the path shows between its
+    // description and its upgrades (Plant.TryGetPathBar: Rhodiola's Golden Sap), refreshed every frame
+    public void ShowTooltip(string text, Plant barPlant, int barPath)
     {
         if (tooltipPanel == null || tooltipText == null) return;
         ReadTooltipBase();
         bool wasShown = tooltipPanel.activeSelf;
         tooltipPanel.SetActive(true);
+        bool wantBar = barPlant != null && barPlant.TryGetPathBar(barPath, out _, out _, out _);
+        bool sameBar = wantBar ? barPlant == tipBarPlant && barPath == tipBarPath : tipBarPlant == null;
         Vector2Int screen = new Vector2Int(Screen.width, Screen.height);
-        if (wasShown && text == shownTooltip && screen == tooltipLaidOutScreen) return;
+        if (wasShown && text == shownTooltip && screen == tooltipLaidOutScreen && sameBar) { RefreshTipBar(false); return; }
+        tipBarPlant = wantBar ? barPlant : null;
+        tipBarPath = barPath;
         if (SplitSections(text, out string title, out string[] parts, out string footer))
             LayoutSections(title, parts, footer);
         else
@@ -1355,6 +1363,7 @@ public class PlantUpgradeUI : EntityInfoPanel
             LayoutTooltip();
         }
         shownTooltip = text;
+        RefreshTipBar(!sameBar || !wasShown);
     }
 
     // the text the panel shows (null after a text laid out some other way)
@@ -1371,7 +1380,8 @@ public class PlantUpgradeUI : EntityInfoPanel
         sections ??= System.Array.Empty<string>();
         string key = (title ?? "") + "\u0001" + string.Join("\u0001", sections) + "\u0001" + (footer ?? "");
         Vector2Int screen = new Vector2Int(Screen.width, Screen.height);
-        if (wasShown && key == shownTooltip && screen == tooltipLaidOutScreen) return;
+        if (wasShown && key == shownTooltip && screen == tooltipLaidOutScreen && tipBarPlant == null) return;
+        tipBarPlant = null;
         LayoutSections(title, sections, footer);
         shownTooltip = key;
     }
@@ -1492,6 +1502,8 @@ public class PlantUpgradeUI : EntityInfoPanel
     {
         BuildSections();
         while (sectionBoxes.Count < parts.Length) AddSection();
+        if (tipBarPlant != null) BuildTipBar();
+        if (tipBar != null) tipBar.root.gameObject.SetActive(tipBarPlant != null);
         tooltipText.gameObject.SetActive(false);
         sectionRoot.gameObject.SetActive(true);
         Color boxColor = TooltipFrameLook.InteriorFor(selectedPlant != null ? (Entity)selectedPlant : selectedInsect);
@@ -1554,8 +1566,21 @@ public class PlantUpgradeUI : EntityInfoPanel
             Gap();
             y += PlaceSectionText(sectionTitle, fontSize, left, y, width);
         }
+        // the path's bar (Rhodiola's Golden Sap) goes between the description and the upgrades, the health bar's size,
+        // in the middle
+        bool barPlaced = false;
+        void PlaceBar()
+        {
+            if (barPlaced || tipBarPlant == null || tipBar == null) return;
+            barPlaced = true;
+            Gap();
+            RectTransform bar = tipBar.root;
+            bar.anchoredPosition = new Vector2(left + Mathf.Round((width - bar.rect.width) * 0.5f / Px) * Px, -y);
+            y += bar.rect.height;
+        }
         for (int i = 0; i < sectionBoxes.Count; i++)
         {
+            if (i == 1) PlaceBar();
             if (!sectionBoxes[i].gameObject.activeSelf) continue;
             Gap();
             float textHeight = PlaceSectionText(sectionTexts[i], fontSize, left + SectionTextPadX, y + SectionTextPadY, width - 2f * SectionTextPadX);
@@ -1565,6 +1590,7 @@ public class PlantUpgradeUI : EntityInfoPanel
             box.sizeDelta = new Vector2(width, boxHeight);
             y += boxHeight;
         }
+        PlaceBar();
         if (sectionFooter.gameObject.activeSelf)
         {
             Gap();
@@ -1637,6 +1663,76 @@ public class PlantUpgradeUI : EntityInfoPanel
     private static void AnchorTopLeft(RectTransform r)
     {
         r.anchorMin = r.anchorMax = r.pivot = new Vector2(0f, 1f);
+    }
+
+    // ---------- the path's bar (Tommy, 2026-11-27: Rhodiola's Golden Sap on her Passive) ----------
+    // a copy of the panel's health bar (its frame, fill, shine, chunk and value text) in the bar's colour, moving
+    // like the health bar: the fill eases to the share, a white chunk holds what was just spent a moment and then
+    // drains, the text reads value/max
+    private InfoBar tipBar;
+    private Plant tipBarPlant;
+    private int tipBarPath;
+    private float tipBarShown, tipBarChunk, tipBarLast, tipBarChunkTimer;
+    private float tipBarShownValue = -1f, tipBarShownMax = -1f;
+
+    private void BuildTipBar()
+    {
+        if (tipBar != null || healthBar == null || healthBar.root == null || sectionRoot == null) return;
+        RectTransform root = Instantiate(healthBar.root, sectionRoot);
+        root.name = "PathBar";
+        AnchorTopLeft(root);
+        T Twin<T>(T part) where T : Component
+        {
+            if (part == null) return null;
+            string path = RelativePath(healthBar.root, part.transform);
+            Transform t = path == null ? null : path.Length == 0 ? root : root.Find(path);
+            return t != null ? t.GetComponent<T>() : null;
+        }
+        tipBar = new InfoBar { root = root, fill = Twin(healthBar.fill), shine = Twin(healthBar.shine), chunk = Twin(healthBar.chunk), text = Twin(healthBar.text) };
+        foreach (Graphic g in root.GetComponentsInChildren<Graphic>(true)) g.raycastTarget = false;
+    }
+
+    private static string RelativePath(Transform root, Transform t)
+    {
+        var names = new System.Collections.Generic.List<string>();
+        for (Transform c = t; c != null; c = c.parent)
+        {
+            if (c == root) { names.Reverse(); return string.Join("/", names); }
+            names.Add(c.name);
+        }
+        return null;
+    }
+
+    // snap: the bar was just shown, so it starts at the share instead of easing to it
+    private void RefreshTipBar(bool snap)
+    {
+        if (tipBar == null || tipBarPlant == null || !tipBar.root.gameObject.activeInHierarchy) return;
+        if (!tipBarPlant.TryGetPathBar(tipBarPath, out float value, out float max, out Color color)) return;
+        float pct = max > 0f ? Mathf.Clamp01(value / max) : 0f;
+        float ease = 1f - Mathf.Exp(-HealthBarLerpSpeed * Time.unscaledDeltaTime);
+        if (snap) { tipBarShown = tipBarChunk = tipBarLast = pct; tipBarChunkTimer = 0f; }
+        else tipBarShown = Mathf.Lerp(tipBarShown, pct, ease);
+        SetFill(tipBar.fill, tipBar.shine, tipBarShown);
+        if (tipBar.fill != null) tipBar.fill.color = color;
+
+        // the chunk, as the health bar's: held a moment after a drop, then drained
+        if (tipBar.chunk != null)
+        {
+            if (pct < tipBarLast) tipBarChunkTimer = DamageChunkDelay;
+            else if (pct > tipBarChunk) { tipBarChunk = pct; tipBarChunkTimer = 0f; }
+            tipBarLast = pct;
+            if (tipBarChunkTimer > 0f) tipBarChunkTimer -= Time.unscaledDeltaTime;
+            else if (tipBarChunk > pct) tipBarChunk = Mathf.Lerp(tipBarChunk, pct, ease);
+            if (tipBarChunk > pct + 0.001f) { SetFill(tipBar.chunk, null, tipBarChunk); tipBar.chunk.color = AllyChunkColor; }
+            else tipBar.chunk.enabled = false;
+        }
+
+        if (tipBar.text != null && (value != tipBarShownValue || max != tipBarShownMax || snap))
+        {
+            tipBarShownValue = value;
+            tipBarShownMax = max;
+            tipBar.text.text = $"{value:F0}/{max:F0}";
+        }
     }
 
     // the one text back, the sections away

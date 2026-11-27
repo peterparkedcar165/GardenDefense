@@ -24,8 +24,8 @@ public class RhodiolaData : PlantData
     public float path1GrassDamagePerLevel = 0.05f;
     [Tooltip("added per Attack path level to how much her channel heals for each point of sap it spends (the healing to sap depletion ratio, 1 at level 0), e.g. 0.1 = +10% (Tommy)")]
     public float path1SapEfficiencyPerLevel = 0.1f;
-    [Tooltip("Attack path max level bonus: share of her Grass Damage added to Heals & Shields she gives, e.g. 0.5 = 50% (Tommy, 2026-11-27: it was always on before)")]
-    public float baseGrassConversion = 0.5f;
+    [Tooltip("Attack path max level bonus: share of her Grass Damage added to Heals & Shields she gives, 1 = all of it (Tommy, 2026-11-27: her healing also benefits from Grass Damage; it was 50%, always on before)")]
+    public float baseGrassConversion = 1f;
 
     [Header("Golden Sap (passive)")]
     [Tooltip("how much golden sap she can hold at passive level 0")]
@@ -53,7 +53,9 @@ public class RhodiolaData : PlantData
     public float channelMoteSpeed = 5f;
 
     [Header("Path 2 Max Level Bonus")]
+    [Tooltip("unused since 2026-11-27 (Tommy: the max level bonus is now her Rejuvenating Burgeon filling her Golden Sap)")]
     public float maxLevelGrassDamageBonus = 0.25f;
+    [Tooltip("unused since 2026-11-27 (see above)")]
     public float maxLevelHealingReturn = 0.33f;
 
     [Header("Rejuvenating Burgeon")]

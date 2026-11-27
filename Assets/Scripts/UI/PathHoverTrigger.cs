@@ -25,7 +25,8 @@ public class PathHoverTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExi
         else if (pathType == PathType.Path3)
             description = plant.GetPath3Description(details);
 
-        PlantUpgradeUI.instance.ShowTooltip(description);
+        // the plant and the path, for a bar the path shows (Rhodiola's Golden Sap on her Passive)
+        PlantUpgradeUI.instance.ShowTooltip(description, plant, (int)pathType + 1);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
