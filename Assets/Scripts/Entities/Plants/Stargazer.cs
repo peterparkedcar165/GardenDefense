@@ -103,7 +103,7 @@ public class Stargazer : Aura
     // frame only if the cached insect stopped being alive
     private int _facingFrame = -1;
     private bool _facingFound;
-    private Insect _facingInsect;
+    private Insect _coneInsect;
     private GameObject _facingGo;
 
     // the cone tracks the targeting-mode pick among insects within range only
@@ -112,7 +112,7 @@ public class Stargazer : Aura
         if (_facingFrame == Time.frameCount)
         {
             if (!_facingFound) return null;
-            if (_facingInsect != null && _facingInsect.IsAlive) return _facingInsect;
+            if (_coneInsect != null && _coneInsect.IsAlive) return _coneInsect;
         }
         _facingFrame = Time.frameCount;
 
@@ -130,10 +130,10 @@ public class Stargazer : Aura
         if (!ReferenceEquals(go, _facingGo))
         {
             _facingGo = go;
-            _facingInsect = go != null ? go.GetComponent<Insect>() : null;
+            _coneInsect = go != null ? go.GetComponent<Insect>() : null;
         }
         _facingFound = go != null;
-        return _facingInsect;
+        return _coneInsect;
     }
 
     protected override GameObject GetHighlightTarget()

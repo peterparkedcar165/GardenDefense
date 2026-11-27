@@ -128,7 +128,7 @@ public static class LineOfSight
             if (z.isActiveAndEnabled && z.gameObject.layer == LayerMask.NameToLayer("Obstacle") && z.TryGetComponent(out Collider2D zc) && zc.enabled) live++;
         }
         sb.AppendLine($"  obstacle zones in the scene: {zones}, {live} active on the Obstacle layer; mask {BlockMask}; " +
-                      $"physics: queries start in colliders {Physics2D.queriesStartInColliders}, auto sync {Physics2D.autoSyncTransforms}, simulation {Physics2D.simulationMode}");
+                      $"physics: queries start in colliders {Physics2D.queriesStartInColliders}, simulation {Physics2D.simulationMode}");
         Debug.Log(sb.ToString());
     }
 #endif
