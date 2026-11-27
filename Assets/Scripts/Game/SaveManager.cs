@@ -182,7 +182,7 @@ public class SaveManager : MonoBehaviour
     }
 
     // legacy curve constants, kept only for MigrateExpCurve below - the live curve is now
-    // PlantLevelCurve (GrowthRate 1.15). exists purely so an already-saved (level, totalExp) pair
+    // PlantLevelCurve (see there for its numbers). exists purely so an already-saved (level, totalExp) pair
     // can be reconstructed into a lifetime exp figure under the curve it was actually earned on
     private const int LegacyBaseExp = 3500;
     private const float LegacyGrowthRate = 1.5f;

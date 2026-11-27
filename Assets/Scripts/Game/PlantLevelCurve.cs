@@ -1,9 +1,10 @@
 using UnityEngine;
 
 // exp-to-level curve for a plant's persistent, per-species meta level (SaveData.PlantExpRecord).
-// exponential by design: leveling from 1 is quick, but each subsequent level costs meaningfully
-// more, so maxing a plant out is a long-term "the more you use it, the more it grows" grind.
-// tune BaseExp/GrowthRate here if the pacing needs adjusting - nothing else needs to change
+// each level costs a little more than the one before (5%, Tommy 2026-11-27: the 15% curve made the
+// last levels a grind of hundreds of wins), so maxing a plant is still a long "the more you use it,
+// the more it grows" goal. tune BaseExp/GrowthRate here if the pacing needs adjusting - nothing else
+// needs to change
 public static class PlantLevelCurve
 {
     // level 1 starts at 0 skill points (no level-up has happened yet), and each level-up grants
@@ -11,7 +12,8 @@ public static class PlantLevelCurve
     public const int MaxLevel = 26;
     // level 1 to 2 (Tommy, 2026-11-27: 3000, was 3500)
     private const int BaseExp = 3000;
-    private const float GrowthRate = 1.15f;
+    // each level costs this times the one before (Tommy, 2026-11-27: 1.05, was 1.15)
+    private const float GrowthRate = 1.05f;
 
     // exp needed to go from `level` to `level + 1` - this is also the amount a plant's totalExp
     // (progress within the current level, reset to 0 on every level-up) must reach, since exp
