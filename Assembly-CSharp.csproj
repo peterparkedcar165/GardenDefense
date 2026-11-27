@@ -97,6 +97,7 @@
     <Compile Include="Assets\Scripts\InsectDataTypes\MosquitoData.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
     <Compile Include="Assets\Scripts\Environment\WaterZone.cs" />
+    <Compile Include="Assets\Scripts\Environment\SightShade.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\FertilizerManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BoggedBarrierEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\UpdraftField.cs" />
@@ -295,6 +296,7 @@
     <Compile Include="Assets\Scripts\Entities\Plants\Dandelion.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\WeatherFertilizerEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WindshearGrassEffect.cs" />
+    <Compile Include="Assets\Scripts\Entities\Plants\RhodiolaStaffTips.cs" />
     <Compile Include="Assets\Scripts\UI\TooltipFrameLook.cs" />
     <Compile Include="Assets\Scripts\Mulch\SolarFlareMulchEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\QueensAuraEffect.cs" />
@@ -527,6 +529,7 @@
     <Compile Include="Assets\Scripts\Mulch\SeasonedOakMulchData.cs" />
     <Compile Include="Assets\Scripts\HealParticleEffect.cs" />
     <Compile Include="Assets\Scripts\Encyclopedia\EncyclopediaManager.cs" />
+    <Compile Include="Assets\Scripts\Entities\Projectiles\RhodiolaDrainOrb.cs" />
     <Compile Include="Assets\Scripts\UI\MulchSlotView.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ObliviousEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\RejuvenatorMulchData.cs" />
@@ -543,6 +546,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\CaveSpider.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AirBubbleEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\LifesapMulchEffect.cs" />
+    <Compile Include="Assets\Scripts\Environment\LineOfSight.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Glowworm.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Stargazer.cs" />

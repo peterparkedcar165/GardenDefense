@@ -37,6 +37,7 @@ public class RhodiolaDrainOrb : MonoBehaviour
         orb._onArrive = onArrive;
         orb._start = from;
         go.transform.position = from;
+        go.transform.localScale = Vector3.one * 0.5f;
         float distance = Vector2.Distance(from, owner.StaffTipPosition);
         orb._duration = Mathf.Max(0.15f, distance / Mathf.Max(0.01f, speed));
         orb._arcHeight = Mathf.Max(minArc, distance * arcPerUnit);
@@ -72,6 +73,8 @@ public class RhodiolaDrainOrb : MonoBehaviour
         Vector3 control = (_start + end) * 0.5f + Vector3.up * _arcHeight;
         float u = 1f - _t;
         transform.position = u * u * _start + 2f * u * _t * control + _t * _t * end;
+        // half size as it leaves the insect, full size halfway, half size again as it reaches her (Tommy)
+        transform.localScale = Vector3.one * (0.5f + 0.5f * Mathf.Sin(Mathf.PI * _t));
 
         if (_t >= 1f)
         {
