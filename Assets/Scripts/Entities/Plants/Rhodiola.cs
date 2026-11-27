@@ -4,10 +4,10 @@ using UnityEngine.Serialization;
 // her kit (Tommy, 2026-11-27). attack: she flicks her wand at an insect for instant grass damage, and the
 // drained life flows back to her as motes, healing her a little. passive: that heal, and Rejuvenating
 // Burgeon on herself, fill her golden sap; with sap she channels into a hurt plant, healing it over time
-// and spending the sap. skill: revives a fallen plant (unchanged)
+// and spending the sap, shown by her heal ray (RhodiolaHealRay). skill: revives a fallen plant (unchanged)
 public class Rhodiola : Shooter
 {
-    // the mote of life energy (RhodiolaProjectile) her drain sends back to her and her channel sends out
+    // the mote of life energy (RhodiolaProjectile): its trail goes on her drain's orb
     [FormerlySerializedAs("healProjectilePrefab")]
     [SerializeField] private GameObject lifeMotePrefab;
 
@@ -44,7 +44,6 @@ public class Rhodiola : Shooter
     public float ChannelHealMP => (RData?.channelHealMPScaling ?? 0.1f) * magicPower;
     public float ChannelHealPerSecond => (RData?.channelHealPerSecond ?? 30f) + ChannelHealMP;
     private float ChannelTickInterval => Mathf.Max(0.05f, RData?.channelTickInterval ?? 0.25f);
-    private float ChannelMoteSpeed => RData?.channelMoteSpeed ?? 5f;
 
     private float _storedSap;
     public float StoredSap => _storedSap;
@@ -98,6 +97,8 @@ public class Rhodiola : Shooter
         _channelTarget = null;
         _releaseRoutine = null;
         _castTarget = null;
+        _rayBegun = false;
+        if (_healRay != null) _healRay.Hide();
     }
 
     // a soft gold glow over her root (Resources/RhodiolaSapGlow), drawn just above her own sprite
@@ -313,6 +314,12 @@ public class Rhodiola : Shooter
         {
             if (KeepChanneling())
             {
+                // the heal ray starts at her staff just early enough for its beam to reach the ally as the first heal goes out
+                if (!_rayBegun && Time.time >= _channelStartedAt + HealStartSeconds - RhodiolaHealRay.LeadSeconds)
+                {
+                    _rayBegun = true;
+                    if (HealRay != null) HealRay.Begin(_channelTarget);
+                }
                 _channelTickTimer += Time.deltaTime;
                 float interval = ChannelTickInterval;
                 while (_channelTarget != null && _channelTickTimer >= interval)
@@ -392,6 +399,7 @@ public class Rhodiola : Shooter
     {
         CancelFlick();
         _channelTarget = ally;
+        _rayBegun = false;
         _channelUrgent = urgent;
         _channelStartedAt = Time.time;
         // the first heal goes out once she has stepped back
@@ -410,12 +418,27 @@ public class Rhodiola : Shooter
             SetBodyBool(BodyChannelBool, false);
             _channelRecoverUntil = Mathf.Max(Time.time, _channelStartedAt + HealStartSeconds) + HealEndSeconds;
         }
+        if (_rayBegun && _healRay != null) _healRay.Stop();
+        _rayBegun = false;
         _channelTarget = null;
         _channelCheckTimer = 0f;
     }
 
+    // her heal ray (RhodiolaHealRay, Tommy 2026-11-27): a spiral at the point of the crystal on her staff and a beam
+    // from there to the ally, while she channels. made the first time she needs it
+    private RhodiolaHealRay _healRay;
+    private bool _rayBegun;
+    private RhodiolaHealRay HealRay
+    {
+        get
+        {
+            if (_healRay == null) _healRay = RhodiolaHealRay.Create(this, GetMainRenderer(), GemPointWorldPosition);
+            return _healRay;
+        }
+    }
+
     // one heal of the channel: as much sap as it heals, never more than the ally is missing. while
-    // she has Rejuvenating Burgeon herself, it passes the burgeon on
+    // she has Rejuvenating Burgeon herself, it passes the burgeon on. the heal ray shows it (no motes any more)
     private void ChannelTick(float interval)
     {
         Entity ally = _channelTarget;
@@ -426,33 +449,23 @@ public class Rhodiola : Shooter
         ally.Heal(amount, this);
         ReturnMaxLevelHealing(amount);
         if (HasEffect<RejuvenatingBurgeonEffect>()) ApplyBurgeon(ally);
-
-        Vector3 gem = GemWorldPosition();
-        SendMote(new Vector3(gem.x, transform.position.y, transform.position.z), gem.y, ally, ChannelMoteSpeed, null);
-    }
-
-    // a mote of life energy from ground (drawn launchY high) to target; onArrive runs when it gets there.
-    // without the mote prefab the arrival happens at once
-    private void SendMote(Vector3 ground, float launchY, Entity target, float speed, System.Action<Entity> onArrive)
-    {
-        RhodiolaProjectile mote = lifeMotePrefab != null
-            ? Instantiate(lifeMotePrefab, ground, Quaternion.identity).GetComponent<RhodiolaProjectile>() : null;
-        if (mote == null) { onArrive?.Invoke(target); return; }
-        mote.Initialize(target, speed, onArrive);
-        mote.SetLaunchHeight(launchY);
     }
 
     // where the crystal at the tip of her staff is right now: the tip in the frame she's showing
     // (RhodiolaStaffTips, read off every frame of her idle, attack and heal), or gemPixel for a frame not in it,
     // through her sprite's pivot and pixels per unit, mirrored when she faces right (flipX). her drain's orb
-    // lands on it and her channel's life energy leaves from it
+    // lands on it; her heal ray leaves from the crystal's point (GemPointWorldPosition)
     [Tooltip("the crystal's middle for a frame RhodiolaStaffTips doesn't know, art px from the frame's top left (her unflipped art faces left)")]
     [SerializeField] private Vector2 gemPixel = new Vector2(20f, 6f);
 
     public Vector3 StaffTipPosition => GemWorldPosition();
     public SpriteRenderer BodyRenderer => GetMainRenderer();
 
-    private Vector3 GemWorldPosition()
+    private Vector3 GemWorldPosition() => StaffArtPoint(false);
+    // the crystal's point, its far end along the staff (RhodiolaStaffTips.TryGetPoint), or its middle for a frame not in it
+    private Vector3 GemPointWorldPosition() => StaffArtPoint(true);
+
+    private Vector3 StaffArtPoint(bool crystalPoint)
     {
         SpriteRenderer body = GetMainRenderer();
         if (body == null) return transform.position;
@@ -460,7 +473,12 @@ public class Rhodiola : Shooter
         float ppu = sprite != null ? sprite.pixelsPerUnit : 64f;
         Vector2 pivot = sprite != null ? sprite.pivot : new Vector2(32f, 32f);
         float height = sprite != null ? sprite.rect.height : 64f;
-        Vector2 tip = sprite != null && RhodiolaStaffTips.TryGet(sprite.name, out Vector2 known) ? known : gemPixel;
+        Vector2 tip = gemPixel;
+        if (sprite != null)
+        {
+            if (crystalPoint && RhodiolaStaffTips.TryGetPoint(sprite.name, out Vector2 point)) tip = point;
+            else if (RhodiolaStaffTips.TryGet(sprite.name, out Vector2 known)) tip = known;
+        }
         Vector2 local = new Vector2((tip.x - pivot.x) / ppu, (height - tip.y - pivot.y) / ppu);
         if (body.flipX) local.x = -local.x;
         return body.transform.TransformPoint(local);

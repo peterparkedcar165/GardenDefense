@@ -1015,6 +1015,9 @@ public abstract class Entity : MonoBehaviour
         return transform.position;
     }
 
+    // the same, for things outside that aim at the sprite (Rhodiola's heal ray)
+    public Vector3 VisualCenter => GetVisualCenter();
+
 // upon spawning, occurs before Start()
     protected virtual void Awake()
     {

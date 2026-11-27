@@ -47,7 +47,7 @@ public class RhodiolaData : PlantData
     public float channelHealMPScaling = 0.1f;
     [Tooltip("seconds between the channel's heals (proposal)")]
     public float channelTickInterval = 0.25f;
-    [Tooltip("how fast the life energy she sends flies, units per second (proposal)")]
+    [Tooltip("unused since her heal ray (2026-11-27): how fast the life energy her channel sent flew, units per second")]
     public float channelMoteSpeed = 5f;
 
     [Header("Path 2 Max Level Bonus")]
