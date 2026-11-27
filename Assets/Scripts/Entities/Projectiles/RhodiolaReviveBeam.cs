@@ -18,8 +18,8 @@ public class RhodiolaReviveBeam : MonoBehaviour
     private SpriteRenderer _renderer;
     private float _age;
 
-    // tileCenter: the middle of the revived plant's tile
-    public static void Play(Vector3 tileCenter)
+    // tileCenter: the middle of the revived plant's tile. glint: her projectile's glint material, for the glitter
+    public static void Play(Vector3 tileCenter, Material glint = null)
     {
         if (_frames == null)
         {
@@ -57,7 +57,7 @@ public class RhodiolaReviveBeam : MonoBehaviour
         // its glitter, along the part of it the camera shows
         float shownTop = cam != null ? Mathf.Min(top, cam.transform.position.y + cam.orthographicSize) : top;
         ReviveGlitter.Begin(new Vector3(tileCenter.x, bottom, tileCenter.z), Mathf.Max(0.5f, shownTop - bottom),
-            _frames.Length * FrameSeconds * GlitterShare);
+            _frames.Length * FrameSeconds * GlitterShare, glint);
     }
 
     // the glitter comes out for this share of the beam's time, while it's full (it thins out after)
@@ -81,7 +81,8 @@ public class RhodiolaReviveBeam : MonoBehaviour
 
 // the revive beam's glitter (Tommy, 2026-11-27): sparkles born on the beam's middle line, anywhere up the part of it
 // the camera shows, that move out sideways (left or right), ease off and drift a little upward, twinkling in and out
-// like a mulch drop's glints (MulchRegistry's glitter material, white). on the beam's clock: real time, so game
+// in her projectile's glint (Tommy, 2026-11-27: the same colours as her drain orb's sparkles; a mulch drop's white
+// glints, MulchRegistry's glitter material, only when there's no glint). on the beam's clock: real time, so game
 // speed doesn't hurry it, frozen while paused. it's its own object, so its sparkles finish after the beam is gone
 public class ReviveGlitter : MonoBehaviour
 {
@@ -95,8 +96,9 @@ public class ReviveGlitter : MonoBehaviour
     private float _age;
     private float _budget;
     private bool _paused;
+    private Material _glint;
 
-    public static void Begin(Vector3 bottom, float height, float emitSeconds)
+    public static void Begin(Vector3 bottom, float height, float emitSeconds, Material glint = null)
     {
         GameObject go = new GameObject("ReviveGlitter");
         go.layer = LayerMask.NameToLayer("Ignore Raycast");
@@ -104,13 +106,15 @@ public class ReviveGlitter : MonoBehaviour
         ReviveGlitter glitter = go.AddComponent<ReviveGlitter>();
         glitter._height = height;
         glitter._emitSeconds = emitSeconds;
+        glitter._glint = glint;
         glitter.Build();
     }
 
-    private void Build() => _ps = MakeSystem(gameObject);
+    private void Build() => _ps = MakeSystem(gameObject, _glint);
 
-    // the glitter's particle system on go, playing, emitted by hand (also the dead plant glitter's, DeadPlantGlitter)
-    public static ParticleSystem MakeSystem(GameObject go)
+    // the glitter's particle system on go, playing, emitted by hand (also the dead plant glitter's, DeadPlantGlitter).
+    // with a glint material (her projectile's) its sparkles keep the glint's own colours, white otherwise tinted
+    public static ParticleSystem MakeSystem(GameObject go, Material glint = null)
     {
         ParticleSystem _ps = go.AddComponent<ParticleSystem>();
         _ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -124,7 +128,7 @@ public class ReviveGlitter : MonoBehaviour
         main.startLifetime = new ParticleSystem.MinMaxCurve(0.9f, 1.5f);
         main.startSpeed = 0f;
         main.startSize = new ParticleSystem.MinMaxCurve(0.09f, 0.165f);
-        main.startColor = GlitterColor;
+        main.startColor = glint != null ? Color.white : GlitterColor;
         main.gravityModifier = 0f;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         main.maxParticles = 600;
@@ -162,7 +166,8 @@ public class ReviveGlitter : MonoBehaviour
 
         ParticleSystemRenderer renderer = go.GetComponent<ParticleSystemRenderer>();
         MulchRegistry registry = Resources.Load<MulchRegistry>("MulchRegistry");
-        if (registry != null && registry.glitterMaterial != null) renderer.sharedMaterial = registry.glitterMaterial;
+        if (glint != null) renderer.sharedMaterial = glint;
+        else if (registry != null && registry.glitterMaterial != null) renderer.sharedMaterial = registry.glitterMaterial;
         renderer.renderMode = ParticleSystemRenderMode.Billboard;
         renderer.sortingLayerName = "Non-Colliders_Air";
         renderer.sortingOrder = 101;
@@ -210,21 +215,25 @@ public class ReviveGlitter : MonoBehaviour
 public class DeadPlantGlitter : MonoBehaviour
 {
     private const float PerSecond = 5f;
-    // light green (Tommy, 2026-11-27). the glitter material is unlit, so the night light never dims them
+    // in her projectile's glint like her skill's other glitter (Tommy, 2026-11-27), light green only without one.
+    // both materials are unlit, so the night light never dims them
     private static readonly Color SparkleColor = new Color(0.6f, 1f, 0.5f, 1f);
     private ParticleSystem _ps;
     private float _budget;
     private bool _stopping, _paused;
 
-    public static DeadPlantGlitter Begin(Vector3 tileCenter)
+    public static DeadPlantGlitter Begin(Vector3 tileCenter, Material glint = null)
     {
         GameObject go = new GameObject("DeadPlantGlitter");
         go.layer = LayerMask.NameToLayer("Ignore Raycast");
         go.transform.position = tileCenter;
         DeadPlantGlitter glitter = go.AddComponent<DeadPlantGlitter>();
-        glitter._ps = ReviveGlitter.MakeSystem(go);
-        ParticleSystem.MainModule main = glitter._ps.main;
-        main.startColor = SparkleColor;
+        glitter._ps = ReviveGlitter.MakeSystem(go, glint);
+        if (glint == null)
+        {
+            ParticleSystem.MainModule main = glitter._ps.main;
+            main.startColor = SparkleColor;
+        }
         return glitter;
     }
 

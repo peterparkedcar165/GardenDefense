@@ -14,6 +14,24 @@ public class Rhodiola : Shooter
 
     private RhodiolaData RData => data as RhodiolaData;
 
+    // her projectile's glint, the life mote's particle material: her skill's glitter wears it too, so the revive
+    // beam's and the fallen plants' sparkles have her drain orb's colours (Tommy, 2026-11-27)
+    private Material _glint;
+    private bool _glintLooked;
+    private Material Glint
+    {
+        get
+        {
+            if (!_glintLooked)
+            {
+                _glintLooked = true;
+                ParticleSystemRenderer r = lifeMotePrefab != null ? lifeMotePrefab.GetComponentInChildren<ParticleSystemRenderer>(true) : null;
+                _glint = r != null ? r.sharedMaterial : null;
+            }
+            return _glint;
+        }
+    }
+
     // her passive bar is her golden sap, gold, directly under her health bar
     protected override bool GetPassiveBarVisible() => true;
     protected override float GetPassiveBarFill() => SapCap > 0f ? Mathf.Clamp01(_storedSap / SapCap) : 0f;
@@ -141,7 +159,7 @@ public class Rhodiola : Shooter
         {
             Tile t = kvp.Value;
             if (t == null || !t.HasDeadPlant || _deadGlitter.ContainsKey(t)) continue;
-            _deadGlitter[t] = DeadPlantGlitter.Begin(t.transform.position);
+            _deadGlitter[t] = DeadPlantGlitter.Begin(t.transform.position, Glint);
         }
         // a tile whose plant came back (or whose record went) stops
         _glitterGone.Clear();
@@ -636,7 +654,7 @@ public class Rhodiola : Shooter
 
         skillCooldownTimer = skillCooldown;
         // the light coming down on it (Tommy, 2026-11-27)
-        RhodiolaReviveBeam.Play(tile.transform.position);
+        RhodiolaReviveBeam.Play(tile.transform.position, Glint);
         HealRevived(revived);
 
         if (SkillTreeManager.HasUnlock(this, RevivalAoeUnlock))
@@ -682,7 +700,7 @@ public class Rhodiola : Shooter
             if (!neighbor.HasDeadPlant) continue;
             Plant revivedNeighbor = Plant.RevivePlant(neighbor, true);
             if (revivedNeighbor == null) continue;
-            RhodiolaReviveBeam.Play(neighbor.transform.position);
+            RhodiolaReviveBeam.Play(neighbor.transform.position, Glint);
             HealRevived(revivedNeighbor);
         }
     }
