@@ -12,6 +12,8 @@ public class UnderwaterGridManager : MonoBehaviour
     [SerializeField] private Tilemap groundTilemap;
     [SerializeField] private Tilemap pathTilemap;
     [SerializeField] private Tilemap colliderTilemap;
+    // obstacles that don't block sight (Tommy, 2026-11-28). left empty, the "LowCollider" tilemap beside Collider
+    [SerializeField] private Tilemap lowColliderTilemap;
     [SerializeField] private Tilemap highgroundGroundTilemap;
     [SerializeField] private Tilemap lightColliderTilemap;
     [SerializeField] private Tilemap airBubbleTilemap;
@@ -30,6 +32,8 @@ public class UnderwaterGridManager : MonoBehaviour
 
     void GenerateGrid()
     {
+        if (lowColliderTilemap == null)
+            lowColliderTilemap = GridTilemaps.Sibling(colliderTilemap != null ? colliderTilemap : groundTilemap, "LowCollider");
         Dictionary<Vector2Int, Tile> tileMap = new Dictionary<Vector2Int, Tile>();
 
         for (int x = 0; x < columns; x++)
@@ -46,13 +50,15 @@ public class UnderwaterGridManager : MonoBehaviour
                 // LightCollider counts as a collider too, same as every other biome's campfire-style tile
                 bool hasCollider         = (colliderTilemap != null && colliderTilemap.HasTile(cell))
                                          || (lightColliderTilemap != null && lightColliderTilemap.HasTile(cell));
+                bool hasLowCollider      = lowColliderTilemap      != null && lowColliderTilemap.HasTile(cell);
                 bool hasPath             = pathTilemap             != null && pathTilemap.HasTile(cell);
                 bool hasHighgroundGround = highgroundGroundTilemap != null && highgroundGroundTilemap.HasTile(cell);
                 bool hasAirBubble        = airBubbleTilemap        != null && airBubbleTilemap.HasTile(cell);
 
-                // priority: collider > path > ground (default seafloor). air bubble is a
+                // priority: collider > low collider (sees through) > path > ground (default seafloor). air bubble is a
                 // standalone flag, independent of tileType — a bubble can sit on any tile
                 if      (hasCollider) t.tileType = TileType.Obstacle;
+                else if (hasLowCollider) { t.obstacleBlocksSight = false; t.tileType = TileType.Obstacle; }
                 else if (hasPath)     t.tileType = TileType.Path;
                 else                  t.tileType = TileType.Seafloor;
 

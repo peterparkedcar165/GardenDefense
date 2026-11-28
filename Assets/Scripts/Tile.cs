@@ -95,6 +95,19 @@ public class Tile : MonoBehaviour
     public FlowerPot flowerPot;
     public WaterPot  waterPot;
 
+    // an obstacle that doesn't block sight: a LowCollider cell (Tommy, 2026-11-28). kept on its box (ObstacleZone)
+    private bool _obstacleBlocksSight = true;
+    public bool obstacleBlocksSight
+    {
+        get => _obstacleBlocksSight;
+        set
+        {
+            _obstacleBlocksSight = value;
+            ObstacleZone zone = GetComponentInChildren<ObstacleZone>();
+            if (zone != null) zone.blocksSight = value;
+        }
+    }
+
     private TileType _tileType;
     public TileType tileType
     {
@@ -138,7 +151,7 @@ public class Tile : MonoBehaviour
         col.isTrigger = false;
         col.size = new Vector2(0.9f, 0.9f);
 
-        zone.AddComponent<ObstacleZone>();
+        zone.AddComponent<ObstacleZone>().blocksSight = _obstacleBlocksSight;
     }
 
     private void OnMouseDown()

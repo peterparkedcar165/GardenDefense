@@ -11,6 +11,8 @@ public class DaytimeGridManager : MonoBehaviour
     [SerializeField] private Tilemap groundTilemap;
     [SerializeField] private Tilemap pathTilemap;
     [SerializeField] private Tilemap colliderTilemap;
+    // obstacles that don't block sight (Tommy, 2026-11-28). left empty, the "LowCollider" tilemap beside Collider
+    [SerializeField] private Tilemap lowColliderTilemap;
     [SerializeField] private Tilemap waterTilemap;
     [SerializeField] private Tilemap dirtTilemap;
     [SerializeField] private Tilemap highgroundGroundTilemap;
@@ -24,6 +26,8 @@ public class DaytimeGridManager : MonoBehaviour
 
     void GenerateGrid()
     {
+        if (lowColliderTilemap == null)
+            lowColliderTilemap = GridTilemaps.Sibling(colliderTilemap != null ? colliderTilemap : groundTilemap, "LowCollider");
         Dictionary<Vector2Int, Tile> tileMap = new Dictionary<Vector2Int, Tile>();
 
         for (int x = 0; x < columns; x++)
@@ -39,6 +43,7 @@ public class DaytimeGridManager : MonoBehaviour
                 Vector3Int cell = groundTilemap.WorldToCell(worldPos);
 
                 bool hasCollider         = colliderTilemap         != null && colliderTilemap.HasTile(cell);
+                bool hasLowCollider      = lowColliderTilemap      != null && lowColliderTilemap.HasTile(cell);
                 bool hasPath             = pathTilemap             != null && pathTilemap.HasTile(cell);
                 bool hasWater            = waterTilemap            != null && waterTilemap.HasTile(cell);
                 bool hasDirt             = dirtTilemap             != null && dirtTilemap.HasTile(cell);
@@ -46,8 +51,9 @@ public class DaytimeGridManager : MonoBehaviour
                 bool hasLowgroundGround  = lowgroundGroundTilemap  != null && lowgroundGroundTilemap.HasTile(cell);
                 bool hasLowgroundWater   = lowgroundWaterTilemap   != null && lowgroundWaterTilemap.HasTile(cell);
 
-                // priority: collider > path > water > dirt > highground > lowground > ground (default grass)
+                // priority: collider > low collider (sees through) > path > water > dirt > highground > lowground > ground (default grass)
                 if      (hasCollider)         t.tileType = TileType.Obstacle;
+                else if (hasLowCollider)      { t.obstacleBlocksSight = false; t.tileType = TileType.Obstacle; }
                 else if (hasPath)             t.tileType = TileType.Path;
                 else if (hasWater)            t.tileType = TileType.Water;
                 else if (hasLowgroundWater)   t.tileType = TileType.Water;

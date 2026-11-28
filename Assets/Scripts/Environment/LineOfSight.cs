@@ -2,7 +2,8 @@ using UnityEngine;
 
 // what a plant that needs a clear line can see (Tommy, 2026-11-27). from where it stands, Rays rays go out
 // (one every half degree) to the first blocker: an obstacle tile's box (Tile.SpawnObstacleZone) or a cliff's
-// edge (CliffBuilder), both on the Obstacle layer. from high ground only obstacles standing on high ground block
+// edge (CliffBuilder), both on the Obstacle layer; a LowCollider cell's box never blocks (Tommy, 2026-11-28). from
+// high ground only obstacles standing on high ground block
 // (it sees down past cliffs and over everything on low ground). who casts them and when is the plant's business (Plant;
 // a flying insect is hidden only when the low part of the line to it is blocked, Plant.InSight). the same rays decide its targeting and paint the red part of its range
 // circle (SightShade)
@@ -37,6 +38,10 @@ public static class LineOfSight
         }
     }
 
+    // a LowCollider cell's box (Tommy, 2026-11-28): an obstacle for placing and for insects, but sight, shots and
+    // skills pass over it
+    private static bool SeeThrough(Collider2D col) => col.TryGetComponent(out ObstacleZone zone) && !zone.blocksSight;
+
     // from high ground only an obstacle standing on high ground blocks (Tommy, 2026-11-27, "block on same level"; for a
     // while low ones blocked too, until he saw a raised Sunflower in Level 2 blocked by bushes below): a tile's box whose
     // tile is raised. it sees down past cliff edges and over everything on low ground
@@ -45,6 +50,8 @@ public static class LineOfSight
         Transform tile = col.transform.parent;
         return tile != null && tile.TryGetComponent(out Tile t) && t.isHighground;
     }
+
+    private static bool Blocks(Collider2D col, bool fromHigh) => !SeeThrough(col) && (!fromHigh || BlocksFromHigh(col));
 
     // each ray's clear distance from origin, MaxDistance where nothing blocks it. fromHigh: looking from high ground
     public static void Cast(Vector2 origin, float[] into, bool fromHigh = false)
@@ -55,14 +62,15 @@ public static class LineOfSight
             Vector2 dir = new Vector2(Mathf.Cos(a), Mathf.Sin(a));
             if (!fromHigh)
             {
+                // one cast is enough unless the first thing it meets is a see through box
                 RaycastHit2D hit = Physics2D.CircleCast(origin, RayRadius, dir, MaxDistance, BlockMask);
-                into[i] = hit.collider != null ? hit.distance + RayRadius : MaxDistance;
-                continue;
+                if (hit.collider == null) { into[i] = MaxDistance; continue; }
+                if (!SeeThrough(hit.collider)) { into[i] = hit.distance + RayRadius; continue; }
             }
             float best = MaxDistance;
             int n = Physics2D.CircleCast(origin, RayRadius, dir, Filter, Hits, MaxDistance);
             for (int k = 0; k < n; k++)
-                if (Hits[k].collider != null && BlocksFromHigh(Hits[k].collider) && Hits[k].distance + RayRadius < best)
+                if (Hits[k].collider != null && Blocks(Hits[k].collider, fromHigh) && Hits[k].distance + RayRadius < best)
                     best = Hits[k].distance + RayRadius;
             into[i] = best;
         }
@@ -90,15 +98,15 @@ public static class LineOfSight
         if (!fromHigh)
         {
             RaycastHit2D hit = Physics2D.Linecast(a, b, BlockMask);
-            at = hit.collider != null ? hit.point : b;
-            return hit.collider != null;
+            if (hit.collider == null) { at = b; return false; }
+            if (!SeeThrough(hit.collider)) { at = hit.point; return true; }
         }
         int n = Physics2D.Linecast(a, b, Filter, Hits);
         float best = float.MaxValue;
         at = b;
         for (int k = 0; k < n; k++)
         {
-            if (Hits[k].collider == null || !BlocksFromHigh(Hits[k].collider) || Hits[k].distance >= best) continue;
+            if (Hits[k].collider == null || !Blocks(Hits[k].collider, fromHigh) || Hits[k].distance >= best) continue;
             best = Hits[k].distance;
             at = Hits[k].point;
         }
@@ -121,7 +129,7 @@ public static class LineOfSight
         Collider2D[] near = Physics2D.OverlapCircleAll(origin, range + 1f, BlockMask);
         sb.AppendLine($"  Obstacle layer colliders within {range + 1f:F1}: {near.Length}");
         foreach (Collider2D c in near)
-            sb.AppendLine($"    {c.GetType().Name} '{c.name}' under '{(c.transform.parent != null ? c.transform.parent.name : "-")}' centre ({c.bounds.center.x:F2}, {c.bounds.center.y:F2}) size ({c.bounds.size.x:F2}, {c.bounds.size.y:F2})");
+            sb.AppendLine($"    {c.GetType().Name} '{c.name}' under '{(c.transform.parent != null ? c.transform.parent.name : "-")}' centre ({c.bounds.center.x:F2}, {c.bounds.center.y:F2}) size ({c.bounds.size.x:F2}, {c.bounds.size.y:F2}){(SeeThrough(c) ? " see through (LowCollider)" : "")}");
         for (int k = 0; k < 8; k++)
         {
             float a = k * Mathf.PI / 4f;
