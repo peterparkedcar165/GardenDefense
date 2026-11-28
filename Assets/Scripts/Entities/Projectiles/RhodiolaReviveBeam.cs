@@ -209,12 +209,13 @@ public class ReviveGlitter : MonoBehaviour
     }
 }
 
-// sparkles rising from a tile where a plant has fallen, while a Rhodiola is selected (Tommy, 2026-11-27): a sign there's
-// a plant her skill can bring back. the revive beam's glitter, born over the tile and drifting up, on real time but
+// sparkles rising from a tile where a plant has fallen, while a Rhodiola is on the field (Tommy, 2026-11-27; not only
+// while one is selected since 2026-11-28): a sign there's a plant her skill can bring back. the revive beam's glitter, born over the tile and drifting up, on real time but
 // frozen while paused. Stop lets the last ones fade
 public class DeadPlantGlitter : MonoBehaviour
 {
-    private const float PerSecond = 5f;
+    // twice the first 5 (Tommy, 2026-11-28)
+    private const float PerSecond = 10f;
     // in her projectile's glint like her skill's other glitter (Tommy, 2026-11-27), light green only without one.
     // both materials are unlit, so the night light never dims them
     private static readonly Color SparkleColor = new Color(0.6f, 1f, 0.5f, 1f);

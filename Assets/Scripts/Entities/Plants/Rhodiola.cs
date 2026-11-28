@@ -59,6 +59,7 @@ public class Rhodiola : Shooter
     // Attack path max level bonus (Tommy, 2026-11-27): this share of her grass damage goes to the heals and shields she
     // gives (1: her healing benefits from her grass damage as her damage does)
     public float GrassConversion => RData?.baseGrassConversion ?? 1f;
+    public float MaxLevelGrassDamage => RData?.maxLevelGrassDamage ?? 0.35f;
 
     // ---------- attack: drain ----------
     // her drain heals her for this share of the damage the hit really dealt
@@ -139,22 +140,35 @@ public class Rhodiola : Shooter
         _bloomTo = null;
         _bloomFrom = null;
         _switchTo = null;
-        ClearDeadPlantGlitter();
+        if (_glitterKeeper == this) ClearDeadPlantGlitter();
     }
 
-    // sparkles rising over every tile where a plant has fallen, while she's selected (Tommy, 2026-11-27): the plants
-    // her skill can bring back (DeadPlantGlitter)
-    private readonly Dictionary<Tile, DeadPlantGlitter> _deadGlitter = new Dictionary<Tile, DeadPlantGlitter>();
-    private readonly List<Tile> _glitterGone = new List<Tile>();
-    private float _deadGlitterCheck;
+    // sparkles rising over every tile where a plant has fallen, while a Rhodiola is on the field (Tommy, 2026-11-27:
+    // while she was selected; 2026-11-28: always): the plants her skill can bring back (DeadPlantGlitter). one set for
+    // every Rhodiola, kept by the first one alive, so two of them don't double the sparkles
+    private static readonly Dictionary<Tile, DeadPlantGlitter> _deadGlitter = new Dictionary<Tile, DeadPlantGlitter>();
+    private static readonly List<Tile> _glitterGone = new List<Tile>();
+    private static float _deadGlitterCheck;
+    private static Rhodiola _glitterKeeper;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetGlitter()
+    {
+        _deadGlitter.Clear();
+        _glitterGone.Clear();
+        _deadGlitterCheck = 0f;
+        _glitterKeeper = null;
+    }
 
     private void UpdateDeadPlantGlitter()
     {
-        if (!IsSelected || !IsAlive)
+        if (!IsAlive)
         {
-            if (_deadGlitter.Count > 0) ClearDeadPlantGlitter();
+            if (_glitterKeeper == this) ClearDeadPlantGlitter();
             return;
         }
+        if (_glitterKeeper == null || !_glitterKeeper.IsAlive || !_glitterKeeper.isActiveAndEnabled) _glitterKeeper = this;
+        if (_glitterKeeper != this) return;
         _deadGlitterCheck -= Time.unscaledDeltaTime;
         if (_deadGlitterCheck > 0f) return;
         _deadGlitterCheck = 0.25f;
@@ -175,10 +189,13 @@ public class Rhodiola : Shooter
         }
     }
 
-    private void ClearDeadPlantGlitter()
+    // the sparkles stop (the keeper went); another Rhodiola still on the field starts them again on her next frame
+    private static void ClearDeadPlantGlitter()
     {
         foreach (DeadPlantGlitter g in _deadGlitter.Values) if (g != null) g.Stop();
         _deadGlitter.Clear();
+        _glitterKeeper = null;
+        _deadGlitterCheck = 0f;
     }
 
     // a soft gold glow over her root (Resources/RhodiolaSapGlow), drawn just above her own sprite
@@ -225,6 +242,9 @@ public class Rhodiola : Shooter
 
     public override void UpdateStats()
     {
+        // Attack path max level bonus (Tommy, 2026-11-28): more Grass Damage, set fresh every frame as a base value (like
+        // Begonia's), so anything that multiplies her Grass Damage scales it too and her healing below counts it
+        if (data != null) baseGrassDamage = data.baseGrassDamage + (IsPath1Maxed ? MaxLevelGrassDamage : 0f);
         base.UpdateStats();
         skillCooldown = Mathf.Max(MinSkillCooldown, skillCooldown);
 
@@ -825,7 +845,7 @@ public class Rhodiola : Shooter
                $"Increase <color=green><b>Base Attack Damage</b></color> by <color=green><b>{dmgpl:F0}</b></color> per level. [<color=green><b>+{dmgpl * effectivePath1Level:F0}</b></color>]\n\n" +
                $"Increase <color=green><b>Base Attack Range</b></color> by <color=green><b>{rangepl:F1}</b></color> per level. [<color=green><b>+{rangepl * effectivePath1Level:F1}</b></color>]\n\n" +
                $"Increase the healing to {GoldenSapLabel} depletion ratio by <color=#FFD700><b>{effpl * 100f:F0}%</b></color> per level. [<color=#FFD700><b>+{effpl * effectivePath1Level * 100f:F0}%</b></color>]\n\n" +
-               $"{Level5Section(path1Level, "<color=green><b>Healing</b></color> also benefits from <color=green><b>Grass Damage</b></color>.")}\n\n" +
+               $"{Level5Section(path1Level, $"<color=green><b>Healing</b></color> also benefits from <color=green><b>Grass Damage</b></color>.\n\nIncrease <color=green><b>Grass Damage</b></color> by <color=green><b>{MaxLevelGrassDamage * 100f:F0}%</b></color>.")}\n\n" +
                $"Level: [<color=green><b>{path1Level}/{pathLevelCap}</b></color>] <color=green><b>(+{effectivePath1Level - path1Level})</b></color>\n\n" +
                ShiftHint(details);
     }

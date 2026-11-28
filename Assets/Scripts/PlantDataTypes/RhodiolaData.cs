@@ -28,6 +28,8 @@ public class RhodiolaData : PlantData
     public float path1SapEfficiencyPerLevel = 0.1f;
     [Tooltip("Attack path max level bonus: share of her Grass Damage added to Heals & Shields she gives, 1 = all of it (Tommy, 2026-11-27: her healing also benefits from Grass Damage; it was 50%, always on before)")]
     public float baseGrassConversion = 1f;
+    [Tooltip("Attack path max level bonus: added to her base Grass Damage, e.g. 0.35 = +35% (Tommy, 2026-11-28)")]
+    public float maxLevelGrassDamage = 0.35f;
 
     [Header("Golden Sap (passive)")]
     [Tooltip("how much golden sap she can hold at passive level 0")]
