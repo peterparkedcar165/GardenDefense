@@ -108,7 +108,7 @@ public class IceBeam : MonoBehaviour
         float body = LineOfSight.GroundAt(feet) + Mathf.Max(Heights.Body, targetHeight);
         float along = length / targetDistance;
         Vector2 groundEnd = (Vector2)(origin + direction * length) - Vector2.up * (targetHeight * along);
-        if (!LineOfSight.Blocked(origin, eye, groundEnd, Mathf.LerpUnclamped(eye, body, along), out Vector2 at)) return range;
+        if (!LineOfSight.Blocked(origin, eye, groundEnd, Mathf.LerpUnclamped(eye, body, along), _owner.OnHighground, out Vector2 at)) return range;
         float groundLength = Vector2.Distance(origin, groundEnd);
         return groundLength > 0.0001f ? length * Vector2.Distance(origin, at) / groundLength : 0f;
     }

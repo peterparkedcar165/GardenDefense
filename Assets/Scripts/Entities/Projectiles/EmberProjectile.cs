@@ -123,6 +123,8 @@ public class EmberProjectile : MonoBehaviour
     private bool _lineSet;
     private Vector2 _lineFrom;
     private float _lineFromZ;
+    // set off from high ground: nothing standing on low ground stops it
+    private bool _lineFromHigh;
 
     private bool Crashes(Vector2 groundFrom, Vector2 groundTo, Vector2 targetGround, float targetZ)
     {
@@ -131,10 +133,11 @@ public class EmberProjectile : MonoBehaviour
             _lineSet = true;
             _lineFrom = _isBounce ? groundFrom : (Vector2)_source.transform.position;
             _lineFromZ = _isBounce ? LineOfSight.BodyAt(groundFrom) : _source.EyeZ;
+            _lineFromHigh = _isBounce ? LineOfSight.GroundAt(groundFrom) > 0f : _source.OnHighground;
         }
         float zFrom = LineOfSight.HeightAlong(_lineFrom, _lineFromZ, targetGround, targetZ, groundFrom);
         float zTo = LineOfSight.HeightAlong(_lineFrom, _lineFromZ, targetGround, targetZ, groundTo);
-        return LineOfSight.Blocked(groundFrom, zFrom, groundTo, zTo, out _);
+        return LineOfSight.Blocked(groundFrom, zFrom, groundTo, zTo, _lineFromHigh, out _);
     }
 
     private void Detonate()

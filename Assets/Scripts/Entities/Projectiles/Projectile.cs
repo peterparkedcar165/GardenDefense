@@ -287,7 +287,7 @@ public abstract class Projectile : MonoBehaviour
         {
             float zTo = LineZ(transform.position);
             _lineZ = zTo;
-            if (LineOfSight.Blocked(stepFrom, zFrom, transform.position, zTo, out Vector2 blockedAt))
+            if (LineOfSight.Blocked(stepFrom, zFrom, transform.position, zTo, source.OnHighground, out Vector2 blockedAt))
             {
                 transform.position = new Vector3(blockedAt.x, blockedAt.y, transform.position.z);
                 OnBlocked();

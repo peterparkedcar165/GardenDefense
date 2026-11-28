@@ -5,8 +5,9 @@ using UnityEngine;
 // (Heights): a plant's eye sits Heights.Eye over its ground and looks at bodies (Heights.Body over theirs, a flyer as
 // high as it flies), and a straight line between them is stopped only by what stands above it there: from low ground a
 // boulder, bush or forest hides what's behind it and the ground up on a cliff stays out of sight (a body standing near
-// the top of one shows over the edge); from high ground a plant sees bodies below the cliff and over the boulders and
-// bushes below, but not past a forest. a LowCollider cell never blocks. shots fly along the same line, skill lines
+// the top of one shows over the edge); from high ground nothing standing on low ground blocks it (Tommy, 2026-11-28: it
+// sees and targets past the obstacles below, forests too, unless they stand on high ground as well). a LowCollider
+// cell never blocks. shots fly along the same line, skill lines
 // level at the plant's eye height. light doesn't use any of it: lights are round and go through everything (Tommy,
 // 2026-11-28). insects still bump into the physics shapes (Tile.ShapeObstacle, CliffBuilder's edges)
 public static class LineOfSight
@@ -14,8 +15,8 @@ public static class LineOfSight
     public const float MaxDistance = 40f;
 
     // the lines from a middle out to reach (a plant's own fan, or a placing preview's)
-    public static RayFan Cast(Vector2 origin, float eyeZ, float reach, RayFan reuse = null, float raysPerPixel = 2f) =>
-        RayFan.Cast(origin, eyeZ, reach, reuse, raysPerPixel);
+    public static RayFan Cast(Vector2 origin, float eyeZ, bool fromHigh, float reach, RayFan reuse = null, float raysPerPixel = 2f) =>
+        RayFan.Cast(origin, eyeZ, fromHigh, reach, reuse, raysPerPixel);
 
     // the ground's height at a point: Heights.Cliff up on a cliff, 0 below
     public static float GroundAt(Vector2 p) => LightMask.LevelAt(p);
@@ -32,12 +33,13 @@ public static class LineOfSight
         return LightMask.LevelAt(at) + body;
     }
 
-    // is the straight line from a point at one height to a point at another clear
-    public static bool Sees(Vector2 from, float fromZ, Vector2 to, float toZ)
+    // is the straight line from a point at one height to a point at another clear. fromHigh: a look from high ground,
+    // which nothing standing on low ground stops
+    public static bool Sees(Vector2 from, float fromZ, Vector2 to, float toZ, bool fromHigh)
     {
         float dist = Vector2.Distance(from, to);
         if (dist < 1e-4f) return true;
-        return LightMask.Clear(from, fromZ, to, toZ, LightMask.OwnCell(from)) >= dist - 1e-4f;
+        return LightMask.Clear(from, fromZ, to, toZ, LightMask.OwnCell(from), fromHigh) >= dist - 1e-4f;
     }
 
     // the height of the straight line from one point and height to another, over a point along it (a shot's, on its
@@ -54,11 +56,12 @@ public static class LineOfSight
     public static bool Blocked(Vector2 a, Vector2 b, bool fromHigh, out Vector2 at)
     {
         float eye = Heights.EyeOver(fromHigh);
-        return LightMask.Blocked(a, eye, b, eye, out at);
+        return LightMask.Blocked(a, eye, b, eye, fromHigh, out at);
     }
 
-    // whether a step from a (za over low ground) to b (zb) runs into something, and where (a shot along its line)
-    public static bool Blocked(Vector2 a, float za, Vector2 b, float zb, out Vector2 at) => LightMask.Blocked(a, za, b, zb, out at);
+    // whether a step from a (za over low ground) to b (zb) runs into something, and where (a shot along its line).
+    // fromHigh: shot from high ground, which nothing standing on low ground stops
+    public static bool Blocked(Vector2 a, float za, Vector2 b, float zb, bool fromHigh, out Vector2 at) => LightMask.Blocked(a, za, b, zb, fromHigh, out at);
 
 #if UNITY_EDITOR
     // F8 readout (editor only; Plant for a selected plant, CursorIcon while placing one): what the lines from origin

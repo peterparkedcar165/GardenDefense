@@ -11,8 +11,10 @@ using UnityEngine;
 // obstacle: a boulder or bush Rock (half a taller picture), a forest cell a pine stands in Tree, while a forest cell
 // that only shows the tops of pines standing below it holds nothing (their branches are up in the air). gaps under
 // SealPixels * 2 across between obstacles are sealed (Tommy: narrow gaps blocked for both).
-// a straight line from a light or an eye to a point is stopped where something reaches above it. a line from inside
-// an obstacle's own cell (a lamp tile) isn't stopped by that cell. rebuilt when an obstacle or cliff changes (Version)
+// a straight line from an eye to a point is stopped where something reaches above it, except that from high ground
+// nothing standing on low ground stops it (Tommy, 2026-11-28: a plant on high ground sees and targets past the
+// obstacles below, unless those stand on high ground as well). a line from inside an obstacle's own cell (a lamp
+// tile) isn't stopped by that cell. rebuilt when an obstacle or cliff changes (Version)
 public static class LightMask
 {
     public const int PixelsPerUnit = 64;
@@ -31,6 +33,9 @@ public static class LightMask
     private static ushort[] _top;     // how high the pixel's blocker reaches over low ground, in pixels, 0 open low ground
     private static bool[] _raised;    // raised ground out to its drawn edge
     private static readonly Dictionary<ObstacleZone, int> _ids = new Dictionary<ObstacleZone, int>();
+    // per obstacle id, whether it stands on high ground (only those stop a look from high ground)
+    private static readonly List<bool> _high = new List<bool> { false };
+    private static bool[] _highOf = { false };
     // the sealing's working space, kept between builds
     private static int[] _sealDist, _sealBack, _sealNear;
 
@@ -46,6 +51,9 @@ public static class LightMask
         _raised = null;
         _sealDist = _sealBack = _sealNear = null;
         _ids.Clear();
+        _high.Clear();
+        _high.Add(false);
+        _highOf = new[] { false };
     }
 
     public static void MarkDirty() => _dirty = true;
@@ -61,6 +69,8 @@ public static class LightMask
     private static void Build()
     {
         _ids.Clear();
+        _high.Clear();
+        _high.Add(false);
         // the area: every tile, with a margin
         bool any = false;
         Vector2 min = Vector2.zero, max = Vector2.zero;
@@ -71,7 +81,7 @@ public static class LightMask
             if (!any) { min = max = p; any = true; }
             else { min = Vector2.Min(min, p); max = Vector2.Max(max, p); }
         }
-        if (!any) { _w = _h = 0; _owner = null; _top = null; _raised = null; return; }
+        if (!any) { _w = _h = 0; _owner = null; _top = null; _raised = null; _highOf = new[] { false }; return; }
         // tiles stand on cell middles, so a cell corner is half a cell off
         _origin = min - new Vector2(0.5f + MarginCells, 0.5f + MarginCells);
         int w = Mathf.CeilToInt((max.x - min.x + 1f + 2 * MarginCells) * PixelsPerUnit);
@@ -99,10 +109,13 @@ public static class LightMask
             int id = next++;
             _ids[zone] = id;
             Tile tile = zone.transform.parent != null ? zone.transform.parent.GetComponent<Tile>() : null;
-            float ground = tile != null && tile.isHighground ? Heights.Cliff : 0f;
+            bool high = tile != null && tile.isHighground;
+            _high.Add(high);
+            float ground = high ? Heights.Cliff : 0f;
             if (zone.art != null) PaintArt(zone, id, ground + Stands(zone));
             else PaintCollider(zone, id, ground + Heights.Rock);
         }
+        _highOf = _high.ToArray();
         Seal();
 
         List<CliffBuilder.RaisedCell> cells = new List<CliffBuilder.RaisedCell>();
@@ -276,9 +289,6 @@ public static class LightMask
     private static bool Inside(int x, int y) => x >= 0 && y >= 0 && x < _w && y < _h;
     private static Vector2 PixelCentre(int x, int y) => _origin + new Vector2((x + 0.5f) / PixelsPerUnit, (y + 0.5f) / PixelsPerUnit);
 
-    // the world corner of the pixel grid, for lining a light's own pixels up with it
-    public static Vector2 GridOrigin { get { Ensure(); return _origin; } }
-
     // the ground's height at a point: Heights.Cliff on raised ground (out to its drawn edge), 0 below
     public static float LevelAt(Vector2 world)
     {
@@ -298,26 +308,28 @@ public static class LightMask
         return zone != null && _ids.TryGetValue(zone, out int id) ? id : 0;
     }
 
-    // how high a pixel's blocker reaches, in pixels: the ground alone for the cell a line started in, nothing off the grid
-    private static float TopAt(int x, int y, int skip)
+    // how high a pixel's blocker reaches, in pixels: the ground alone for the cell a line started in, and from high ground
+    // for anything standing on low ground; nothing off the grid
+    private static float TopAt(int x, int y, int skip, bool fromHigh)
     {
         if ((uint)x >= (uint)_w || (uint)y >= (uint)_h) return 0f;
         int i = y * _w + x;
-        if (skip != 0 && _owner[i] == skip) return _raised[i] ? CliffPx : 0f;
+        int id = _owner[i];
+        if (id != 0 && (id == skip || (fromHigh && !_highOf[id]))) return _raised[i] ? CliffPx : 0f;
         return _top[i];
     }
 
     // one line of a fan (RayFan): from origin along dir (normalised) out to maxDistance, from an eye eyePx pixels over
-    // low ground. it notes where a body standing along it (Heights.Body over its ground) goes out of sight or comes
-    // back into it, as distances from origin, starting seen. a body is seen when the line to it rises more steeply than
-    // the line to the top of everything before it (the steepest so far). a line through a pixel corner is stopped only
-    // as high as the lower pixel beside it
-    internal static void MarchFan(Vector2 origin, Vector2 dir, float maxDistance, float eyePx, int skip, List<float> body)
+    // low ground (fromHigh: standing on high ground). it notes where a body standing along it (Heights.Body over its
+    // ground) goes out of sight or comes back into it, as distances from origin, starting seen. a body is seen when the
+    // line to it rises more steeply than the line to the top of everything before it (the steepest so far). a line
+    // through a pixel corner is stopped only as high as the lower pixel beside it
+    internal static void MarchFan(Vector2 origin, Vector2 dir, float maxDistance, float eyePx, int skip, bool fromHigh, List<float> body)
     {
         Ensure();
         if (_top == null) return;
         ushort[] top = _top, owner = _owner;
-        bool[] raised = _raised;
+        bool[] raised = _raised, highOf = _highOf;
         int w = _w, h = _h;
         float px = (origin.x - _origin.x) * PixelsPerUnit, py = (origin.y - _origin.y) * PixelsPerUnit;
         float max = maxDistance * PixelsPerUnit;
@@ -343,7 +355,7 @@ public static class LightMask
                 tIn = tMaxX;
                 if (tIn > max) break;
                 float at = Mathf.Max(tIn, Near);
-                float side = Mathf.Min(TopAt(x + stepX, y, skip), TopAt(x, y + stepY, skip));
+                float side = Mathf.Min(TopAt(x + stepX, y, skip, fromHigh), TopAt(x, y + stepY, skip, fromHigh));
                 if (side > 0f) steepest = Mathf.Max(steepest, (side - eyePx) / at);
                 x += stepX; y += stepY;
                 tMaxX += tDeltaX; tMaxY += tDeltaY;
@@ -374,7 +386,8 @@ public static class LightMask
 
             // and how high what's here stands, for what lies past it: the slope to its top, at its near side when it
             // reaches over the eye, at its far side when it stays under
-            float stands = skip != 0 && owner[i] == skip ? level : top[i];
+            int id = owner[i];
+            float stands = id != 0 && (id == skip || (fromHigh && !highOf[id])) ? level : top[i];
             if (stands > 0f)
             {
                 float s = (stands - eyePx) / (stands >= eyePx ? Mathf.Max(tIn, Near) : tOut);
@@ -391,8 +404,9 @@ public static class LightMask
     }
 
     // how far a straight line gets from a (za tiles over low ground) toward b (zb), before something stands above it:
-    // the whole way when nothing does. a line through a pixel corner is stopped only when both pixels beside it are
-    public static float Clear(Vector2 a, float za, Vector2 b, float zb, int skip)
+    // the whole way when nothing does. fromHigh: the line is a look (or a shot) from high ground, which nothing standing
+    // on low ground stops. a line through a pixel corner is stopped only when both pixels beside it are
+    public static float Clear(Vector2 a, float za, Vector2 b, float zb, int skip, bool fromHigh)
     {
         Ensure();
         Vector2 d = b - a;
@@ -418,7 +432,7 @@ public static class LightMask
                 tIn = tMaxX;
                 if (tIn > max) break;
                 float hAt = zFrom + rise * tIn;
-                if (TopAt(x + stepX, y, skip) > hAt && TopAt(x, y + stepY, skip) > hAt) return tIn / PixelsPerUnit;
+                if (TopAt(x + stepX, y, skip, fromHigh) > hAt && TopAt(x, y + stepY, skip, fromHigh) > hAt) return tIn / PixelsPerUnit;
                 x += stepX; y += stepY;
                 tMaxX += tDeltaX; tMaxY += tDeltaY;
             }
@@ -444,19 +458,19 @@ public static class LightMask
             float tOut = Mathf.Min(Mathf.Min(tMaxX, tMaxY), max);
             // the line's lowest over this pixel
             float low = Mathf.Min(zFrom + rise * tIn, zFrom + rise * tOut);
-            if (TopAt(x, y, skip) > low) return tIn / PixelsPerUnit;
+            if (TopAt(x, y, skip, fromHigh) > low) return tIn / PixelsPerUnit;
         }
         return dist;
     }
 
     // whether a straight line from a (za) to b (zb) runs into something, and where (on the ground under it)
-    public static bool Blocked(Vector2 a, float za, Vector2 b, float zb, out Vector2 at)
+    public static bool Blocked(Vector2 a, float za, Vector2 b, float zb, bool fromHigh, out Vector2 at)
     {
         at = b;
         Vector2 d = b - a;
         float dist = d.magnitude;
         if (dist < 1e-5f) return false;
-        float clear = Clear(a, za, b, zb, OwnCell(a));
+        float clear = Clear(a, za, b, zb, OwnCell(a), fromHigh);
         if (clear >= dist - 1e-5f) return false;
         at = a + d / dist * clear;
         return true;
@@ -467,11 +481,12 @@ public static class LightMask
     public static string Describe(Vector2 world)
     {
         Ensure();
-        if (_owner == null) return "no light grid (no tiles)";
+        if (_owner == null) return "no sight grid (no tiles)";
         int x = PixelX(world.x), y = PixelY(world.y);
-        if (!Inside(x, y)) return "outside the light grid";
+        if (!Inside(x, y)) return "outside the sight grid";
         int i = y * _w + x;
-        return $"grid {_w}x{_h} px, version {_version}; here: obstacle {_owner[i]}, stands {_top[i] / (float)PixelsPerUnit:F2} high, raised ground {_raised[i]}";
+        int id = _owner[i];
+        return $"grid {_w}x{_h} px, version {_version}; here: obstacle {id}{(id != 0 && _highOf[id] ? " (on high ground)" : "")}, stands {_top[i] / (float)PixelsPerUnit:F2} high, raised ground {_raised[i]}";
     }
 #endif
 }

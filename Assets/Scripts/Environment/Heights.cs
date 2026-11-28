@@ -2,8 +2,8 @@
 // slant, so a thing's picture shows its height as that many tiles up the screen: the numbers come from the art. a
 // plant's eye sits that high over the spot it stands on (its middle, the same dot as its range circle), and what
 // stands between it and a body stops the look only where it rises above the straight line between them (LightMask,
-// RayFan). on high ground everything stands Cliff higher. light uses none of it: lights are round and go through
-// everything (Tommy, 2026-11-28)
+// RayFan). on high ground everything stands Cliff higher, and a plant up there looks past everything standing on low
+// ground (Tommy, 2026-11-28). light uses none of it: lights are round and go through everything (Tommy, 2026-11-28)
 public static class Heights
 {
     // high ground over low ground: the cliff face is drawn 22 pixels tall
@@ -18,8 +18,8 @@ public static class Heights
     // the cells behind it is up in the air
     public const float Tree = 184f / LightMask.PixelsPerUnit;
     // the least a boulder, bush or any other obstacle stands: over a body, so from low ground nothing is seen past
-    // one, and well under a high ground eye, so from high ground a plant sees over the ones below. a taller picture
-    // stands half its drawn height
+    // one, and over a high ground eye standing up there too, so a plant on high ground can't see past one beside it. a
+    // taller picture stands half its drawn height
     public const float Rock = 28f / LightMask.PixelsPerUnit;
 
     // the eye of something standing on high ground or not

@@ -250,9 +250,9 @@ public class CursorIcon : MonoBehaviour
         if (_previewShade == null) _previewShade = SightShade.On(rangePreviewCircle);
         if (!cachedPlant.NeedsLineOfSight) { _previewShade.Hide(); return; }
         float eye = Heights.EyeOver(tile.isHighground);
-        if (_previewFan == null || _previewRaysTile != tile || !_previewFan.Fits(tile.transform.position, eye, range))
+        if (_previewFan == null || _previewRaysTile != tile || !_previewFan.Fits(tile.transform.position, eye, tile.isHighground, range))
         {
-            _previewFan = LineOfSight.Cast(tile.transform.position, eye, range + 0.5f, _previewFan, 1f);
+            _previewFan = LineOfSight.Cast(tile.transform.position, eye, tile.isHighground, range + 0.5f, _previewFan, 1f);
             _previewRaysTile = tile;
             _previewRaysVersion++;
         }

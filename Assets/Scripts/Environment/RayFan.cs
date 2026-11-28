@@ -9,8 +9,9 @@ using UnityEngine;
 public sealed class RayFan
 {
     public Vector2 Origin { get; private set; }
-    // the eye's height over low ground (Heights)
+    // the eye's height over low ground (Heights), and whether it stands on high ground (nothing below stops it)
     public float EyeZ { get; private set; }
+    public bool FromHigh { get; private set; }
     public float Reach { get; private set; }
     public int Version { get; private set; }
     public int Count { get; private set; }
@@ -19,12 +20,12 @@ public sealed class RayFan
     private readonly List<float> _flips = new List<float>();
     private int[] _start = new int[1];
 
-    // whether this fan still answers for a middle, a height and a reach
-    public bool Fits(Vector2 origin, float eyeZ, float reach) =>
-        Version == LightMask.Version && origin == Origin && Mathf.Abs(eyeZ - EyeZ) < 1e-4f && reach <= Reach;
+    // whether this fan still answers for a middle, a height, its ground and a reach
+    public bool Fits(Vector2 origin, float eyeZ, bool fromHigh, float reach) =>
+        Version == LightMask.Version && origin == Origin && Mathf.Abs(eyeZ - EyeZ) < 1e-4f && fromHigh == FromHigh && reach <= Reach;
 
     // raysPerPixel 2: half a pixel apart at the reach (a plant's own sight); 1 for a quick preview
-    public static RayFan Cast(Vector2 origin, float eyeZ, float reach, RayFan reuse = null, float raysPerPixel = 2f)
+    public static RayFan Cast(Vector2 origin, float eyeZ, bool fromHigh, float reach, RayFan reuse = null, float raysPerPixel = 2f)
     {
         RayFan fan = reuse ?? new RayFan();
         reach = Mathf.Max(0.25f, reach);
@@ -34,6 +35,7 @@ public sealed class RayFan
         fan.Count = count;
         fan.Origin = origin;
         fan.EyeZ = eyeZ;
+        fan.FromHigh = fromHigh;
         fan.Reach = reach;
         fan.Version = LightMask.Version;
         int skip = LightMask.OwnCell(origin);
@@ -43,7 +45,7 @@ public sealed class RayFan
         {
             fan._start[i] = fan._flips.Count;
             float a = i * step;
-            LightMask.MarchFan(origin, new Vector2(Mathf.Cos(a), Mathf.Sin(a)), reach, eyePx, skip, fan._flips);
+            LightMask.MarchFan(origin, new Vector2(Mathf.Cos(a), Mathf.Sin(a)), reach, eyePx, skip, fromHigh, fan._flips);
         }
         fan._start[count] = fan._flips.Count;
         return fan;
@@ -79,7 +81,7 @@ public sealed class RayFan
         float dist = d.magnitude;
         if (dist < 1e-4f) return true;
         if (dist <= Reach) return Seen(Index(d), dist);
-        return LineOfSight.Sees(Origin, EyeZ, point, LineOfSight.BodyAt(point));
+        return LineOfSight.Sees(Origin, EyeZ, point, LineOfSight.BodyAt(point), FromHigh);
     }
 
     // how many lines hide a body somewhere short of a distance (the F8 readout)

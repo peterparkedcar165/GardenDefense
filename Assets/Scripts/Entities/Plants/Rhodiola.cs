@@ -659,6 +659,7 @@ public class Rhodiola : Shooter
         Vector2 from = healed.transform.position;
         // from the healed one's eye (a plant's) or body to the other plant's body (Heights)
         float fromZ = healed is Plant healedPlant ? healedPlant.EyeZ : LineOfSight.BodyAt(from);
+        bool fromHigh = healed is Plant highPlant ? highPlant.OnHighground : LineOfSight.GroundAt(from) > 0f;
         Plant best = null;
         float bestShare = 1f;
         foreach (Plant plant in Plant.allPlants)
@@ -666,7 +667,7 @@ public class Rhodiola : Shooter
             if (plant == null || plant == this || ReferenceEquals(plant, healed) || !plant.IsAlive || plant.maxHealth <= 0f) continue;
             if (!Hurt(plant) || Vector2.Distance(from, plant.transform.position) > attackRange) continue;
             float share = HealthShare(plant);
-            if (share >= bestShare || !LineOfSight.Sees(from, fromZ, plant.transform.position, LineOfSight.BodyAt(plant.transform.position))) continue;
+            if (share >= bestShare || !LineOfSight.Sees(from, fromZ, plant.transform.position, LineOfSight.BodyAt(plant.transform.position), fromHigh)) continue;
             bestShare = share;
             best = plant;
         }

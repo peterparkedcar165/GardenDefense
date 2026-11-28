@@ -2074,8 +2074,8 @@ public abstract class Plant : Entity, IAttackable
     // Heights.Eye over its ground and it sees a body (Heights.Body over its ground, a flyer as high as it flies) when the
     // straight line to it clears everything standing between them. so from low ground a boulder, bush or forest hides
     // what's behind it and the ground up on a cliff stays hidden, while a body near the top of a cliff shows over the
-    // edge; from high ground it sees bodies below the cliff and over the boulders and bushes below, but not past a
-    // forest or anything standing up on the high ground. a ground target is read from its own lines (RayFan, on the
+    // edge; from high ground nothing standing on low ground blocks it (Tommy, 2026-11-28: it sees and targets past the
+    // obstacles below, forests too), only what stands up on the high ground with it. a ground target is read from its own lines (RayFan, on the
     // sight grid, LightMask). the part of its range it can't see shows red on its range circle (SightShade). its light
     // is another matter: round, through everything (Tommy, 2026-11-28)
     // melee plants need one too (Tommy, 2026-11-27: Acorn Knight, Bird of Paradise, Cactus)
@@ -2100,9 +2100,10 @@ public abstract class Plant : Entity, IAttackable
         Vector2 here = transform.position;
         float eye = EyeZ;
         float reach = FanReach;
-        if (_fan != null && _fan.Fits(here, eye, reach)) return _fan;
+        bool high = OnHighground;
+        if (_fan != null && _fan.Fits(here, eye, high, reach)) return _fan;
         if (_fan != null) reach = Mathf.Max(reach, _fan.Reach);
-        _fan = LineOfSight.Cast(here, eye, reach, _fan);
+        _fan = LineOfSight.Cast(here, eye, high, reach, _fan);
         _sightVersion++;
         return _fan;
     }
@@ -2120,7 +2121,7 @@ public abstract class Plant : Entity, IAttackable
     {
         if (!insect.isFlying) return CanSee(insect.transform.position);
         if (!NeedsLineOfSight) return true;
-        return LineOfSight.Sees(transform.position, EyeZ, insect.transform.position, LineOfSight.BodyOf(insect));
+        return LineOfSight.Sees(transform.position, EyeZ, insect.transform.position, LineOfSight.BodyOf(insect), OnHighground);
     }
 
     // the red part of its range circle, kept up to date while the circle shows
