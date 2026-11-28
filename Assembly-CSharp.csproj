@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\FlammableEffect.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\FrostbiteEffect.cs" />
     <Compile Include="Assets\Scripts\TextIndicators\SkillCooldownIndicator.cs" />
+    <Compile Include="Assets\Scripts\Environment\LightBlockers.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DrizzleBarrierEffect.cs" />
     <Compile Include="Assets\Scripts\InsectDataTypes\MosquitoData.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
