@@ -582,6 +582,7 @@
     <Compile Include="Assets\Scripts\PlantDataTypes\CalendulaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TermiteSwarmEffect.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\CleanGardenFertilizerData.cs" />
+    <Compile Include="Assets\Scripts\Environment\ScallopSandTile.cs" />
     <Compile Include="Assets\Scripts\Environment\CloudShadows.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\FruitFly.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\ElementalDebuff.cs" />
