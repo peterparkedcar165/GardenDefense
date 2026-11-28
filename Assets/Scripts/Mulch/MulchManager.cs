@@ -65,7 +65,7 @@ public class MulchManager : MonoBehaviour
 
     public static void RaiseChanged() => OnChanged?.Invoke();
 
-    // the level's one drought timer runs here, whichever plants carry a drought
+    // every plant's drought timer runs here (DroughtMulchEffect)
     void Update() => DroughtMulchEffect.TickClock(Time.deltaTime);
 
     // ── inventory ───────────────────────────────────────────────────────────
