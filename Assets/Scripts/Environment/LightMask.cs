@@ -1,37 +1,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// the level's light blockers at the art's own pixel size (Tommy, 2026-11-28: "really perfectly the very fine pixel"):
-// every sight blocking obstacle cell's solid pixels (PixelMask, its tile's sprite) and every cliff wall (CliffBuilder,
-// on the borders between pixels), on one grid lined up with the tiles' pixels. lights and the gameplay light checks
-// walk it pixel by pixel: from low ground a wall or any obstacle pixel stops light, from high ground only the pixels of
-// an obstacle standing on high ground (as for line of sight). a light standing in an obstacle's own cell (a lamp tile)
-// isn't stopped by that cell. rebuilt when an obstacle or wall changes (Version)
+// the level's blockers at the art's own pixel size (Tommy, 2026-11-28: "really perfectly the very fine pixel"), one grid
+// for light and sight alike: what stops a plant's light stops its line of sight, its shots and its skill lines, from
+// the same middle (RayFan, LineOfSight, ExactLight).
+// on it: every sight blocking obstacle cell's solid art pixels (PixelMask, the tile's sprite; trees by their drawn
+// shape, Tommy's pick), with gaps under SealPixels * 2 across sealed (he chose narrow gaps blocked for both, about the
+// width sight used to need), and the raised ground of every cliff (CliffBuilder) out to its drawn rugged edge: a raised
+// cell's top piece outline and rim tufts count as raised, the bit outside the outline doesn't.
+// from low ground raised ground and every obstacle stop a line; from high ground only obstacles standing on high
+// ground (it sees down past cliffs and over everything low). a line from inside an obstacle's own cell (a lamp tile)
+// isn't stopped by that cell. rebuilt when an obstacle or cliff changes (Version)
 public static class LightMask
 {
     public const int PixelsPerUnit = 64;
+    // gaps narrower than twice this many pixels between obstacles are closed (Tommy, 2026-11-28: "both blocked")
+    public const int SealPixels = 5;
     private const int MarginCells = 3;
-    private const byte WallLeft = 1, WallBottom = 2;
 
     private static bool _dirty = true;
     private static int _version;
-    // goes up whenever the blockers change, so an exact light knows to redraw
+    // goes up whenever the blockers change, so lights and sight know to look again
     public static int Version { get { Ensure(); return _version; } }
 
     private static Vector2 _origin;   // world corner of pixel (0, 0), on a cell corner
     private static int _w, _h;
-    private static ushort[] _owner;   // which obstacle a pixel belongs to, 0 for none
-    private static byte[] _walls;     // cliff walls on a pixel's left or bottom border
+    private static ushort[] _owner;   // the obstacle a blocking pixel belongs to (a sealed pixel: the nearest one), 0 none
+    private static bool[] _raised;    // raised ground out to its drawn edge
     private static readonly List<bool> _high = new List<bool> { false };
     private static bool[] _highOf = { false };
     private static readonly Dictionary<ObstacleZone, int> _ids = new Dictionary<ObstacleZone, int>();
+    // which cells hold any raised ground, so a light far from every cliff can skip looking for one
+    private static bool[] _raisedCell;
+    private static int _cellsW, _cellsH;
+    // the sealing's working space, kept between builds
+    private static int[] _sealDist, _sealBack;
+    private static ushort[] _sealNear;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics()
     {
         _dirty = true;
         _owner = null;
-        _walls = null;
+        _raised = null;
+        _raisedCell = null;
+        _sealDist = _sealBack = null;
+        _sealNear = null;
         _ids.Clear();
         _high.Clear();
         _high.Add(false);
@@ -63,7 +77,7 @@ public static class LightMask
             if (!any) { min = max = p; any = true; }
             else { min = Vector2.Min(min, p); max = Vector2.Max(max, p); }
         }
-        if (!any) { _w = _h = 0; _owner = null; _walls = null; _highOf = new[] { false }; return; }
+        if (!any) { _w = _h = 0; _owner = null; _raised = null; _highOf = new[] { false }; return; }
         // tiles stand on cell middles, so a cell corner is half a cell off
         _origin = min - new Vector2(0.5f + MarginCells, 0.5f + MarginCells);
         int w = Mathf.CeilToInt((max.x - min.x + 1f + 2 * MarginCells) * PixelsPerUnit);
@@ -72,12 +86,12 @@ public static class LightMask
         {
             _w = w; _h = h;
             _owner = new ushort[w * h];
-            _walls = new byte[w * h];
+            _raised = new bool[w * h];
         }
         else
         {
             System.Array.Clear(_owner, 0, _owner.Length);
-            System.Array.Clear(_walls, 0, _walls.Length);
+            System.Array.Clear(_raised, 0, _raised.Length);
         }
 
         foreach (ObstacleZone zone in Object.FindObjectsByType<ObstacleZone>(FindObjectsInactive.Exclude))
@@ -90,20 +104,23 @@ public static class LightMask
             if (zone.art != null) PaintArt(zone, id);
             else PaintCollider(zone, id);
         }
-
-        List<Vector2> walls = new List<Vector2>();
-        foreach (CliffBuilder cliffs in Object.FindObjectsByType<CliffBuilder>(FindObjectsInactive.Exclude))
-            cliffs.CollectWalls(walls);
-        for (int i = 0; i + 1 < walls.Count; i += 2) PaintWall(walls[i], walls[i + 1]);
         _highOf = _high.ToArray();
+        Seal();
+
+        List<CliffBuilder.RaisedCell> cells = new List<CliffBuilder.RaisedCell>();
+        foreach (CliffBuilder cliffs in Object.FindObjectsByType<CliffBuilder>(FindObjectsInactive.Exclude))
+            cliffs.CollectRaised(cells);
+        _cellsW = (_w + PixelsPerUnit - 1) / PixelsPerUnit;
+        _cellsH = (_h + PixelsPerUnit - 1) / PixelsPerUnit;
+        _raisedCell = new bool[_cellsW * _cellsH];
+        foreach (CliffBuilder.RaisedCell cell in cells) PaintRaised(cell);
     }
 
-    // an obstacle's solid pixels through its tile's matrix; a sprite drawn at another pixel size covers each of our
-    // pixels whose middle it covers
+    // an obstacle's solid pixels where the tilemap draws them: the cell's middle, through the tile's own matrix (as
+    // Tile.ShapeObstacle); a sprite drawn at another pixel size covers each of our pixels whose middle it covers
     private static void PaintArt(ObstacleZone zone, int id)
     {
         PixelMask.Shape s = zone.art;
-        // where the tilemap draws it: the cell's middle, through the tile's own matrix (as Tile.ShapeObstacle)
         Matrix4x4 toWorld = Matrix4x4.Translate(zone.transform.position) * zone.artMatrix;
         int sub = Mathf.Max(1, Mathf.CeilToInt(PixelsPerUnit / s.pixelsPerUnit));
         for (int y = 0; y < s.height; y++)
@@ -114,7 +131,9 @@ public static class LightMask
                     for (int sx = 0; sx < sub; sx++)
                     {
                         Vector2 local = new Vector2((x + (sx + 0.5f) / sub - s.pivot.x) / s.pixelsPerUnit, (y + (sy + 0.5f) / sub - s.pivot.y) / s.pixelsPerUnit);
-                        Set(toWorld.MultiplyPoint3x4(local), id);
+                        Vector2 world = toWorld.MultiplyPoint3x4(local);
+                        int px = PixelX(world.x), py = PixelY(world.y);
+                        if (Inside(px, py)) _owner[py * _w + px] = (ushort)id;
                     }
             }
     }
@@ -130,29 +149,97 @@ public static class LightMask
                 if (Inside(x, y) && col.OverlapPoint(PixelCentre(x, y))) _owner[y * _w + x] = (ushort)id;
     }
 
-    private static void Set(Vector2 world, int id)
+    // closes gaps narrower than twice SealPixels between obstacles (a morphological closing: grow every obstacle by
+    // SealPixels, then shrink the result back by as much, so outer edges stay where they're drawn and only narrow
+    // gaps and notches fill). distances are 3 4 chamfer, in thirds of a pixel. a filled pixel belongs to the nearest
+    // obstacle, so a lamp's own cell and the high ground rule still know whose it is
+    private static void Seal()
     {
-        int x = PixelX(world.x), y = PixelY(world.y);
-        if (Inside(x, y)) _owner[y * _w + x] = (ushort)id;
+        int n = _w * _h;
+        const int Inf = int.MaxValue / 4;
+        int limit = 3 * SealPixels;
+        if (_sealDist == null || _sealDist.Length != n) { _sealDist = new int[n]; _sealBack = new int[n]; _sealNear = new ushort[n]; }
+        int[] dist = _sealDist;
+        ushort[] near = _sealNear;
+        for (int i = 0; i < n; i++)
+        {
+            dist[i] = _owner[i] != 0 ? 0 : Inf;
+            near[i] = _owner[i];
+        }
+        Chamfer(dist, near);
+        // grown set: within the seal distance of an obstacle. now the distance from every pixel to the nearest pixel
+        // outside it
+        int[] back = _sealBack;
+        for (int i = 0; i < n; i++) back[i] = dist[i] <= limit ? Inf : 0;
+        Chamfer(back, null);
+        for (int i = 0; i < n; i++)
+            if (_owner[i] == 0 && back[i] > limit && dist[i] <= limit) _owner[i] = near[i];
     }
 
-    // a wall along a pixel border, straight across or straight up
-    private static void PaintWall(Vector2 a, Vector2 b)
+    // a two pass chamfer distance transform, carrying the nearest source's id along when ids is given
+    private static void Chamfer(int[] d, ushort[] ids)
     {
-        float ax = (a.x - _origin.x) * PixelsPerUnit, ay = (a.y - _origin.y) * PixelsPerUnit;
-        float bx = (b.x - _origin.x) * PixelsPerUnit, by = (b.y - _origin.y) * PixelsPerUnit;
-        if (Mathf.Abs(ax - bx) < 0.5f)
+        int w = _w, h = _h;
+        for (int y = 0; y < h; y++)
         {
-            int x = Mathf.RoundToInt(ax);
-            int from = Mathf.RoundToInt(Mathf.Min(ay, by)), to = Mathf.RoundToInt(Mathf.Max(ay, by));
-            for (int y = from; y < to; y++) if (Inside(x, y)) _walls[y * _w + x] |= WallLeft;
+            int row = y * w;
+            for (int x = 0; x < w; x++)
+            {
+                int i = row + x;
+                int v = d[i];
+                if (v == 0) continue;
+                int from = -1;
+                if (x > 0 && d[i - 1] + 3 < v) { v = d[i - 1] + 3; from = i - 1; }
+                if (y > 0)
+                {
+                    int j = i - w;
+                    if (d[j] + 3 < v) { v = d[j] + 3; from = j; }
+                    if (x > 0 && d[j - 1] + 4 < v) { v = d[j - 1] + 4; from = j - 1; }
+                    if (x < w - 1 && d[j + 1] + 4 < v) { v = d[j + 1] + 4; from = j + 1; }
+                }
+                d[i] = v;
+                if (ids != null && from >= 0) ids[i] = ids[from];
+            }
         }
-        else if (Mathf.Abs(ay - by) < 0.5f)
+        for (int y = h - 1; y >= 0; y--)
         {
-            int y = Mathf.RoundToInt(ay);
-            int from = Mathf.RoundToInt(Mathf.Min(ax, bx)), to = Mathf.RoundToInt(Mathf.Max(ax, bx));
-            for (int x = from; x < to; x++) if (Inside(x, y)) _walls[y * _w + x] |= WallBottom;
+            int row = y * w;
+            for (int x = w - 1; x >= 0; x--)
+            {
+                int i = row + x;
+                int v = d[i];
+                if (v == 0) continue;
+                int from = -1;
+                if (x < w - 1 && d[i + 1] + 3 < v) { v = d[i + 1] + 3; from = i + 1; }
+                if (y < h - 1)
+                {
+                    int j = i + w;
+                    if (d[j] + 3 < v) { v = d[j] + 3; from = j; }
+                    if (x < w - 1 && d[j + 1] + 4 < v) { v = d[j + 1] + 4; from = j + 1; }
+                    if (x > 0 && d[j - 1] + 4 < v) { v = d[j - 1] + 4; from = j - 1; }
+                }
+                d[i] = v;
+                if (ids != null && from >= 0) ids[i] = ids[from];
+            }
         }
+    }
+
+    // a raised cell out to its drawn edge: the whole cell, less the part of its cliff top piece outside the outline
+    private static void PaintRaised(CliffBuilder.RaisedCell cell)
+    {
+        int x0 = Mathf.RoundToInt((cell.corner.x - _origin.x) * PixelsPerUnit);
+        int y0 = Mathf.RoundToInt((cell.corner.y - _origin.y) * PixelsPerUnit);
+        int size = Mathf.Max(1, Mathf.RoundToInt(cell.size * PixelsPerUnit));
+        PixelMask.Edge edge = PixelMask.CliffEdge(cell.top);
+        for (int y = 0; y < size; y++)
+            for (int x = 0; x < size; x++)
+            {
+                if (edge != null && edge.Outside(x * edge.width / size, y * edge.height / size)) continue;
+                int px = x0 + x, py = y0 + y;
+                if (!Inside(px, py)) continue;
+                _raised[py * _w + px] = true;
+                _raisedCell[(py / PixelsPerUnit) * _cellsW + px / PixelsPerUnit] = true;
+            }
     }
 
     private static int PixelX(float worldX) => Mathf.FloorToInt((worldX - _origin.x) * PixelsPerUnit);
@@ -163,16 +250,7 @@ public static class LightMask
     // the world corner of the pixel grid, for lining a light's own pixels up with it
     public static Vector2 GridOrigin { get { Ensure(); return _origin; } }
 
-    // the obstacle a pixel belongs to (0 for none), for lighting an obstacle's own art
-    public static int OwnerAt(Vector2 world)
-    {
-        Ensure();
-        if (_owner == null) return 0;
-        int x = PixelX(world.x), y = PixelY(world.y);
-        return Inside(x, y) ? _owner[y * _w + x] : 0;
-    }
-
-    // the obstacle whose cell a light stands in (a lamp tile), which doesn't stop its own light
+    // the obstacle whose cell a light or a look starts in (a lamp tile), which doesn't stop it
     public static int OwnCell(Vector2 world)
     {
         Ensure();
@@ -182,101 +260,149 @@ public static class LightMask
         return zone != null && _ids.TryGetValue(zone, out int id) ? id : 0;
     }
 
+    // whether a pixel stops a line: raised ground for one from low ground, an obstacle's (from high ground only a raised
+    // obstacle's), not the cell it started in
     private static bool Stops(int x, int y, bool fromHigh, int skip)
     {
-        if (!Inside(x, y)) return false;
-        int id = _owner[y * _w + x];
+        if ((uint)x >= (uint)_w || (uint)y >= (uint)_h) return false;
+        int i = y * _w + x;
+        if (!fromHigh && _raised[i]) return true;
+        int id = _owner[i];
         return id != 0 && id != skip && (!fromHigh || _highOf[id]);
     }
 
-    // a wall on the border crossed stepping from pixel (x, y) one step along an axis
-    private static bool WallX(int x, int y, int stepX) { int bx = stepX > 0 ? x + 1 : x; return Inside(bx, y) && (_walls[y * _w + bx] & WallLeft) != 0; }
-    private static bool WallY(int x, int y, int stepY) { int by = stepY > 0 ? y + 1 : y; return Inside(x, by) && (_walls[by * _w + x] & WallBottom) != 0; }
+    private static bool StopsWall(int x, int y) => (uint)x < (uint)_w && (uint)y < (uint)_h && _raised[y * _w + x];
 
-    // how far light gets from origin along dir (normalised) before something stops it, up to maxDistance, and what
-    // stopped it (an obstacle id, a negative number for a wall, 0 for nothing). a line through a pixel corner is
-    // stopped only when both ways round the corner are. every light check walks this, so the plain steps are kept tight
-    public static float March(Vector2 origin, Vector2 dir, float maxDistance, bool fromHigh, int skip, out int hit)
+    // any raised ground within reach of a point (a light far from every cliff needn't look for one)
+    public static bool RaisedNear(Vector2 world, float reach)
     {
         Ensure();
-        hit = 0;
+        if (_raisedCell == null) return false;
+        int x0 = Mathf.Max(0, PixelX(world.x - reach) / PixelsPerUnit), x1 = Mathf.Min(_cellsW - 1, PixelX(world.x + reach) / PixelsPerUnit);
+        int y0 = Mathf.Max(0, PixelY(world.y - reach) / PixelsPerUnit), y1 = Mathf.Min(_cellsH - 1, PixelY(world.y + reach) / PixelsPerUnit);
+        for (int y = y0; y <= y1; y++)
+            for (int x = x0; x <= x1; x++)
+                if (_raisedCell[y * _cellsW + x]) return true;
+        return false;
+    }
+
+    // how far a line from origin along dir (normalised) gets, up to maxDistance: to the first pixel that stops it. walls:
+    // how far it gets past obstacles, stopped only by raised ground (for a light's obstacle art, ExactLight; maxDistance
+    // from high ground). a line through a pixel corner is stopped only when both ways round it are
+    public static float March(Vector2 origin, Vector2 dir, float maxDistance, bool fromHigh, int skip, out float walls, bool wantWalls = false)
+    {
+        Ensure();
+        walls = maxDistance;
+        if (_owner == null) return maxDistance;
+        bool[] raised = _raised;
         ushort[] owner = _owner;
-        if (owner == null) return maxDistance;
-        byte[] walls = _walls;
         bool[] high = _highOf;
         int w = _w, h = _h;
         float px = (origin.x - _origin.x) * PixelsPerUnit, py = (origin.y - _origin.y) * PixelsPerUnit;
         float max = maxDistance * PixelsPerUnit;
         int x = Mathf.FloorToInt(px), y = Mathf.FloorToInt(py);
         int stepX = dir.x > 0f ? 1 : -1, stepY = dir.y > 0f ? 1 : -1;
-        int wallOffX = stepX > 0 ? 1 : 0, wallOffY = stepY > 0 ? 1 : 0;
         float ax = Mathf.Abs(dir.x), ay = Mathf.Abs(dir.y);
         float tDeltaX = ax > 1e-6f ? 1f / ax : float.MaxValue;
         float tDeltaY = ay > 1e-6f ? 1f / ay : float.MaxValue;
         float tMaxX = ax > 1e-6f ? (stepX > 0 ? x + 1 - px : px - x) / ax : float.MaxValue;
         float tMaxY = ay > 1e-6f ? (stepY > 0 ? y + 1 - py : py - y) / ay : float.MaxValue;
-        bool useWalls = !fromHigh;
+        // walls only matter from low ground; from high ground nothing stops a light's obstacle art
+        bool trackWalls = wantWalls && !fromHigh;
+        float ground = -1f;
         while (true)
         {
             float t;
             float gap = tMaxX - tMaxY;
             if (gap < 1e-4f && gap > -1e-4f)
             {
-                // through a corner: blocked when going round it either way is
+                // through a corner: stopped when going round it either way is
                 t = tMaxX;
-                if (t > max) return maxDistance;
-                bool viaX = (useWalls && WallX(x, y, stepX)) || Stops(x + stepX, y, fromHigh, skip) || (useWalls && WallY(x + stepX, y, stepY));
-                bool viaY = (useWalls && WallY(x, y, stepY)) || Stops(x, y + stepY, fromHigh, skip) || (useWalls && WallX(x, y + stepY, stepX));
-                if (viaX && viaY)
+                if (t > max) break;
+                if (ground < 0f && Stops(x + stepX, y, fromHigh, skip) && Stops(x, y + stepY, fromHigh, skip))
                 {
-                    hit = Stops(x + stepX, y, fromHigh, skip) ? owner[y * w + x + stepX]
-                        : Stops(x, y + stepY, fromHigh, skip) ? owner[(y + stepY) * w + x] : -1;
-                    return t / PixelsPerUnit;
+                    ground = t;
+                    if (!trackWalls) break;
                 }
+                if (trackWalls && StopsWall(x + stepX, y) && StopsWall(x, y + stepY)) { walls = t / PixelsPerUnit; break; }
                 x += stepX; y += stepY;
                 tMaxX += tDeltaX; tMaxY += tDeltaY;
             }
             else if (gap < 0f)
             {
                 t = tMaxX;
-                if (t > max) return maxDistance;
-                if (useWalls)
-                {
-                    int bx = x + wallOffX;
-                    if ((uint)bx < (uint)w && (uint)y < (uint)h && (walls[y * w + bx] & WallLeft) != 0) { hit = -1; return t / PixelsPerUnit; }
-                }
+                if (t > max) break;
                 x += stepX;
                 tMaxX += tDeltaX;
             }
             else
             {
                 t = tMaxY;
-                if (t > max) return maxDistance;
-                if (useWalls)
-                {
-                    int by = y + wallOffY;
-                    if ((uint)x < (uint)w && (uint)by < (uint)h && (walls[by * w + x] & WallBottom) != 0) { hit = -1; return t / PixelsPerUnit; }
-                }
+                if (t > max) break;
                 y += stepY;
                 tMaxY += tDeltaY;
             }
             if ((uint)x < (uint)w && (uint)y < (uint)h)
             {
-                int id = owner[y * w + x];
-                if (id != 0 && id != skip && (!fromHigh || high[id])) { hit = id; return t / PixelsPerUnit; }
+                int i = y * w + x;
+                if (ground < 0f)
+                {
+                    bool stop = !fromHigh && raised[i];
+                    if (!stop)
+                    {
+                        int id = owner[i];
+                        stop = id != 0 && id != skip && (!fromHigh || high[id]);
+                    }
+                    if (stop)
+                    {
+                        ground = t;
+                        if (!trackWalls) break;
+                    }
+                }
+                if (trackWalls && raised[i]) { walls = t / PixelsPerUnit; break; }
             }
-            else if (x < -1 || y < -1 || x > w || y > h) return maxDistance;
+            else if (x < -1 || y < -1 || x > w || y > h) break;
         }
+        return ground < 0f ? maxDistance : ground / PixelsPerUnit;
     }
 
-    // does light from a source reach a point (every gameplay light check; a plant with an exact light reads its own
-    // table instead, which is the same walk)
+    public static float March(Vector2 origin, Vector2 dir, float maxDistance, bool fromHigh, int skip) =>
+        March(origin, dir, maxDistance, fromHigh, skip, out _);
+
+    // does a line from a source reach a point (light from anything that isn't a plant with its own fan, and sight
+    // past a fan's reach)
     public static bool Reaches(Vector2 from, Vector2 to, bool fromHigh)
     {
         Vector2 d = to - from;
         float dist = d.magnitude;
         if (dist < 1e-4f) return true;
-        int skip = OwnCell(from);
-        return March(from, d / dist, dist, fromHigh, skip, out _) >= dist;
+        return March(from, d / dist, dist, fromHigh, OwnCell(from)) >= dist;
     }
+
+    // whether a step from a to b runs into a blocker, and where (shots, skill lines)
+    public static bool Blocked(Vector2 a, Vector2 b, bool fromHigh, out Vector2 at)
+    {
+        Vector2 d = b - a;
+        float dist = d.magnitude;
+        at = b;
+        if (dist < 1e-5f) return false;
+        Vector2 dir = d / dist;
+        float clear = March(a, dir, dist, fromHigh, OwnCell(a));
+        if (clear >= dist) return false;
+        at = a + dir * clear;
+        return true;
+    }
+
+#if UNITY_EDITOR
+    // for the F8 readout: what the grid holds at a point
+    public static string Describe(Vector2 world)
+    {
+        Ensure();
+        if (_owner == null) return "no light grid (no tiles)";
+        int x = PixelX(world.x), y = PixelY(world.y);
+        if (!Inside(x, y)) return "outside the light grid";
+        int i = y * _w + x;
+        return $"grid {_w}x{_h} px, version {_version}; here: obstacle {_owner[i]}{(_owner[i] != 0 && _highOf[_owner[i]] ? " (raised)" : "")}, raised ground {_raised[i]}";
+    }
+#endif
 }

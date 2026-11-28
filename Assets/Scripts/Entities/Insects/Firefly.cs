@@ -30,9 +30,13 @@ public class Firefly : FlyingInsect
     {
         base.UpdateStats();
 
-        if (lightEmissionRange > 0f && _light2D == null && visual != null)
+        if (lightEmissionRange > 0f && _light2D == null)
         {
-            _light2D = visual.gameObject.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
+            // centred on the insect's own spot, where its light counts from (DarknessManager) and where plants look at
+            // it, not on its raised sprite (Tommy, 2026-11-28)
+            UnityEngine.GameObject glow = new UnityEngine.GameObject("Glow");
+            glow.transform.SetParent(transform, false);
+            _light2D = glow.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
             _light2D.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
             _light2D.intensity = 0.5f;
             _light2D.falloffIntensity = 0.5f;

@@ -234,15 +234,26 @@ public class CliffBuilder : MonoBehaviour
         LightMask.MarkDirty();
     }
 
-    // the walls' ends in world space, two points a wall, for the light grid (LightMask)
-    public void CollectWalls(List<Vector2> into)
+    // a raised cell for the light and sight grid (LightMask): its world corner and size, and its cliff top piece (null
+    // when it's raised all round), whose drawn outline is where the raised ground ends (Tommy, 2026-11-28: cliff edges
+    // rugged as drawn)
+    public struct RaisedCell
     {
-        if (_edges == null) return;
-        foreach (EdgeCollider2D edge in _edges.GetComponents<EdgeCollider2D>())
+        public Vector2 corner;
+        public float size;
+        public Sprite top;
+    }
+
+    // every raised cell of a tier that lays walls in play (a decoration tier, buildEdges off, adds none)
+    public void CollectRaised(List<RaisedCell> into)
+    {
+        if (!Application.isPlaying || !buildEdges || _edges == null || tops == null || raisedMaps == null) return;
+        BoundsInt area = Area();
+        float size = tops.layoutGrid != null ? tops.layoutGrid.cellSize.x : 1f;
+        foreach (Vector3Int p in area.allPositionsWithin)
         {
-            if (!edge.enabled || edge.pointCount < 2) continue;
-            into.Add(_edges.transform.TransformPoint(edge.points[0]));
-            into.Add(_edges.transform.TransformPoint(edge.points[edge.pointCount - 1]));
+            if (!Raised(p)) continue;
+            into.Add(new RaisedCell { corner = tops.CellToWorld(p), size = size, top = tops.GetSprite(p) });
         }
     }
 

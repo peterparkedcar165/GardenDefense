@@ -12,16 +12,16 @@ public class SightShade : MonoBehaviour
     // texels across the circle: 256 keeps the edge smooth on the widest ranges
     private const int Size = 256;
 
-    // per texel: the ray nearest its direction and how far it is from the middle (circle space: the edge is at 0.5);
+    // per texel: its direction as a turn (0 to 1) and how far it is from the middle (circle space: the edge is at 0.5);
     // shared by every shade, like the paint buffer
-    private static int[] _texelRay;
+    private static float[] _texelTurn;
     private static float[] _texelDist;
     private static Color32[] _paint;
 
     private SpriteRenderer _renderer;
     private Texture2D _texture;
     private Sprite _sprite;
-    private float[] _rays;
+    private RayFan _fan;
     private int _version = -1;
     private float _range = -1f;
     private int _blocked;
@@ -55,27 +55,27 @@ public class SightShade : MonoBehaviour
         return shade;
     }
 
-    // rays from the circle's middle (LineOfSight.Cast), or null for a plant that sees everything; version
-    // changes whenever the rays are cast again
-    public void Show(float[] rays, int version, float range)
+    // the lines from the circle's middle (RayFan), or null for a plant that sees everything; version changes whenever
+    // they're cast again
+    public void Show(RayFan fan, int version, float range)
     {
-        if (rays == null) { Hide(); return; }
-        if (ReferenceEquals(rays, _rays) && version == _version && Mathf.Approximately(range, _range)) return;
-        _rays = rays;
+        if (fan == null) { Hide(); return; }
+        if (ReferenceEquals(fan, _fan) && version == _version && Mathf.Approximately(range, _range)) return;
+        _fan = fan;
         _version = version;
         _range = range;
-        _renderer.enabled = Paint(rays, range);
+        _renderer.enabled = Paint(fan, range);
     }
 
     public void Hide()
     {
         if (_renderer != null) _renderer.enabled = false;
-        _rays = null;
+        _fan = null;
         _version = -1;
     }
 
-    // a texel is red when it's inside the circle and further out than its ray reaches. false if nothing's hidden
-    private bool Paint(float[] rays, float range)
+    // a texel is red when it's inside the circle and further out than its line gets. false if nothing's hidden
+    private bool Paint(RayFan fan, float range)
     {
         EnsureTables();
         float toWorld = 2f * range;
@@ -83,7 +83,7 @@ public class SightShade : MonoBehaviour
         for (int i = 0; i < _paint.Length; i++)
         {
             float d = _texelDist[i];
-            bool hidden = d <= 0.5f && d * toWorld > rays[_texelRay[i]];
+            bool hidden = d <= 0.5f && d * toWorld > fan.Ground(fan.Index01(_texelTurn[i]));
             _paint[i] = hidden ? ShadeColor : default;
             if (hidden) _blocked++;
         }
@@ -95,8 +95,8 @@ public class SightShade : MonoBehaviour
 
     private static void EnsureTables()
     {
-        if (_texelRay != null) return;
-        _texelRay = new int[Size * Size];
+        if (_texelTurn != null) return;
+        _texelTurn = new float[Size * Size];
         _texelDist = new float[Size * Size];
         _paint = new Color32[Size * Size];
         for (int y = 0; y < Size; y++)
@@ -106,7 +106,8 @@ public class SightShade : MonoBehaviour
                 float u = (x + 0.5f) / Size - 0.5f, v = (y + 0.5f) / Size - 0.5f;
                 int i = y * Size + x;
                 _texelDist[i] = Mathf.Sqrt(u * u + v * v);
-                _texelRay[i] = LineOfSight.RayIndex(Mathf.Atan2(v, u));
+                float turn = Mathf.Atan2(v, u) / (2f * Mathf.PI);
+                _texelTurn[i] = turn < 0f ? turn + 1f : turn;
             }
         }
     }

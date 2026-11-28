@@ -238,8 +238,9 @@ public class CursorIcon : MonoBehaviour
     }
 
     // the red part of the preview circle: where the plant couldn't target from this tile (line of sight,
-    // Tommy 2026-11-27). the rays are cast once per tile hovered
-    private float[] _previewRays;
+    // Tommy 2026-11-27). the lines (RayFan, on the same grid as the placed plant's) are cast once per tile hovered,
+    // one a pixel apart round the range: plenty for the circle's picture and quick enough to follow the cursor
+    private RayFan _previewFan;
     private Tile _previewRaysTile;
     private int _previewRaysVersion;
     private SightShade _previewShade;
@@ -248,19 +249,18 @@ public class CursorIcon : MonoBehaviour
     {
         if (_previewShade == null) _previewShade = SightShade.On(rangePreviewCircle);
         if (!cachedPlant.NeedsLineOfSight) { _previewShade.Hide(); return; }
-        if (_previewRays == null || _previewRaysTile != tile)
+        if (_previewFan == null || _previewRaysTile != tile || !_previewFan.Fits(tile.transform.position, tile.isHighground, range, false))
         {
-            if (_previewRays == null) _previewRays = new float[LineOfSight.Rays];
-            LineOfSight.Cast(tile.transform.position, _previewRays, tile.isHighground);
+            _previewFan = LineOfSight.Cast(tile.transform.position, tile.isHighground, range + 0.5f, _previewFan, 1f);
             _previewRaysTile = tile;
             _previewRaysVersion++;
         }
-        _previewShade.Show(_previewRays, _previewRaysVersion, range);
+        _previewShade.Show(_previewFan, _previewRaysVersion, range);
 #if UNITY_EDITOR
         // F8 while placing or moving a plant: the preview's line of sight readout in the console
         if (UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.f8Key.wasPressedThisFrame)
         {
-            LineOfSight.LogReadout($"preview of {cachedPlant.name}", tile.transform.position, tile.isHighground, range, _previewRays, tile);
+            LineOfSight.LogReadout($"preview of {cachedPlant.name}", tile.transform.position, tile.isHighground, range, _previewFan, tile);
             Debug.Log($"[LineOfSight] preview: version {_previewRaysVersion}; " + _previewShade.Describe());
         }
 #endif

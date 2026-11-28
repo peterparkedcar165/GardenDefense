@@ -24,6 +24,7 @@ public static class PixelMask
     }
 
     private static readonly Dictionary<Sprite, Shape> Shapes = new Dictionary<Sprite, Shape>();
+    private static readonly Dictionary<Sprite, Edge> Edges = new Dictionary<Sprite, Edge>();
     private static readonly Dictionary<Texture2D, Color32[]> TexturePixels = new Dictionary<Texture2D, Color32[]>();
 
     // the copied textures are only needed while a level builds its obstacles
@@ -31,6 +32,7 @@ public static class PixelMask
     private static void ResetStatics()
     {
         Shapes.Clear();
+        Edges.Clear();
         TexturePixels.Clear();
         UnityEngine.SceneManagement.SceneManager.sceneLoaded -= DropPixels;
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += DropPixels;
@@ -93,6 +95,83 @@ public static class PixelMask
             shape.smooth.Add(smooth);
         }
         return shape;
+    }
+
+    // a cliff top piece's drawn edge (Tommy, 2026-11-28: cliff edges rugged as drawn): which of its pixels lie outside
+    // the outline, on the low side. the piece is see through in the middle, so whatever the middle reaches without
+    // crossing a drawn pixel (half opaque or more) is the raised top; the drawn outline and rim tufts are raised too;
+    // the see through rest is outside
+    public class Edge
+    {
+        public int width, height;
+        public bool[] outside;
+        public bool Outside(int x, int y) => x >= 0 && y >= 0 && x < width && y < height && outside[y * width + x];
+    }
+
+    // null for no piece (a cell raised all round) or one that can't be read
+    public static Edge CliffEdge(Sprite sprite)
+    {
+        if (sprite == null || sprite.texture == null) return null;
+        if (Edges.TryGetValue(sprite, out Edge cached)) return cached;
+        Edge edge = BuildEdge(sprite);
+        Edges[sprite] = edge;
+        return edge;
+    }
+
+    private static Edge BuildEdge(Sprite sprite)
+    {
+        if (sprite.packed && (sprite.packingMode == SpritePackingMode.Tight || sprite.packingRotation != SpritePackingRotation.None)) return null;
+        Color32[] pixels = Pixels(sprite.texture);
+        if (pixels == null) return null;
+        Rect r = sprite.packed ? sprite.textureRect : sprite.rect;
+        int x0 = Mathf.RoundToInt(r.x), y0 = Mathf.RoundToInt(r.y);
+        int w = Mathf.RoundToInt(r.width), h = Mathf.RoundToInt(r.height);
+        int texW = sprite.texture.width;
+        if (w <= 0 || h <= 0) return null;
+        bool[] drawn = new bool[w * h];
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+            {
+                int i = (y0 + y) * texW + x0 + x;
+                drawn[y * w + x] = i >= 0 && i < pixels.Length && pixels[i].a >= 128;
+            }
+        // the middle, or the see through pixel nearest it
+        int start = -1;
+        float best = float.MaxValue;
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+            {
+                if (drawn[y * w + x]) continue;
+                float dx = x + 0.5f - w * 0.5f, dy = y + 0.5f - h * 0.5f;
+                float d = dx * dx + dy * dy;
+                if (d < best) { best = d; start = y * w + x; }
+            }
+        bool[] top = new bool[w * h];
+        if (start >= 0)
+        {
+            Stack<int> open = new Stack<int>();
+            top[start] = true;
+            open.Push(start);
+            while (open.Count > 0)
+            {
+                int i = open.Pop();
+                int x = i % w, y = i / w;
+                void Reach(int nx, int ny)
+                {
+                    int j = ny * w + nx;
+                    if (drawn[j] || top[j]) return;
+                    top[j] = true;
+                    open.Push(j);
+                }
+                if (x > 0) Reach(x - 1, y);
+                if (x < w - 1) Reach(x + 1, y);
+                if (y > 0) Reach(x, y - 1);
+                if (y < h - 1) Reach(x, y + 1);
+            }
+        }
+        bool[] outside = new bool[w * h];
+        for (int i = 0; i < outside.Length; i++) outside[i] = !drawn[i] && !top[i];
+        return new Edge { width = w, height = h, outside = outside };
     }
 
     // the texture's pixels, read straight when it's readable, otherwise copied off the graphics card

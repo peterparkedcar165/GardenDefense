@@ -34,9 +34,13 @@ public class Glowworm : Insect
         baseLightEmissionRange = GData?.glowRadius ?? 2f;
         base.UpdateStats();
 
-        if (_light == null && visual != null)
+        if (_light == null)
         {
-            _light = visual.gameObject.AddComponent<Light2D>();
+            // centred on the insect's own spot, where its light counts from (DarknessManager) and where plants look at
+            // it, not on its raised sprite (Tommy, 2026-11-28)
+            GameObject glow = new GameObject("Glow");
+            glow.transform.SetParent(transform, false);
+            _light = glow.AddComponent<Light2D>();
             _light.lightType        = Light2D.LightType.Point;
             _light.color            = RegenerativeGlowEffect.GlowColor;
             _light.falloffIntensity = 0.5f;

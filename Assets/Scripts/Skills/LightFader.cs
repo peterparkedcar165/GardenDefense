@@ -116,6 +116,22 @@ public class LightFader : MonoBehaviour
         float startIntensity = _light.intensity;
         clone.intensity = startIntensity;
 
+        // a drawn light's obstacle art light (ExactLight) fades out at the old size with it
+        UnityEngine.Rendering.Universal.Light2D artClone = null;
+        ExactLight exact = _light.GetComponent<ExactLight>();
+        if (exact != null && exact.ArtLight != null && exact.ArtLight.lightCookieSprite != null)
+        {
+            GameObject artObj = new GameObject("ArtFadeClone");
+            artObj.transform.SetParent(cloneObj.transform, false);
+            artClone = artObj.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
+            artClone.lightType = exact.ArtLight.lightType;
+            artClone.lightCookieSprite = exact.ArtLight.lightCookieSprite;
+            artClone.shadowsEnabled = false;
+            artClone.color = exact.ArtLight.color;
+            artClone.targetSortingLayers = exact.ArtLight.targetSortingLayers;
+            artClone.intensity = startIntensity;
+        }
+
         _light.pointLightOuterRadius = outerRadius;
         _light.pointLightInnerRadius = innerRadius;
         _light.intensity = 0f;
@@ -126,6 +142,7 @@ public class LightFader : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / duration;
             clone.intensity = Mathf.Lerp(startIntensity, 0f, t);
+            if (artClone != null) artClone.intensity = clone.intensity;
             _light.intensity = Mathf.Lerp(0f, _targetIntensity, t);
             yield return null;
         }

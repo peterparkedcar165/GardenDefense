@@ -429,8 +429,9 @@ public abstract class Plant : Entity, IAttackable
 
             _lightFader = lightObj.AddComponent<LightFader>();
             _lightFader.Setup(_light2D, LightIntensity);
-            // drawn to the pixel, dark past walls and obstacles (Tommy, 2026-11-28)
+            // drawn to the pixel along this plant's own lines, so its glow is exactly what it can see (Tommy, 2026-11-28)
             _exactLight = ExactLight.Attach(_light2D, OnHighground);
+            _exactLight.fanSource = EnsureFan;
         }
 
         if (_light2D != null)
@@ -1738,6 +1739,7 @@ public abstract class Plant : Entity, IAttackable
         LightFader fader = _lightFader ?? lightObj.AddComponent<LightFader>();
         fader.SetupForFadeOut(_light2D);
         fader.FadeOut(0.3f, destroyOnComplete: true);
+        if (_exactLight != null) _exactLight.fanSource = null;
         _light2D = null;
         _lightFader = null;
         _exactLight = null;
@@ -2075,54 +2077,54 @@ public abstract class Plant : Entity, IAttackable
 
     // ---------- line of sight (Tommy, 2026-11-27) ----------
     // a plant that needs a clear line (straight and homing shooters, Stargazer, Kelp, Rhodiola: NeedsLineOfSight)
-    // can't target a ground insect or an ally it can't see. from low ground, obstacle tiles and cliff edges
-    // block the line; from high ground only trees, bushes and boulders standing on high ground do (it sees
-    // down past cliffs and over everything on low ground). a flying insect is hidden only when the low part of the line to it is blocked (InSight). what it sees is
-    // cast once from where it stands (LineOfSight) and kept until it moves or its ground changes. the part
-    // of its range it can't see shows red on its range circle (SightShade)
+    // can't target a ground insect or an ally it can't see. from low ground, obstacles (by their drawn pixels) and
+    // raised ground (out to its drawn cliff edge) block the line; from high ground only trees, bushes and boulders
+    // standing on high ground do (it sees down past cliffs and over everything on low ground). a flying insect is
+    // hidden only when the low part of the line to it is blocked (InSight). what it sees is its own lines (RayFan, on
+    // the light grid, LightMask), the same ones its light is drawn from. the part of its range it can't see shows red
+    // on its range circle (SightShade)
     // melee plants need one too (Tommy, 2026-11-27: Acorn Knight, Bird of Paradise, Cactus)
     public virtual bool NeedsLineOfSight => IsMeleeAttacker;
 
-    // the rays from where it stands, null when it sees everything (it needs no clear line)
-    private float[] _sightRays;
-    private bool _sightCast;
-    private Vector3 _sightOrigin;
-    private bool _sightFromHigh;
+    // its lines out from where it stands (RayFan, Tommy 2026-11-28): its sight, its light and the red part of its range
+    // circle all read these same ones, from the same middle. cast when first needed, and again when it moves, its
+    // ground changes, it must reach further or the blockers change
+    private RayFan _fan;
     private int _sightVersion;
 
     public bool OnHighground => occupiedTile != null && occupiedTile.isHighground;
 
-    private void EnsureSight()
+    // out past its range (when it needs a clear line) and its light, by a cell, in half cell steps so small range
+    // changes don't cast again
+    private float FanReach(float atLeast) =>
+        Mathf.Ceil((Mathf.Max(NeedsLineOfSight ? attackRange : 0f, lightEmissionRange, atLeast) + 1f) * 2f) * 0.5f;
+
+    private RayFan EnsureFan(float atLeast)
     {
+        Vector2 here = transform.position;
         bool high = OnHighground;
-        Vector3 here = transform.position;
-        if (_sightCast && here == _sightOrigin && high == _sightFromHigh) return;
-        _sightCast = true;
-        _sightOrigin = here;
-        _sightFromHigh = high;
+        bool walls = _exactLight != null;
+        float reach = FanReach(atLeast);
+        if (_fan != null && _fan.Fits(here, high, reach, walls)) return _fan;
+        if (_fan != null) reach = Mathf.Max(reach, _fan.Reach);
+        _fan = LineOfSight.Cast(here, high, reach, _fan, 2f, walls);
         _sightVersion++;
-        if (!NeedsLineOfSight) { _sightRays = null; return; }
-        if (_sightRays == null) _sightRays = new float[LineOfSight.Rays];
-        LineOfSight.Cast(here, _sightRays, high);
+        return _fan;
     }
+
+    private RayFan EnsureFan() => EnsureFan(0f);
 
     // can this plant see a point on the ground (an ally, or a ground insect's spot)
     public bool CanSee(Vector3 point)
     {
         if (!NeedsLineOfSight) return true;
-        EnsureSight();
-        return _sightRays == null || LineOfSight.Sees(_sightRays, _sightOrigin, point);
+        return EnsureFan().Sees(point);
     }
 
-    // does this plant's light reach a point (Tommy, 2026-11-28): Collider cells and cliffs block it as they block
-    // sight, from the same ground (from high ground only raised obstacles). a plant with a light reads its drawn light's
-    // rays (ExactLight), so what's lit is what looks lit; any other one (Borrowed Light) walks the line on the light grid
-    public bool LightReaches(Vector3 point)
-    {
-        bool high = OnHighground;
-        if (_exactLight != null && _exactLight.TryReaches(point, high, out bool reached)) return reached;
-        return LightMask.Reaches(transform.position, point, high);
-    }
+    // does this plant's light reach a point (Tommy, 2026-11-28): along its own lines, the ones its glow is drawn from
+    // (ExactLight) and its sight reads, so what's lit is what looks lit and what it can target. a plant without a light
+    // of its own (a Borrowed Light origin) reads the same kind of lines
+    public bool LightReaches(Vector3 point) => EnsureFan().Sees(point);
 
     // a flying insect: the line to it rises from the plant to its body, the way a shot climbs to it (Projectile), so
     // only its part lower than Projectile.FliesOverHeight can be blocked. hidden when the first blocker toward the
@@ -2131,14 +2133,13 @@ public abstract class Plant : Entity, IAttackable
     {
         if (!insect.isFlying) return CanSee(insect.transform.position);
         if (!NeedsLineOfSight) return true;
-        EnsureSight();
-        if (_sightRays == null) return true;
-        Vector2 toward = (Vector2)(insect.transform.position - _sightOrigin);
+        RayFan fan = EnsureFan();
+        Vector2 toward = (Vector2)insect.transform.position - fan.Origin;
         float ground = toward.magnitude;
         if (ground < 0.001f) return true;
         float height = insect.GetAimPoint().y - insect.transform.position.y;
         float lowPart = height > Projectile.FliesOverHeight ? ground * Projectile.FliesOverHeight / height : ground;
-        return _sightRays[LineOfSight.RayIndex(Mathf.Atan2(toward.y, toward.x))] >= lowPart;
+        return fan.Clear(fan.Origin + toward / ground * lowPart) >= lowPart - 1e-4f;
     }
 
     // the red part of its range circle, kept up to date while the circle shows
@@ -2149,16 +2150,15 @@ public abstract class Plant : Entity, IAttackable
         // F8 on a selected plant: its line of sight readout in the console (LineOfSight.LogReadout)
         if (_isSelected && UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.f8Key.wasPressedThisFrame)
         {
-            if (NeedsLineOfSight) EnsureSight();
-            LineOfSight.LogReadout($"{name} (needs line of sight: {NeedsLineOfSight})", transform.position, OnHighground, attackRange, _sightRays, occupiedTile);
+            LineOfSight.LogReadout($"{name} (needs line of sight: {NeedsLineOfSight})", transform.position, OnHighground, attackRange, NeedsLineOfSight ? EnsureFan() : null, occupiedTile);
             Debug.Log($"[LineOfSight] {name}: sight version {_sightVersion}; " + (_sightShade != null ? _sightShade.Describe() : "no red area made yet") +
                       $"; circleRadius '{(circleRadius != null ? circleRadius.name : "none")}' active {(circleRadius != null && circleRadius.gameObject.activeInHierarchy)}");
         }
 #endif
         if (!NeedsLineOfSight || circleRadius == null || !circleRadius.gameObject.activeInHierarchy) return;
-        EnsureSight();
+        RayFan fan = EnsureFan();
         if (_sightShade == null) _sightShade = SightShade.On(circleRadius);
-        _sightShade.Show(_sightRays, _sightVersion, attackRange);
+        _sightShade.Show(fan, _sightVersion, attackRange);
     }
 
     // a melee plant (see IsMeleeAttacker) can't normally pick a flying insect as a target - it
