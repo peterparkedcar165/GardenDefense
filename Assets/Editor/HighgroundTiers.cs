@@ -21,7 +21,7 @@ public static class HighgroundTiers
     private static void AddTier()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) return;
-        CliffBuilder[] builders = Object.FindObjectsByType<CliffBuilder>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        CliffBuilder[] builders = Object.FindObjectsByType<CliffBuilder>(FindObjectsInactive.Include);
         CliffBuilder level = builders.FirstOrDefault(b => b.buildEdges);
         if (level == null || level.tops == null || level.faces == null || level.raisedMaps == null
             || level.raisedMaps.Length == 0 || level.raisedMaps[0] == null)
@@ -73,7 +73,7 @@ public static class HighgroundTiers
     private static void AddLowCollider()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) return;
-        Tilemap collider = Object.FindObjectsByType<Tilemap>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+        Tilemap collider = Object.FindObjectsByType<Tilemap>(FindObjectsInactive.Include)
             .FirstOrDefault(m => m.name == "Collider");
         if (collider == null) { EditorUtility.DisplayDialog("Add LowCollider", "This scene has no Collider tilemap.", "OK"); return; }
         Transform grid = collider.transform.parent;
