@@ -29,8 +29,8 @@ public class RaisedGroundTile : RandomVariantTile
         return (paletteIcon == null || InLevel(tilemap)) && base.GetTileAnimationData(position, tilemap, ref tileAnimationData);
     }
 
-    // a level's tilemaps sit beside its Ground map; a palette's one tilemap doesn't
-    private static bool InLevel(ITilemap map)
+    // a level's tilemaps sit beside its Ground map; a palette's one tilemap doesn't (the desert's sand brushes ask too)
+    internal static bool InLevel(ITilemap map)
     {
         Tilemap self = map.GetComponent<Tilemap>();
         if (self == null || self.transform.parent == null) return true;
