@@ -250,6 +250,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\BegoniaFlowersEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\AnemoneVortex.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\SnowFly.cs" />
+    <Compile Include="Assets\Scripts\Environment\Heights.cs" />
     <Compile Include="Assets\Scripts\UI\GameButtons.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\DoTEffect\DoTEffect.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\RootCellarFertilizerEffect.cs" />
