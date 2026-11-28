@@ -67,6 +67,25 @@ public static class HighgroundTiers
         Debug.Log($"[Highground] tier {n} added: paint its ground on {raised.name} (now selected), the cliffs draw themselves on {faces.name} and {tops.name}");
     }
 
+    // a LowCollider map beside Collider in the open level, for a level that has none (Tommy, 2026-11-28: Level 6 was
+    // open when every other level got one): an empty copy of Collider's setup, its cells obstacles that don't block sight
+    [MenuItem("Tools/Garden Defense/Add LowCollider")]
+    private static void AddLowCollider()
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+        Tilemap collider = Object.FindObjectsByType<Tilemap>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+            .FirstOrDefault(m => m.name == "Collider");
+        if (collider == null) { EditorUtility.DisplayDialog("Add LowCollider", "This scene has no Collider tilemap.", "OK"); return; }
+        Transform grid = collider.transform.parent;
+        if (grid.Find("LowCollider") != null) { EditorUtility.DisplayDialog("Add LowCollider", "This level already has a LowCollider.", "OK"); return; }
+        TilemapRenderer look = collider.GetComponent<TilemapRenderer>();
+        Tilemap low = NewMap(grid, "LowCollider", collider, look, look.sortingLayerID, look.sortingOrder, collider.transform.GetSiblingIndex() + 1);
+        Undo.SetCurrentGroupName("Add LowCollider");
+        EditorSceneManager.MarkSceneDirty(grid.gameObject.scene);
+        Selection.activeGameObject = low.gameObject;
+        Debug.Log("[LowCollider] added beside Collider (now selected): its cells are obstacles that don't block sight");
+    }
+
     private static Tilemap NewMap(Transform parent, string name, Tilemap like, TilemapRenderer rendererLike, int sortingLayer, int order, int sibling)
     {
         GameObject go = new GameObject(name, typeof(Tilemap), typeof(TilemapRenderer));
