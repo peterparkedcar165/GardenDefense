@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // the level's blockers at the art's own pixel size, with how high each stands (Tommy, 2026-11-28: "really perfectly
-// the very fine pixel", then heights), one grid for light and sight alike: what stops a plant's light stops its line
-// of sight, its shots and its skill lines, from the same middle (RayFan, LineOfSight, ExactLight).
+// the very fine pixel", then heights): what stops a plant's line of sight stops its shots and its skill lines too,
+// from the same middle (RayFan, LineOfSight). it began as the light grid; light goes through everything now (Tommy,
+// 2026-11-28: round lights, no realism needed).
 // on it, per pixel, how high whatever stands there reaches (Heights): raised ground out to its drawn rugged edge
 // (CliffBuilder: a raised cell's top piece outline and rim tufts count, the bit outside the outline doesn't) stands
 // Cliff high; every sight blocking obstacle cell's solid art pixels (PixelMask) stand on their ground as high as the
@@ -30,9 +31,6 @@ public static class LightMask
     private static ushort[] _top;     // how high the pixel's blocker reaches over low ground, in pixels, 0 open low ground
     private static bool[] _raised;    // raised ground out to its drawn edge
     private static readonly Dictionary<ObstacleZone, int> _ids = new Dictionary<ObstacleZone, int>();
-    // which cells hold any raised ground, so a light far from every cliff can skip looking for one
-    private static bool[] _raisedCell;
-    private static int _cellsW, _cellsH;
     // the sealing's working space, kept between builds
     private static int[] _sealDist, _sealBack, _sealNear;
 
@@ -46,7 +44,6 @@ public static class LightMask
         _owner = null;
         _top = null;
         _raised = null;
-        _raisedCell = null;
         _sealDist = _sealBack = _sealNear = null;
         _ids.Clear();
     }
@@ -111,9 +108,6 @@ public static class LightMask
         List<CliffBuilder.RaisedCell> cells = new List<CliffBuilder.RaisedCell>();
         foreach (CliffBuilder cliffs in Object.FindObjectsByType<CliffBuilder>(FindObjectsInactive.Exclude))
             cliffs.CollectRaised(cells);
-        _cellsW = (_w + PixelsPerUnit - 1) / PixelsPerUnit;
-        _cellsH = (_h + PixelsPerUnit - 1) / PixelsPerUnit;
-        _raisedCell = new bool[_cellsW * _cellsH];
         foreach (CliffBuilder.RaisedCell cell in cells) PaintRaised(cell);
     }
 
@@ -274,7 +268,6 @@ public static class LightMask
                 int i = py * _w + px;
                 _raised[i] = true;
                 if (cliff > _top[i]) _top[i] = cliff;
-                _raisedCell[(py / PixelsPerUnit) * _cellsW + px / PixelsPerUnit] = true;
             }
     }
 
@@ -314,31 +307,12 @@ public static class LightMask
         return _top[i];
     }
 
-    private static float CliffAt(int x, int y) =>
-        (uint)x < (uint)_w && (uint)y < (uint)_h && _raised[y * _w + x] ? CliffPx : 0f;
-
-    // any raised ground within reach of a point (a light far from every cliff needn't look for one)
-    public static bool RaisedNear(Vector2 world, float reach)
-    {
-        Ensure();
-        if (_raisedCell == null) return false;
-        int x0 = Mathf.Max(0, PixelX(world.x - reach) / PixelsPerUnit), x1 = Mathf.Min(_cellsW - 1, PixelX(world.x + reach) / PixelsPerUnit);
-        int y0 = Mathf.Max(0, PixelY(world.y - reach) / PixelsPerUnit), y1 = Mathf.Min(_cellsH - 1, PixelY(world.y + reach) / PixelsPerUnit);
-        for (int y = y0; y <= y1; y++)
-            for (int x = x0; x <= x1; x++)
-                if (_raisedCell[y * _cellsW + x]) return true;
-        return false;
-    }
-
     // one line of a fan (RayFan): from origin along dir (normalised) out to maxDistance, from an eye eyePx pixels over
-    // low ground. it notes where each of three things along it turns dark (or lit again), as distances from origin,
-    // starting lit: the ground (low ground, or a cliff's top), a body standing there (Heights.Body over its ground),
-    // and an obstacle's picture there (as high as a body, but stopped by cliffs only: obstacles take the light whole).
-    // a thing is lit when the line to it rises more steeply than the line to the top of everything before it (the
-    // steepest so far, kept for everything and for cliffs alone). a line through a pixel corner is stopped only as
-    // high as the lower pixel beside it. cliffs: whether any are near (none: the pictures are lit all the way)
-    internal static void MarchFan(Vector2 origin, Vector2 dir, float maxDistance, float eyePx, int skip, bool cliffs,
-        List<float> ground, List<float> body, List<float> art)
+    // low ground. it notes where a body standing along it (Heights.Body over its ground) goes out of sight or comes
+    // back into it, as distances from origin, starting seen. a body is seen when the line to it rises more steeply than
+    // the line to the top of everything before it (the steepest so far). a line through a pixel corner is stopped only
+    // as high as the lower pixel beside it
+    internal static void MarchFan(Vector2 origin, Vector2 dir, float maxDistance, float eyePx, int skip, List<float> body)
     {
         Ensure();
         if (_top == null) return;
@@ -354,10 +328,10 @@ public static class LightMask
         float tDeltaY = ay > 1e-6f ? 1f / ay : float.MaxValue;
         float tMaxX = ax > 1e-6f ? (stepX > 0 ? x + 1 - px : px - x) / ax : float.MaxValue;
         float tMaxY = ay > 1e-6f ? (stepY > 0 ? y + 1 - py : py - y) / ay : float.MaxValue;
-        // the highest thing that can be seen: a body up on a cliff
+        // the highest a body stands: up on a cliff
         float highest = CliffPx + BodyPx - eyePx;
-        float steepest = float.NegativeInfinity, steepestCliff = float.NegativeInfinity;
-        bool litGround = true, litBody = true, litArt = true;
+        float steepest = float.NegativeInfinity;
+        bool seen = true;
         const float Near = 1e-3f;
         while (true)
         {
@@ -371,11 +345,6 @@ public static class LightMask
                 float at = Mathf.Max(tIn, Near);
                 float side = Mathf.Min(TopAt(x + stepX, y, skip), TopAt(x, y + stepY, skip));
                 if (side > 0f) steepest = Mathf.Max(steepest, (side - eyePx) / at);
-                if (cliffs)
-                {
-                    float sideCliff = Mathf.Min(CliffAt(x + stepX, y), CliffAt(x, y + stepY));
-                    if (sideCliff > 0f) steepestCliff = Mathf.Max(steepestCliff, (sideCliff - eyePx) / at);
-                }
                 x += stepX; y += stepY;
                 tMaxX += tDeltaX; tMaxY += tDeltaY;
             }
@@ -398,38 +367,24 @@ public static class LightMask
             float tOut = Mathf.Max(Mathf.Min(tMaxX, tMaxY), Near);
             float mid = Mathf.Max(0.5f * (tIn + tOut), Near);
 
-            // what stands here, seen past everything before it
-            bool high = raised[i];
-            float level = high ? CliffPx : 0f;
-            float flip = tIn / PixelsPerUnit;
-            bool g = (level - eyePx) / mid > steepest;
+            // a body standing here, seen past everything before it
+            float level = raised[i] ? CliffPx : 0f;
             bool b = (level + BodyPx - eyePx) / mid > steepest;
-            bool a = !cliffs || (level + BodyPx - eyePx) / mid > steepestCliff;
-            if (g != litGround) { litGround = g; ground.Add(flip); }
-            if (b != litBody) { litBody = b; body.Add(flip); }
-            if (a != litArt) { litArt = a; art.Add(flip); }
+            if (b != seen) { seen = b; body.Add(tIn / PixelsPerUnit); }
 
-            // and how high it stands, for what lies past it: the slope to its top, at its near side when it reaches
-            // over the eye, at its far side when it stays under
+            // and how high what's here stands, for what lies past it: the slope to its top, at its near side when it
+            // reaches over the eye, at its far side when it stays under
             float stands = skip != 0 && owner[i] == skip ? level : top[i];
             if (stands > 0f)
             {
                 float s = (stands - eyePx) / (stands >= eyePx ? Mathf.Max(tIn, Near) : tOut);
                 if (s > steepest) steepest = s;
             }
-            if (cliffs && high)
-            {
-                float s = (CliffPx - eyePx) / (CliffPx >= eyePx ? Mathf.Max(tIn, Near) : tOut);
-                if (s > steepestCliff) steepestCliff = s;
-            }
 
-            // nothing further on can be seen any more: the rest stays dark
-            if (steepest >= 0f && steepest * tOut >= highest && (!cliffs || (steepestCliff >= 0f && steepestCliff * tOut >= highest)))
+            // nothing further on can be seen any more: the rest stays hidden
+            if (steepest >= 0f && steepest * tOut >= highest)
             {
-                float end = tOut / PixelsPerUnit;
-                if (litGround) ground.Add(end);
-                if (litBody) body.Add(end);
-                if (litArt && cliffs) art.Add(end);
+                if (seen) body.Add(tOut / PixelsPerUnit);
                 break;
             }
         }

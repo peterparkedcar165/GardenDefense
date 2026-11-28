@@ -152,7 +152,7 @@ public class Tansy : Aura
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
-            if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange || !LightReaches(plant.transform.position)) continue;
+            if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange) continue;
             plant.ApplyEffect(new CalendulasLightEffect(plant, 1, this, lightEmissionRange, 0.15f));
         }
     }
@@ -234,7 +234,7 @@ public class Tansy : Aura
                 foreach (Insect insect in insects)
                 {
                     if (insect == null || !insect.IsAlive) continue;
-                    if (Vector2.Distance(transform.position, insect.transform.position) > lightEmissionRange || !LightReaches(insect.transform.position)) continue;
+                    if (Vector2.Distance(transform.position, insect.transform.position) > lightEmissionRange) continue;
                     insect.ApplyEffect(new GuidingLightEffect(insect, GuidingLightInterval * 2f, 1, this));
                 }
 
@@ -244,7 +244,7 @@ public class Tansy : Aura
                     foreach (Insect insect in insects)
                     {
                         if (insect == null || !insect.IsAlive) continue;
-                        if (Vector2.Distance(glowTarget.transform.position, insect.transform.position) > lightEmissionRange || !glowTarget.LightReaches(insect.transform.position)) continue;
+                        if (Vector2.Distance(glowTarget.transform.position, insect.transform.position) > lightEmissionRange) continue;
                         insect.ApplyEffect(new GuidingLightEffect(insect, GuidingLightInterval * 2f, 1, this));
                     }
                 }
@@ -265,7 +265,7 @@ public class Tansy : Aura
                 foreach (Plant plant in Plant.allPlants)
                 {
                     if (plant == null || !plant.IsAlive || plant == this) continue;
-                    if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange || !LightReaches(plant.transform.position)) continue;
+                    if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange) continue;
                     healed.Add(plant);
                     plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, RegenTags);
                 }
@@ -276,7 +276,7 @@ public class Tansy : Aura
                     foreach (Plant plant in Plant.allPlants)
                     {
                         if (plant == null || !plant.IsAlive || plant == this || healed.Contains(plant)) continue;
-                        if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange || !glowTarget.LightReaches(plant.transform.position)) continue;
+                        if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange) continue;
                         healed.Add(plant);
                         plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, RegenTags);
                     }
@@ -296,7 +296,7 @@ public class Tansy : Aura
                 foreach (Plant plant in Plant.allPlants)
                 {
                     if (plant == null || !plant.IsAlive) continue;
-                    if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange || !glowTarget.LightReaches(plant.transform.position)) continue;
+                    if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange) continue;
                     plant.ApplyEffect(new CalendulasLightEffect(plant, 1, this, lightEmissionRange, 0.15f, glowTarget.transform));
                 }
             }

@@ -32,8 +32,7 @@ public class FungalGlowEffect : StatusEffect
 
     private LightFader GetOrCreateFader()
     {
-        // centred on the insect's own spot, where plants look at it, not on its raised sprite (Tommy, 2026-11-28)
-        Transform visualRoot = target.transform;
+        Transform visualRoot = target.transform.Find("Visual") ?? target.transform;
 
         Transform existing = visualRoot.Find("FungalGlowLight");
         if (existing != null)

@@ -1,15 +1,14 @@
 using UnityEngine;
 
-// what a plant that needs a clear line can see (Tommy, 2026-11-27), and where shots and skill lines stop. it walks the
-// same pixel grid as light (LightMask), from the same middle along the same lines (RayFan), so a plant can target
-// exactly what its light reaches. since 2026-11-28 everything has a height (Heights, Tommy: "yes i trust you on both",
-// heights and plants seeing the way light goes): a plant's eye sits Heights.Eye over its ground and looks at bodies
-// (Heights.Body over theirs, a flyer as high as it flies), and a straight line between them is stopped only by what
-// stands above it there: from low ground a boulder, bush or forest hides what's behind it and the ground up on a cliff
-// stays out of sight (a body standing near the top of one shows over the edge); from high ground a plant sees bodies
-// below the cliff and over the boulders and bushes below, but not past a forest. a LowCollider cell never blocks.
-// shots fly along the same line, skill lines level at the plant's eye height. insects still bump into the physics
-// shapes (Tile.ShapeObstacle, CliffBuilder's edges)
+// what a plant that needs a clear line can see (Tommy, 2026-11-27), and where shots and skill lines stop. it walks a
+// pixel grid of the blockers (LightMask) from the plant's middle (RayFan). since 2026-11-28 everything has a height
+// (Heights): a plant's eye sits Heights.Eye over its ground and looks at bodies (Heights.Body over theirs, a flyer as
+// high as it flies), and a straight line between them is stopped only by what stands above it there: from low ground a
+// boulder, bush or forest hides what's behind it and the ground up on a cliff stays out of sight (a body standing near
+// the top of one shows over the edge); from high ground a plant sees bodies below the cliff and over the boulders and
+// bushes below, but not past a forest. a LowCollider cell never blocks. shots fly along the same line, skill lines
+// level at the plant's eye height. light doesn't use any of it: lights are round and go through everything (Tommy,
+// 2026-11-28). insects still bump into the physics shapes (Tile.ShapeObstacle, CliffBuilder's edges)
 public static class LineOfSight
 {
     public const float MaxDistance = 40f;
@@ -21,7 +20,7 @@ public static class LineOfSight
     // the ground's height at a point: Heights.Cliff up on a cliff, 0 below
     public static float GroundAt(Vector2 p) => LightMask.LevelAt(p);
 
-    // a body standing at a point: what a light lights and an eye sees of a plant or a ground insect there
+    // a body standing at a point: what an eye sees of a plant or a ground insect there
     public static float BodyAt(Vector2 p) => LightMask.LevelAt(p) + Heights.Body;
 
     // an insect's body over low ground: a flyer's as high as its picture flies
@@ -40,10 +39,6 @@ public static class LineOfSight
         if (dist < 1e-4f) return true;
         return LightMask.Clear(from, fromZ, to, toZ, LightMask.OwnCell(from)) >= dist - 1e-4f;
     }
-
-    // does light from a source (fromZ over low ground) reach a body standing at a point (Tommy, 2026-11-28: every
-    // light, gameplay first); a light standing in an obstacle's own cell (a lamp tile) isn't blocked by that cell
-    public static bool LightReaches(Vector2 from, float fromZ, Vector2 to) => Sees(from, fromZ, to, BodyAt(to));
 
     // the height of the straight line from one point and height to another, over a point along it (a shot's, on its
     // way along its plant's line of sight)
@@ -85,12 +80,10 @@ public static class LineOfSight
             {
                 float a = k * Mathf.PI / 4f;
                 Vector2 dir = new Vector2(Mathf.Cos(a), Mathf.Sin(a));
-                int line = fan.Index(dir);
-                float body = fan.FirstDark(line, RayFan.Kind.Body);
-                float ground = fan.FirstDark(line, RayFan.Kind.Ground);
-                Vector2 end = origin + dir * body;
-                sb.AppendLine($"  line at {k * 45} degrees: bodies seen for {body:F2}, ground lit for {ground:F2}" +
-                              (body < limit - 1e-3f ? $", first hidden at ({end.x:F2}, {end.y:F2}): {LightMask.Describe(end + dir * 0.01f)}" : ""));
+                float seen = fan.FirstHidden(fan.Index(dir));
+                Vector2 end = origin + dir * seen;
+                sb.AppendLine($"  line at {k * 45} degrees: bodies seen for {seen:F2}" +
+                              (seen < limit - 1e-3f ? $", first hidden at ({end.x:F2}, {end.y:F2}): {LightMask.Describe(end + dir * 0.01f)}" : ""));
             }
         }
         Debug.Log(sb.ToString());

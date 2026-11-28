@@ -100,14 +100,8 @@ public class LightFader : MonoBehaviour
         cloneObj.transform.SetParent(_light.transform.parent);
         cloneObj.transform.position = _light.transform.position;
 
-        // same place, size and turn as the light, so a drawn light's picture (ExactLight) lands on the same pixels
-        cloneObj.transform.localScale = _light.transform.localScale;
-        cloneObj.transform.localRotation = _light.transform.localRotation;
-
         var clone = cloneObj.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
         clone.lightType = _light.lightType;
-        clone.lightCookieSprite = _light.lightCookieSprite;
-        clone.shadowsEnabled = _light.shadowsEnabled;
         clone.color = _light.color;
         clone.falloffIntensity = _light.falloffIntensity;
         clone.targetSortingLayers = _light.targetSortingLayers;
@@ -115,11 +109,6 @@ public class LightFader : MonoBehaviour
         clone.pointLightInnerRadius = _light.pointLightInnerRadius;
         float startIntensity = _light.intensity;
         clone.intensity = startIntensity;
-
-        // a drawn light's obstacle art and body lights (ExactLight) fade out at the old size with it
-        ExactLight exact = _light.GetComponent<ExactLight>();
-        UnityEngine.Rendering.Universal.Light2D artClone = exact != null ? CloneExtra(exact.ArtLight, "ArtFadeClone", cloneObj.transform, startIntensity) : null;
-        UnityEngine.Rendering.Universal.Light2D bodyClone = exact != null ? CloneExtra(exact.BodyLight, "BodyFadeClone", cloneObj.transform, startIntensity) : null;
 
         _light.pointLightOuterRadius = outerRadius;
         _light.pointLightInnerRadius = innerRadius;
@@ -131,8 +120,6 @@ public class LightFader : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / duration;
             clone.intensity = Mathf.Lerp(startIntensity, 0f, t);
-            if (artClone != null) artClone.intensity = clone.intensity;
-            if (bodyClone != null) bodyClone.intensity = clone.intensity;
             _light.intensity = Mathf.Lerp(0f, _targetIntensity, t);
             yield return null;
         }
@@ -140,21 +127,5 @@ public class LightFader : MonoBehaviour
         Destroy(cloneObj);
         _crossFadeClone = null;
         _light.intensity = _targetIntensity;
-    }
-
-    // a copy of one of a drawn light's own sprite lights as it looks now, under the cross fade's copy
-    private static UnityEngine.Rendering.Universal.Light2D CloneExtra(UnityEngine.Rendering.Universal.Light2D source, string name, Transform parent, float intensity)
-    {
-        if (source == null || source.lightCookieSprite == null) return null;
-        GameObject obj = new GameObject(name);
-        obj.transform.SetParent(parent, false);
-        var copy = obj.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
-        copy.lightType = source.lightType;
-        copy.lightCookieSprite = source.lightCookieSprite;
-        copy.shadowsEnabled = false;
-        copy.color = source.color;
-        copy.targetSortingLayers = source.targetSortingLayers;
-        copy.intensity = intensity;
-        return copy;
     }
 }

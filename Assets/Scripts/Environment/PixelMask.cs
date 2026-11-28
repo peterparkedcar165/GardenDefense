@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// a sprite's exact pixel silhouette (Tommy, 2026-11-28: light and sight blocked by the very pixels of a tree or boulder,
+// a sprite's exact pixel silhouette (Tommy, 2026-11-28: sight blocked by the very pixels of a tree or boulder,
 // not a box or a rough outline). a pixel counts when it's nearly opaque, so the see through ground shadows under trees
 // and boulders (alpha under 0.75, two overlapping ones too) never block. holes inside are filled. the tile textures
 // aren't readable, so their pixels are copied off the graphics card once (Blit and ReadPixels) and kept per texture
@@ -16,7 +16,7 @@ public static class PixelMask
         public Vector2 pivot;          // the sprite's pivot, in its pixels
         public float pixelsPerUnit;
         public List<Vector2[]> exact;  // outer outlines along pixel edges, in sprite units around the pivot
-        public List<Vector2[]> smooth; // the same, the one pixel stairs straightened (colliders and shadow casters)
+        public List<Vector2[]> smooth; // the same, the one pixel stairs straightened (colliders)
 
         public bool Solid(int x, int y) => x >= 0 && y >= 0 && x < width && y < height && solid[y * width + x];
         // a pixel's middle in sprite units around the pivot
@@ -87,7 +87,7 @@ public static class PixelMask
             for (int i = 0; i < loop.Count; i++)
                 exact[i] = new Vector2((loop[i].x - shape.pivot.x) / shape.pixelsPerUnit, (loop[i].y - shape.pivot.y) / shape.pixelsPerUnit);
             shape.exact.Add(exact);
-            // specks of a few pixels block light (exact) but are too small for a collider
+            // specks of a few pixels block sight (exact) but are too small for a collider
             if (Mathf.Abs(Area(loop)) < 6f) continue;
             Vector2[] smooth = Simplify(exact, 0.75f / shape.pixelsPerUnit);
             // a thin spike straightened from both sides can cross itself; such an outline stays exact

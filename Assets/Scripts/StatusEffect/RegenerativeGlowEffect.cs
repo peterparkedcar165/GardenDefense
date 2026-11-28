@@ -78,9 +78,8 @@ public class RegenerativeGlowEffect : RegenerationEffect
             }
         }
 
-        // centred on the insect's own spot, where its light counts from (DarknessManager) and where plants look at it,
-        // not on its raised sprite (Tommy, 2026-11-28)
-        Transform visualRoot = target.transform;
+        Transform visualRoot = target.transform.Find("Visual");
+        if (visualRoot == null) visualRoot = target.transform;
 
         GameObject lightObj = new GameObject("RegenerativeGlow");
         lightObj.transform.SetParent(visualRoot);

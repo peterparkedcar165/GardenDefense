@@ -190,7 +190,7 @@ public class Sunray : MonoBehaviour
             fader.Setup(light, 1f);
             fader.FadeIn(0.3f);
 
-            DarknessManager.RegisterLightSource(transform, 5f, overhead: true);
+            DarknessManager.RegisterLightSource(transform, 5f);
         }
         StartCoroutine(SunrayRoutine());
     }

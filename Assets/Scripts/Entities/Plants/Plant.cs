@@ -142,7 +142,6 @@ public abstract class Plant : Entity, IAttackable
     private bool _isSelected = false;
     private UnityEngine.Rendering.Universal.Light2D _light2D;
     private LightFader _lightFader;
-    private ExactLight _exactLight;
     private float _lastLightEmissionRange;
     protected virtual float LightIntensity => 0.5f;
     // the bar widget over the plant (health, attack and passive cooldown bars, skill circle),
@@ -429,9 +428,6 @@ public abstract class Plant : Entity, IAttackable
 
             _lightFader = lightObj.AddComponent<LightFader>();
             _lightFader.Setup(_light2D, LightIntensity);
-            // drawn to the pixel along this plant's own lines, so its glow is exactly what it can see (Tommy, 2026-11-28)
-            _exactLight = ExactLight.Attach(_light2D, OnHighground);
-            _exactLight.fanSource = EnsureFan;
         }
 
         if (_light2D != null)
@@ -1117,7 +1113,6 @@ public abstract class Plant : Entity, IAttackable
 
         if (_light2D != null)
         {
-            if (_exactLight != null) _exactLight.fromHigh = OnHighground;
             if (lightEmissionRange != _lastLightEmissionRange)
             {
                 if (lightEmissionRange > 0f && _lastLightEmissionRange <= 0f)
@@ -1739,10 +1734,8 @@ public abstract class Plant : Entity, IAttackable
         LightFader fader = _lightFader ?? lightObj.AddComponent<LightFader>();
         fader.SetupForFadeOut(_light2D);
         fader.FadeOut(0.3f, destroyOnComplete: true);
-        if (_exactLight != null) _exactLight.fanSource = null;
         _light2D = null;
         _lightFader = null;
-        _exactLight = null;
     }
 
     public override void Kill()
@@ -2083,32 +2076,30 @@ public abstract class Plant : Entity, IAttackable
     // what's behind it and the ground up on a cliff stays hidden, while a body near the top of a cliff shows over the
     // edge; from high ground it sees bodies below the cliff and over the boulders and bushes below, but not past a
     // forest or anything standing up on the high ground. a ground target is read from its own lines (RayFan, on the
-    // light grid, LightMask), the same ones its light is drawn from. the part of its range it can't see shows red on
-    // its range circle (SightShade)
+    // sight grid, LightMask). the part of its range it can't see shows red on its range circle (SightShade). its light
+    // is another matter: round, through everything (Tommy, 2026-11-28)
     // melee plants need one too (Tommy, 2026-11-27: Acorn Knight, Bird of Paradise, Cactus)
     public virtual bool NeedsLineOfSight => IsMeleeAttacker;
 
-    // its lines out from where it stands (RayFan, Tommy 2026-11-28): its sight, its light and the red part of its range
-    // circle all read these same ones, from the same middle. cast when first needed, and again when it moves, its
-    // ground changes, it must reach further or the blockers change
+    // its lines out from where it stands (RayFan, Tommy 2026-11-28): its sight and the red part of its range circle
+    // read these same ones, from the same middle. cast when first needed, and again when it moves, its ground changes,
+    // its range grows past them or the blockers change
     private RayFan _fan;
     private int _sightVersion;
 
     public bool OnHighground => occupiedTile != null && occupiedTile.isHighground;
 
-    // where its eye and its light sit over low ground: Heights.Eye over its own ground
+    // where its eye sits over low ground: Heights.Eye over its own ground
     public float EyeZ => Heights.EyeOver(OnHighground);
 
-    // out past its range (when it needs a clear line) and its light, by a cell, in half cell steps so small range
-    // changes don't cast again
-    private float FanReach(float atLeast) =>
-        Mathf.Ceil((Mathf.Max(NeedsLineOfSight ? attackRange : 0f, lightEmissionRange, atLeast) + 1f) * 2f) * 0.5f;
+    // out past its range by a cell, in half cell steps so small range changes don't cast again
+    private float FanReach => Mathf.Ceil((attackRange + 1f) * 2f) * 0.5f;
 
-    private RayFan EnsureFan(float atLeast)
+    private RayFan EnsureFan()
     {
         Vector2 here = transform.position;
         float eye = EyeZ;
-        float reach = FanReach(atLeast);
+        float reach = FanReach;
         if (_fan != null && _fan.Fits(here, eye, reach)) return _fan;
         if (_fan != null) reach = Mathf.Max(reach, _fan.Reach);
         _fan = LineOfSight.Cast(here, eye, reach, _fan);
@@ -2116,20 +2107,12 @@ public abstract class Plant : Entity, IAttackable
         return _fan;
     }
 
-    private RayFan EnsureFan() => EnsureFan(0f);
-
     // can this plant see a body standing at a point (an ally, or a ground insect)
     public bool CanSee(Vector3 point)
     {
         if (!NeedsLineOfSight) return true;
         return EnsureFan().Sees(point);
     }
-
-    // does this plant's light reach a body standing at a point (Tommy, 2026-11-28): along its own lines, the ones its
-    // glow is drawn from (ExactLight: its body light lights exactly these) and its sight reads, so what's lit is what
-    // looks lit and what it can target. a plant without a light of its own (a Borrowed Light origin) reads the same
-    // kind of lines
-    public bool LightReaches(Vector3 point) => EnsureFan().Sees(point);
 
     // an insect: a ground one from its own lines (CanSee), a flying one by the straight line up to its body, the line
     // its shots fly along (Projectile; Tommy, 2026-11-27: skip a flyer whose shot would crash first)

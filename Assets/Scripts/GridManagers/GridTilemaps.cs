@@ -14,7 +14,7 @@ public static class GridTilemaps
     }
 
     // an obstacle cell's shape from whichever map holds its tile (Tile.ShapeObstacle, Tommy 2026-11-28), and for a pine
-    // forest cell whether a pine stands in it (light and sight, Heights.Tree)
+    // forest cell whether a pine stands in it (line of sight, Heights.Tree)
     public static void ShapeObstacle(Tile tile, Vector3Int cell, params Tilemap[] maps)
     {
         if (tile == null || tile.tileType != TileType.Obstacle) return;

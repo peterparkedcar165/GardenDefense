@@ -84,7 +84,7 @@ public class SightShade : MonoBehaviour
         for (int i = 0; i < _paint.Length; i++)
         {
             float d = _texelDist[i];
-            bool hidden = d <= 0.5f && !fan.Lit(fan.Index01(_texelTurn[i]), d * toWorld, RayFan.Kind.Body);
+            bool hidden = d <= 0.5f && !fan.Seen(fan.Index01(_texelTurn[i]), d * toWorld);
             _paint[i] = hidden ? ShadeColor : default;
             if (hidden) _blocked++;
         }

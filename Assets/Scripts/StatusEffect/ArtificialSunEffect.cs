@@ -178,7 +178,7 @@ public class ArtificialSunEffect : StatusEffect
         fader.Setup(light, lightIntensity);
         fader.FadeIn(1f);
 
-        DarknessManager.RegisterLightSource(_lightObj.transform, radius, overhead: true);
+        DarknessManager.RegisterLightSource(_lightObj.transform, radius);
     }
 
     private int[] GetAllSortingLayerIDs()

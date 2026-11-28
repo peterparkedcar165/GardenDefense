@@ -20,7 +20,7 @@ public class Tile : MonoBehaviour
 
     private void Awake()  => allTiles[TileKey(transform.position)] = this;
 
-    // the tile a point is on, or null off the grid (a moving light's ground, DarknessManager)
+    // the tile a point is on, or null off the grid (the obstacle cell a line of sight starts in, LightMask.OwnCell)
     public static Tile At(Vector3 point)
     {
         Tile best = null;
@@ -172,24 +172,17 @@ public class Tile : MonoBehaviour
     }
 
     // an obstacle cell's final shape (Tommy, 2026-11-28; the grid managers call this once the cell's type is set). its
-    // art's exact pixels are kept for lights (LightMask: the still lights' glow and every gameplay light check), and one
-    // that blocks sight gets shadow casters of the art's outline (LightBlockers) for the lights that move: trees and
-    // forest too, so light stops at their drawn pixels. for sight, shots and insect pushes a boulder or bush cell blocks
-    // with that outline instead of the box, a tree or forest cell keeps the box (Tommy chose the split so forest walls
-    // stay solid). art without anything solid keeps the box and a square caster
+    // art's exact pixels are kept for line of sight (LightMask), and a boulder or bush cell pushes insects with that
+    // outline instead of the box, a tree or forest cell keeping the box (Tommy chose the split so forest walls stay
+    // solid). art without anything solid keeps the box
     public void ShapeObstacle(Sprite sprite, Matrix4x4 tileMatrix)
     {
         ObstacleZone zone = GetComponentInChildren<ObstacleZone>();
         if (zone == null) return;
         PixelMask.Shape art = PixelMask.Of(sprite);
-        if (art == null || art.smooth.Count == 0)
-        {
-            if (zone.blocksSight) LightBlockers.Add(zone.transform, LightBlockers.Cell);
-            return;
-        }
+        if (art == null || art.smooth.Count == 0) return;
         zone.art = art;
         zone.artMatrix = tileMatrix;
-        PolygonCollider2D shape = null;
         if (OutlinedObstacle(sprite))
         {
             BoxCollider2D box = zone.GetComponent<BoxCollider2D>();
@@ -198,40 +191,30 @@ public class Tile : MonoBehaviour
                 box.enabled = false;
                 Destroy(box);
             }
-            shape = zone.gameObject.AddComponent<PolygonCollider2D>();
+            PolygonCollider2D shape = zone.gameObject.AddComponent<PolygonCollider2D>();
             shape.pathCount = art.smooth.Count;
-        }
-        // where the tilemap draws the sprite: the cell's middle, through the tile's own matrix
-        Matrix4x4 toWorld = Matrix4x4.Translate(zone.transform.position) * tileMatrix;
-        for (int i = 0; i < art.smooth.Count; i++)
-        {
-            Vector2[] src = art.smooth[i];
-            Vector2[] path = new Vector2[src.Length];
-            Vector3[] shadow = new Vector3[src.Length];
-            for (int k = 0; k < src.Length; k++)
+            // where the tilemap draws the sprite: the cell's middle, through the tile's own matrix
+            Matrix4x4 toWorld = Matrix4x4.Translate(zone.transform.position) * tileMatrix;
+            for (int i = 0; i < art.smooth.Count; i++)
             {
-                Vector3 local = zone.transform.InverseTransformPoint(toWorld.MultiplyPoint3x4(src[k]));
-                path[k] = local;
-                shadow[k] = local;
+                Vector2[] src = art.smooth[i];
+                Vector2[] path = new Vector2[src.Length];
+                for (int k = 0; k < src.Length; k++)
+                    path[k] = zone.transform.InverseTransformPoint(toWorld.MultiplyPoint3x4(src[k]));
+                shape.SetPath(i, path);
             }
-            if (shape != null) shape.SetPath(i, path);
-            if (zone.blocksSight) LightBlockers.Add(zone.transform, shadow);
         }
         LightMask.MarkDirty();
     }
 
-    // a pine forest cell (GridTilemaps.ShapeObstacle): whether a pine stands in it, which decides whether it stops light
-    // and sight (LightMask). its box still stops insects either way
+    // a pine forest cell (GridTilemaps.ShapeObstacle): whether a pine stands in it, which decides whether it stops line of
+    // sight (LightMask). its box still stops insects either way
     public void MarkForest(bool pineStandsHere)
     {
         ObstacleZone zone = GetComponentInChildren<ObstacleZone>();
         if (zone == null) return;
         zone.forest = true;
         zone.pineStandsHere = pineStandsHere;
-        // only the tops of pines standing below: no shadow for the lights that move either
-        if (!pineStandsHere)
-            foreach (UnityEngine.Rendering.Universal.ShadowCaster2D caster in zone.GetComponentsInChildren<UnityEngine.Rendering.Universal.ShadowCaster2D>(true))
-                Destroy(caster.gameObject);
         LightMask.MarkDirty();
     }
 
