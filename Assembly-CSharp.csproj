@@ -101,6 +101,7 @@
     <Compile Include="Assets\Scripts\Environment\WaterZone.cs" />
     <Compile Include="Assets\Scripts\Environment\SightShade.cs" />
     <Compile Include="Assets\Scripts\Fertilizer\FertilizerManager.cs" />
+    <Compile Include="Assets\Scripts\GridManagers\GridTilemaps.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\BoggedBarrierEffect.cs" />
     <Compile Include="Assets\Scripts\Skills\UpdraftField.cs" />
     <Compile Include="Assets\Scripts\Spawning\WeatherManager.cs" />
