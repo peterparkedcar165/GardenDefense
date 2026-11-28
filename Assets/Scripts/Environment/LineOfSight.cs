@@ -1,8 +1,8 @@
 using UnityEngine;
 
 // what a plant that needs a clear line can see (Tommy, 2026-11-27). from where it stands, Rays rays go out
-// (one every half degree) to the first blocker: an obstacle tile's box (Tile.SpawnObstacleZone) or a cliff's
-// edge (CliffBuilder), both on the Obstacle layer; a LowCollider cell's box never blocks (Tommy, 2026-11-28). from
+// (one every half degree) to the first blocker: an obstacle tile's outline (its art's solid pixels, Tile.ShapeObstacle;
+// a plain box where a cell has no art) or a cliff's edge (CliffBuilder), both on the Obstacle layer; a LowCollider cell's box never blocks (Tommy, 2026-11-28). from
 // high ground only obstacles standing on high ground block
 // (it sees down past cliffs and over everything on low ground). who casts them and when is the plant's business (Plant;
 // a flying insect is hidden only when the low part of the line to it is blocked, Plant.InSight). the same rays decide its targeting and paint the red part of its range
@@ -10,10 +10,10 @@ using UnityEngine;
 public static class LineOfSight
 {
     public const int Rays = 720;
-    // obstacle boxes are 0.9 of a cell: two side by side leave a 0.1 gap, two meeting only at a corner a 0.14 slit
-    // (0.1 times root 2) right where a ray from a tile's middle runs at 45 degrees. rays a bit thicker than the slit
-    // (0.16 across) can't slip through either; at 0.12 the 45 degree ones went through diagonal tree lines (Tommy saw
-    // plants target past obstacles from certain tiles)
+    // rays 0.16 across: thin slits between obstacles (a box cell is 0.9 of a cell, so two side by side left a 0.1 gap,
+    // two meeting at a corner a 0.14 slit; art outlines can leave thinner ones) don't let sight through. at 0.12 the 45
+    // degree ones went through diagonal tree lines (Tommy saw plants target past obstacles from certain tiles). light
+    // is walked thin, pixel by pixel (LightMask)
     private const float RayRadius = 0.08f;
     public const float MaxDistance = 40f;
     private const float Step = 2f * Mathf.PI / Rays;
@@ -78,18 +78,8 @@ public static class LineOfSight
 
     // does light from a source reach a point (Tommy, 2026-11-28: every light, gameplay first): Collider cells and cliffs
     // block it as they block sight, from the source's ground; a light standing in an obstacle's own cell (a lamp tile)
-    // isn't blocked by that cell
-    public static bool LightReaches(Vector2 from, Vector2 to, bool fromHigh)
-    {
-        int n = Physics2D.Linecast(from, to, Filter, Hits);
-        for (int k = 0; k < n; k++)
-        {
-            Collider2D col = Hits[k].collider;
-            if (col == null || !Blocks(col, fromHigh) || col.OverlapPoint(from)) continue;
-            return false;
-        }
-        return true;
-    }
+    // isn't blocked by that cell. walked on the light grid at the art's pixel size, as the glow is drawn (LightMask)
+    public static bool LightReaches(Vector2 from, Vector2 to, bool fromHigh) => LightMask.Reaches(from, to, fromHigh);
 
     // is point in the clear, along the ray nearest its direction
     public static bool Sees(float[] rays, Vector2 origin, Vector2 point)

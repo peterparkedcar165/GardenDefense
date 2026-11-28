@@ -127,6 +127,9 @@ public class CaveGridManager : MonoBehaviour
             light.intensity            = lightIntensity;
             light.falloffIntensity     = lightFalloff;
             light.targetSortingLayers  = sortingLayerIDs;
+            // a lamp is a still light: drawn to the pixel, dark past walls and obstacles, its height from its tile
+            // (ExactLight, Tommy 2026-11-28)
+            ExactLight.Attach(light, false, highFromTile: true);
 
             DarknessManager.RegisterLightSource(lightGO.transform, lightRadius);
         }

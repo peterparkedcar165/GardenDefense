@@ -142,6 +142,7 @@ public abstract class Plant : Entity, IAttackable
     private bool _isSelected = false;
     private UnityEngine.Rendering.Universal.Light2D _light2D;
     private LightFader _lightFader;
+    private ExactLight _exactLight;
     private float _lastLightEmissionRange;
     protected virtual float LightIntensity => 0.5f;
     // the bar widget over the plant (health, attack and passive cooldown bars, skill circle),
@@ -428,6 +429,8 @@ public abstract class Plant : Entity, IAttackable
 
             _lightFader = lightObj.AddComponent<LightFader>();
             _lightFader.Setup(_light2D, LightIntensity);
+            // drawn to the pixel, dark past walls and obstacles (Tommy, 2026-11-28)
+            _exactLight = ExactLight.Attach(_light2D, OnHighground);
         }
 
         if (_light2D != null)
@@ -1113,6 +1116,7 @@ public abstract class Plant : Entity, IAttackable
 
         if (_light2D != null)
         {
+            if (_exactLight != null) _exactLight.fromHigh = OnHighground;
             if (lightEmissionRange != _lastLightEmissionRange)
             {
                 if (lightEmissionRange > 0f && _lastLightEmissionRange <= 0f)
@@ -1736,6 +1740,7 @@ public abstract class Plant : Entity, IAttackable
         fader.FadeOut(0.3f, destroyOnComplete: true);
         _light2D = null;
         _lightFader = null;
+        _exactLight = null;
     }
 
     public override void Kill()
@@ -2110,26 +2115,13 @@ public abstract class Plant : Entity, IAttackable
     }
 
     // does this plant's light reach a point (Tommy, 2026-11-28): Collider cells and cliffs block it as they block
-    // sight. a plant that needs a clear line uses its sight rays; any other one casts its own once, kept until it moves
-    private float[] _lightRays;
-    private bool _lightCast;
-    private Vector3 _lightOrigin;
-    private bool _lightFromHigh;
-
+    // sight, from the same ground (from high ground only raised obstacles). a plant with a light reads its drawn light's
+    // rays (ExactLight), so what's lit is what looks lit; any other one (Borrowed Light) walks the line on the light grid
     public bool LightReaches(Vector3 point)
     {
-        if (NeedsLineOfSight) return CanSee(point);
         bool high = OnHighground;
-        Vector3 here = transform.position;
-        if (!_lightCast || here != _lightOrigin || high != _lightFromHigh)
-        {
-            _lightCast = true;
-            _lightOrigin = here;
-            _lightFromHigh = high;
-            if (_lightRays == null) _lightRays = new float[LineOfSight.Rays];
-            LineOfSight.Cast(here, _lightRays, high);
-        }
-        return LineOfSight.Sees(_lightRays, _lightOrigin, point);
+        if (_exactLight != null && _exactLight.TryReaches(point, high, out bool reached)) return reached;
+        return LightMask.Reaches(transform.position, point, high);
     }
 
     // a flying insect: the line to it rises from the plant to its body, the way a shot climbs to it (Projectile), so

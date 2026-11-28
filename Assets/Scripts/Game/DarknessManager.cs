@@ -23,14 +23,14 @@ public class DarknessManager : MonoBehaviour
     [SerializeField] private float fadeDuration = 0.4f;
 
     // overhead: a light from the sky (Sunray, Zinnia's Artificial Sun) that walls don't block
-    private struct DynamicSource { public Transform t; public float radius; public bool overhead; }
+    private struct DynamicSource { public Transform t; public float radius; public bool overhead; public ExactLight exact; }
     private static readonly List<DynamicSource> _dynamicSources = new List<DynamicSource>();
 
     [Header("Light shadows (Tommy, 2026-11-28)")]
-    [Tooltip("how dark a light's shadow behind a wall or cliff is, 1 = none of its light gets past (proposal)")]
-    [Range(0f, 1f)] [SerializeField] private float lightShadowStrength = 0.9f;
-    [Tooltip("how soft a light's shadow edge is (proposal)")]
-    [Range(0f, 1f)] [SerializeField] private float lightShadowSoftness = 0.3f;
+    [Tooltip("how dark a moving light's shadow behind a wall or cliff is, 1 = none of its light gets past (Tommy: hard, like the still lights)")]
+    [Range(0f, 1f)] [SerializeField] private float lightShadowStrength = 1f;
+    [Tooltip("how soft a moving light's shadow edge is, 0 = a hard edge")]
+    [Range(0f, 1f)] [SerializeField] private float lightShadowSoftness = 0f;
 
     // the darkness this level would have absent any weather override - whatever the scene author
     // set isDark/pitchBlack to (or, on a litDuringSetup cave level, whatever the setup-phase fade
@@ -151,8 +151,9 @@ public class DarknessManager : MonoBehaviour
     }
 
     // the visible glow is blocked where the gameplay light is (Tommy, 2026-11-28): every point light on low ground casts
-    // shadows from the obstacle cells and cliff edges (LightBlockers). swept every ShadowSweepInterval, so a light made
-    // in between (a shot, a burn) goes without for a moment
+    // shadows from the obstacle cells and cliff edges (LightBlockers), hard edged. the still lights (plants, lamps) are
+    // drawn to the pixel instead (ExactLight) and skipped. swept every ShadowSweepInterval, so a light made in between (a
+    // shot, a burn) goes without for a moment
     private const float ShadowSweepInterval = 0.1f;
     private float _shadowSweepTimer;
 
@@ -164,7 +165,7 @@ public class DarknessManager : MonoBehaviour
         _shadowSweepTimer = ShadowSweepInterval;
         foreach (Light2D light in FindObjectsByType<Light2D>(FindObjectsInactive.Exclude))
         {
-            if (light.lightType != Light2D.LightType.Point) continue;
+            if (light.lightType != Light2D.LightType.Point || light.TryGetComponent(out ExactLight _)) continue;
             bool cast = CastsShadows(light);
             if (light.shadowsEnabled != cast) light.shadowsEnabled = cast;
             if (!cast) continue;
@@ -262,6 +263,8 @@ public class DarknessManager : MonoBehaviour
         public Plant plant;
         public bool fromHigh;
         public bool overhead;
+        // a still light drawn to the pixel (a lamp) answers from its own rays
+        public ExactLight exact;
     }
 
     private readonly List<LitSource> _lights = new List<LitSource>();
@@ -284,19 +287,20 @@ public class DarknessManager : MonoBehaviour
             DynamicSource source = _dynamicSources[i];
             if (source.t == null) { _dynamicSources.RemoveAt(i); continue; }
             Tile ground = Tile.At(source.t.position);
-            AddLight(source.t.position, source.radius, null, ground != null && ground.isHighground, source.overhead);
+            AddLight(source.t.position, source.radius, null, ground != null && ground.isHighground, source.overhead, source.exact);
         }
     }
 
-    private void AddLight(Vector3 position, float radius, Plant plant = null, bool fromHigh = false, bool overhead = false) =>
-        _lights.Add(new LitSource { position = position, radius = radius, sqrRadius = radius * radius, plant = plant, fromHigh = fromHigh, overhead = overhead });
+    private void AddLight(Vector3 position, float radius, Plant plant = null, bool fromHigh = false, bool overhead = false, ExactLight exact = null) =>
+        _lights.Add(new LitSource { position = position, radius = radius, sqrRadius = radius * radius, plant = plant, fromHigh = fromHigh, overhead = overhead, exact = exact });
 
-    // Collider cells and cliffs block light as they block sight (Tommy, 2026-11-28: every light source; the glow
-    // itself still draws round, gameplay first)
+    // Collider cells and cliffs block light as they block sight (Tommy, 2026-11-28: every light source), walked at the
+    // art's pixel size as the still lights' glow is drawn (LightMask, ExactLight)
     private static bool Reaches(LitSource light, Vector3 point)
     {
         if (light.overhead) return true;
         if (light.plant != null) return light.plant.LightReaches(point);
+        if (light.exact != null && light.exact.TryReaches(point, light.fromHigh, out bool reached)) return reached;
         return LineOfSight.LightReaches(light.position, point, light.fromHigh);
     }
 
@@ -313,7 +317,7 @@ public class DarknessManager : MonoBehaviour
     }
 
     public static void RegisterLightSource(Transform t, float radius, bool overhead = false) =>
-        _dynamicSources.Add(new DynamicSource { t = t, radius = radius, overhead = overhead });
+        _dynamicSources.Add(new DynamicSource { t = t, radius = radius, overhead = overhead, exact = t != null ? t.GetComponent<ExactLight>() : null });
 
     public static void UnregisterLightSource(Transform t) => _dynamicSources.RemoveAll(s => s.t == t);
 

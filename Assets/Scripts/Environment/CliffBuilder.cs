@@ -231,6 +231,19 @@ public class CliffBuilder : MonoBehaviour
         }
         // in the physics world at once, so a plant's first line of sight cast already meets them
         Physics2D.SyncTransforms();
+        LightMask.MarkDirty();
+    }
+
+    // the walls' ends in world space, two points a wall, for the light grid (LightMask)
+    public void CollectWalls(List<Vector2> into)
+    {
+        if (_edges == null) return;
+        foreach (EdgeCollider2D edge in _edges.GetComponents<EdgeCollider2D>())
+        {
+            if (!edge.enabled || edge.pointCount < 2) continue;
+            into.Add(_edges.transform.TransformPoint(edge.points[0]));
+            into.Add(_edges.transform.TransformPoint(edge.points[edge.pointCount - 1]));
+        }
     }
 
     // a wall between two cell corners (a cell's corner is its CellToWorld point)

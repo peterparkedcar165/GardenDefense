@@ -3,8 +3,9 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-// the visible side of light and walls (Tommy, 2026-11-28): obstacle cells and cliff edges get URP 2D shadow casters, so a
-// light's glow shows where it's blocked, as gameplay has it (LineOfSight.LightReaches). a caster's shape can only be given
+// the visible side of light and walls for lights that move (Tommy, 2026-11-28; still lights are drawn exactly by
+// ExactLight): obstacle cells (their art's outline) and cliff edges get URP 2D shadow casters, so a light's glow shows
+// where it's blocked, as gameplay has it (LightMask). a caster's shape can only be given
 // before it wakes (its path field is private), so it's made on an inactive object, shaped, then switched on. its shadow
 // falls on everything but the obstacles' own art (the Colliders and Non-Colliders_Air layers), so a tree or boulder isn't
 // darkened by its own shadow. which lights cast shadows is DarknessManager's business
@@ -50,40 +51,4 @@ public static class LightBlockers
         return new Vector3[] { a - n, a + n, b + n, b - n };
     }
 
-    // the outline a boulder or bush cell blocks with (Tommy, 2026-11-28): its sprite's physics shape (the largest one)
-    // through the tile's own matrix, in the cell's local space. null for anything else (trees and forest cells stay whole
-    // squares, so a forest wall has no gaps) and for a sprite without a shape
-    public static Vector2[] Outline(Sprite sprite, Matrix4x4 tileMatrix)
-    {
-        if (sprite == null) return null;
-        string name = sprite.name.ToLowerInvariant();
-        if (!name.Contains("boulder") && !name.Contains("bush")) return null;
-        int count = sprite.GetPhysicsShapeCount();
-        if (count == 0) return null;
-        List<Vector2> points = new List<Vector2>();
-        List<Vector2> best = null;
-        float bestArea = 0f;
-        for (int i = 0; i < count; i++)
-        {
-            points.Clear();
-            sprite.GetPhysicsShape(i, points);
-            float area = Mathf.Abs(Area(points));
-            if (area > bestArea) { bestArea = area; best = new List<Vector2>(points); }
-        }
-        if (best == null || best.Count < 3) return null;
-        Vector2[] outline = new Vector2[best.Count];
-        for (int i = 0; i < best.Count; i++) outline[i] = tileMatrix.MultiplyPoint3x4(best[i]);
-        return outline;
-    }
-
-    private static float Area(List<Vector2> p)
-    {
-        float a = 0f;
-        for (int i = 0; i < p.Count; i++)
-        {
-            Vector2 q = p[(i + 1) % p.Count];
-            a += p[i].x * q.y - q.x * p[i].y;
-        }
-        return a * 0.5f;
-    }
 }

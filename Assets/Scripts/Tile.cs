@@ -121,6 +121,7 @@ public class Tile : MonoBehaviour
             _obstacleBlocksSight = value;
             ObstacleZone zone = GetComponentInChildren<ObstacleZone>();
             if (zone != null) zone.blocksSight = value;
+            LightMask.MarkDirty();
         }
     }
 
@@ -170,29 +171,47 @@ public class Tile : MonoBehaviour
         zone.AddComponent<ObstacleZone>().blocksSight = _obstacleBlocksSight;
     }
 
-    // an obstacle cell's final shape (Tommy, 2026-11-28; the grid managers call this once the cell's type is set): a
-    // boulder or bush blocks with its own outline instead of the square, a tree or forest cell with the square; one that
-    // blocks sight also gets a shadow caster of that shape (LightBlockers), so lights show where they're blocked
+    // an obstacle cell's final shape (Tommy, 2026-11-28; the grid managers call this once the cell's type is set): the
+    // tile art's own pixel outline instead of the box (trees, forest, boulders, bushes alike; PixelMask), its exact pixels
+    // kept for lights (LightMask). one that blocks sight also gets shadow casters of that outline (LightBlockers) for the
+    // lights that move. art without anything solid keeps the box
     public void ShapeObstacle(Sprite sprite, Matrix4x4 tileMatrix)
     {
         ObstacleZone zone = GetComponentInChildren<ObstacleZone>();
         if (zone == null) return;
-        Vector2[] outline = LightBlockers.Outline(sprite, tileMatrix);
-        Vector3[] shadow = LightBlockers.Cell;
-        if (outline != null)
+        PixelMask.Shape art = PixelMask.Of(sprite);
+        if (art == null || art.smooth.Count == 0)
         {
-            BoxCollider2D box = zone.GetComponent<BoxCollider2D>();
-            if (box != null)
-            {
-                box.enabled = false;
-                Destroy(box);
-            }
-            PolygonCollider2D shape = zone.gameObject.AddComponent<PolygonCollider2D>();
-            shape.pathCount = 1;
-            shape.SetPath(0, outline);
-            shadow = System.Array.ConvertAll(outline, p => (Vector3)p);
+            if (zone.blocksSight) LightBlockers.Add(zone.transform, LightBlockers.Cell);
+            return;
         }
-        if (zone.blocksSight) LightBlockers.Add(zone.transform, shadow);
+        zone.art = art;
+        zone.artMatrix = tileMatrix;
+        BoxCollider2D box = zone.GetComponent<BoxCollider2D>();
+        if (box != null)
+        {
+            box.enabled = false;
+            Destroy(box);
+        }
+        PolygonCollider2D shape = zone.gameObject.AddComponent<PolygonCollider2D>();
+        shape.pathCount = art.smooth.Count;
+        // where the tilemap draws the sprite: the cell's middle, through the tile's own matrix
+        Matrix4x4 toWorld = Matrix4x4.Translate(zone.transform.position) * tileMatrix;
+        for (int i = 0; i < art.smooth.Count; i++)
+        {
+            Vector2[] src = art.smooth[i];
+            Vector2[] path = new Vector2[src.Length];
+            Vector3[] shadow = new Vector3[src.Length];
+            for (int k = 0; k < src.Length; k++)
+            {
+                Vector3 local = zone.transform.InverseTransformPoint(toWorld.MultiplyPoint3x4(src[k]));
+                path[k] = local;
+                shadow[k] = local;
+            }
+            shape.SetPath(i, path);
+            if (zone.blocksSight) LightBlockers.Add(zone.transform, shadow);
+        }
+        LightMask.MarkDirty();
     }
 
     private void OnMouseDown()

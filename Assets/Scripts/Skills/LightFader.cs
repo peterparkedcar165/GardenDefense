@@ -100,8 +100,14 @@ public class LightFader : MonoBehaviour
         cloneObj.transform.SetParent(_light.transform.parent);
         cloneObj.transform.position = _light.transform.position;
 
+        // same place, size and turn as the light, so a drawn light's picture (ExactLight) lands on the same pixels
+        cloneObj.transform.localScale = _light.transform.localScale;
+        cloneObj.transform.localRotation = _light.transform.localRotation;
+
         var clone = cloneObj.AddComponent<UnityEngine.Rendering.Universal.Light2D>();
         clone.lightType = _light.lightType;
+        clone.lightCookieSprite = _light.lightCookieSprite;
+        clone.shadowsEnabled = _light.shadowsEnabled;
         clone.color = _light.color;
         clone.falloffIntensity = _light.falloffIntensity;
         clone.targetSortingLayers = _light.targetSortingLayers;
