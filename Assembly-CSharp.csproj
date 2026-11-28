@@ -559,8 +559,8 @@
     <Compile Include="Assets\Scripts\StatusEffect\IronbarkCounterShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\CaveSpider.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\AirBubbleEffect.cs" />
-    <Compile Include="Assets\Scripts\Mulch\LifesapMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Environment\LineOfSight.cs" />
+    <Compile Include="Assets\Scripts\Mulch\LifesapMulchEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\Glowworm.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CactusShieldEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Stargazer.cs" />

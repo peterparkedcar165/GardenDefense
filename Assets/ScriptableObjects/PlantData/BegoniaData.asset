@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BegoniaData
   plantPrefab: {fileID: -3248773622810050089, guid: 63eb5dc8f809acf4a84718b08a9a7eea, type: 3}
   icon: {fileID: 21300000, guid: adc730a06fd32d1449e86eb5219c00bf, type: 3}
+  skillIcon: {fileID: 0}
   plantName: Begonia
   displayName: Begonia
   role: 2
@@ -22,7 +23,10 @@ MonoBehaviour:
   sunCost: 250
   placementLimit: 1
   tauntValue: 3
+  retainsAggro: 0
+  generatesSun: 0
   category: 1
+  widgetHeightOffset: 0
   skillTree: {fileID: 11400000, guid: 8a63d697ba7244889dd75e2cf5974b0b, type: 2}
   fertilizerPossibleStats: 22000000
   baseMaxHealth: 300
@@ -55,6 +59,7 @@ MonoBehaviour:
   baseMagicPenFlat: 0
   baseMagicPenPercent: 0
   baseLifesteal: 0
+  baseVisibility: 1
   baseCriticalChance: 0.05
   baseCriticalDamage: 1.5
   baseDotDamage: 0
@@ -76,6 +81,7 @@ MonoBehaviour:
   baseProjectileVisualHitboxRadius: 0.1
   projectileEmitLight: 0
   projectileLightRadius: 0.5
+  projectileLightIntensity: 0.4
   projectileLightColor: {r: 1, g: 1, b: 1, a: 1}
   baseAoERadius: 0
   minFlightDuration: 0.5
@@ -104,11 +110,12 @@ MonoBehaviour:
   basePrimerCooldownReduction: 0.5
   baseGerminateSpeedup: 0.5
   baseBlessingShare: 0.85
-  path1AttackRangePerLevel: 0.3
+  path1AttackRangePerLevel: 0.2
   baseWaterCooldownReduction: 2
   path1CooldownReductionPerLevel: 0.4
   baseGrassResistanceShred: 0.12
   path1GrassResistanceShredPerLevel: 0.04
+  path1WaterPrimerDurationPerLevel: 1
   path2ElementalAffinityPerLevel: 0.04
   path2GrassDamagePerLevel: 0.02
   path2GerminateSpeedupPerLevel: 0.1
@@ -116,3 +123,10 @@ MonoBehaviour:
   path3AttackSpeedBonusPerLevel: 0.06
   path3SkillDurationPerLevel: 3
   path3PrimerCooldownReductionPerLevel: 0.1
+  rangeGlitterMaterial: {fileID: 0}
+  rangeGlitterColorA: {r: 0.31, g: 0.76, b: 0.97, a: 1}
+  rangeGlitterColorB: {r: 0.7, g: 0.9, b: 0.99, a: 1}
+  rangeGlitterDensity: 0.8
+  rangeGlitterLifetime: {x: 1, y: 1.6}
+  rangeGlitterSize: {x: 0.07, y: 0.12}
+  rangeGlitterRiseSpeed: {x: 0.25, y: 0.5}

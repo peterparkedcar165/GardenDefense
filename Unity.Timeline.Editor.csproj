@@ -288,8 +288,8 @@
     <Compile Include="Library\PackageCache\com.unity.timeline@bfd27f8016ff\Editor\Manipulators\Trim\TrimItemModeRipple.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@bfd27f8016ff\Editor\Window\TimelineWindow_HeaderGui.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@bfd27f8016ff\Editor\Extensions\AnimationTrackExtensions.cs" />
-    <Compile Include="Library\PackageCache\com.unity.timeline@bfd27f8016ff\Editor\Utilities\AnimatedParameterCache.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@bfd27f8016ff\Editor\inspectors\ClipInspector\ClipInspectorSelectionInfo.cs" />
+    <Compile Include="Library\PackageCache\com.unity.timeline@bfd27f8016ff\Editor\Utilities\AnimatedParameterCache.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@bfd27f8016ff\Editor\Utilities\FrameRateDisplayUtility.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@bfd27f8016ff\Editor\Manipulators\Sequence\SelectAndMoveItem.cs" />
     <Compile Include="Library\PackageCache\com.unity.timeline@bfd27f8016ff\Editor\Recording\TimelineRecording_PlayableAsset.cs" />
