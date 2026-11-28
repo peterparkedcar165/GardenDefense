@@ -75,6 +75,7 @@ public class SnowGridManager : MonoBehaviour
 
                 // water over highground ground is highground water: the HighgroundWater map is gone (Tommy, 2026-11-28)
                 if (hasHighgroundGround) t.isHighground = true;
+                GridTilemaps.ShapeObstacle(t, cell, colliderTilemap, lowColliderTilemap, lightColliderTilemap);
                 if (hasLowgroundGround  || hasLowgroundWater)  t.isLowground  = true;
                 if (hasHeat) t.isHeatSource = true;
             }

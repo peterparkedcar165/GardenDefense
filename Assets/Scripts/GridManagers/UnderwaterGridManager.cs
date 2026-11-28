@@ -63,6 +63,7 @@ public class UnderwaterGridManager : MonoBehaviour
                 else                  t.tileType = TileType.Seafloor;
 
                 if (hasHighgroundGround) t.isHighground = true;
+                GridTilemaps.ShapeObstacle(t, cell, colliderTilemap, lowColliderTilemap, lightColliderTilemap);
                 if (hasAirBubble) t.isAirBubble = true;
             }
         }

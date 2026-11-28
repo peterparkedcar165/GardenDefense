@@ -170,6 +170,31 @@ public class Tile : MonoBehaviour
         zone.AddComponent<ObstacleZone>().blocksSight = _obstacleBlocksSight;
     }
 
+    // an obstacle cell's final shape (Tommy, 2026-11-28; the grid managers call this once the cell's type is set): a
+    // boulder or bush blocks with its own outline instead of the square, a tree or forest cell with the square; one that
+    // blocks sight also gets a shadow caster of that shape (LightBlockers), so lights show where they're blocked
+    public void ShapeObstacle(Sprite sprite, Matrix4x4 tileMatrix)
+    {
+        ObstacleZone zone = GetComponentInChildren<ObstacleZone>();
+        if (zone == null) return;
+        Vector2[] outline = LightBlockers.Outline(sprite, tileMatrix);
+        Vector3[] shadow = LightBlockers.Cell;
+        if (outline != null)
+        {
+            BoxCollider2D box = zone.GetComponent<BoxCollider2D>();
+            if (box != null)
+            {
+                box.enabled = false;
+                Destroy(box);
+            }
+            PolygonCollider2D shape = zone.gameObject.AddComponent<PolygonCollider2D>();
+            shape.pathCount = 1;
+            shape.SetPath(0, outline);
+            shadow = System.Array.ConvertAll(outline, p => (Vector3)p);
+        }
+        if (zone.blocksSight) LightBlockers.Add(zone.transform, shadow);
+    }
+
     private void OnMouseDown()
     {
         if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;

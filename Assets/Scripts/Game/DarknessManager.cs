@@ -26,6 +26,12 @@ public class DarknessManager : MonoBehaviour
     private struct DynamicSource { public Transform t; public float radius; public bool overhead; }
     private static readonly List<DynamicSource> _dynamicSources = new List<DynamicSource>();
 
+    [Header("Light shadows (Tommy, 2026-11-28)")]
+    [Tooltip("how dark a light's shadow behind a wall or cliff is, 1 = none of its light gets past (proposal)")]
+    [Range(0f, 1f)] [SerializeField] private float lightShadowStrength = 0.9f;
+    [Tooltip("how soft a light's shadow edge is (proposal)")]
+    [Range(0f, 1f)] [SerializeField] private float lightShadowSoftness = 0.3f;
+
     // the darkness this level would have absent any weather override - whatever the scene author
     // set isDark/pitchBlack to (or, on a litDuringSetup cave level, whatever the setup-phase fade
     // just computed). isDark/pitchBlack themselves become read-only derived values once Sunny
@@ -141,6 +147,49 @@ public class DarknessManager : MonoBehaviour
 
         ApplyOverride();
         UpdateSunLights(ease);
+        UpdateLightShadows();
+    }
+
+    // the visible glow is blocked where the gameplay light is (Tommy, 2026-11-28): every point light on low ground casts
+    // shadows from the obstacle cells and cliff edges (LightBlockers). swept every ShadowSweepInterval, so a light made
+    // in between (a shot, a burn) goes without for a moment
+    private const float ShadowSweepInterval = 0.1f;
+    private float _shadowSweepTimer;
+
+    private void UpdateLightShadows()
+    {
+        if (!_isDarkLevel) return;
+        _shadowSweepTimer -= Time.unscaledDeltaTime;
+        if (_shadowSweepTimer > 0f) return;
+        _shadowSweepTimer = ShadowSweepInterval;
+        foreach (Light2D light in FindObjectsByType<Light2D>(FindObjectsInactive.Exclude))
+        {
+            if (light.lightType != Light2D.LightType.Point) continue;
+            bool cast = CastsShadows(light);
+            if (light.shadowsEnabled != cast) light.shadowsEnabled = cast;
+            if (!cast) continue;
+            light.shadowIntensity = lightShadowStrength;
+            light.shadowSoftness = lightShadowSoftness;
+        }
+    }
+
+    // a light on low ground casts. one on high ground doesn't (it sees down past cliffs; raised obstacles near it
+    // still block its gameplay light), nor one on a flying insect, one from the sky (Sunray, the Artificial Sun), or one
+    // inside an obstacle's cell (a lamp tile), whose own caster would black out everything around it
+    private bool CastsShadows(Light2D light)
+    {
+        Transform t = light.transform;
+        for (int i = 0; i < _dynamicSources.Count; i++)
+        {
+            DynamicSource source = _dynamicSources[i];
+            if (source.overhead && source.t != null && (t == source.t || t.IsChildOf(source.t))) return false;
+        }
+        Plant plant = light.GetComponentInParent<Plant>();
+        if (plant != null) return !plant.OnHighground;
+        Insect insect = light.GetComponentInParent<Insect>();
+        if (insect != null && insect.isFlying) return false;
+        Tile ground = Tile.At(t.position);
+        return ground == null || (!ground.isHighground && ground.tileType != TileType.Obstacle);
     }
 
     private const float SunSweepInterval = 0.1f;

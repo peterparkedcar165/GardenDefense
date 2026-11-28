@@ -62,6 +62,7 @@ public class DaytimeGridManager : MonoBehaviour
 
                 // water over highground ground is highground water: the HighgroundWater map is gone (Tommy, 2026-11-28)
                 if (hasHighgroundGround) t.isHighground = true;
+                GridTilemaps.ShapeObstacle(t, cell, colliderTilemap, lowColliderTilemap);
                 if (hasLowgroundGround  || hasLowgroundWater)  t.isLowground  = true;
             }
         }

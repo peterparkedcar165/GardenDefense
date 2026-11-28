@@ -12,4 +12,16 @@ public static class GridTilemaps
             if (child.name == name && child.TryGetComponent(out Tilemap map)) return map;
         return null;
     }
+
+    // an obstacle cell's shape from whichever map holds its tile (Tile.ShapeObstacle, Tommy 2026-11-28)
+    public static void ShapeObstacle(Tile tile, Vector3Int cell, params Tilemap[] maps)
+    {
+        if (tile == null || tile.tileType != TileType.Obstacle) return;
+        foreach (Tilemap map in maps)
+        {
+            if (map == null || !map.HasTile(cell)) continue;
+            tile.ShapeObstacle(map.GetSprite(cell), map.GetTransformMatrix(cell));
+            return;
+        }
+    }
 }

@@ -240,5 +240,7 @@ public class CliffBuilder : MonoBehaviour
         Vector3 a = _edges.transform.InverseTransformPoint(tops.CellToWorld(fromCorner));
         Vector3 b = _edges.transform.InverseTransformPoint(tops.CellToWorld(toCorner));
         edge.points = new[] { (Vector2)a, (Vector2)b };
+        // and a thin shadow caster along it, so a light below the cliff shows blocked (Tommy, 2026-11-28)
+        LightBlockers.Add(_edges.transform, LightBlockers.Wall(a, b, 0.06f), "EdgeShadow");
     }
 }
