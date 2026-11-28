@@ -188,7 +188,8 @@ public class Glowshroom : Shooter
         foreach (Insect insect in snapshot)
         {
             if (insect == null || !insect.IsAlive) continue;
-            if (Vector3.Distance(transform.position, insect.transform.position) <= expandedRange)
+            // a flash of light: Collider cells and cliffs block it (Tommy, 2026-11-28)
+            if (Vector3.Distance(transform.position, insect.transform.position) <= expandedRange && InSight(insect))
                 insect.ApplyEffect(new BlindEffect(insect, BlindDuration, 1, this, BlindPenalty));
         }
 

@@ -2109,6 +2109,29 @@ public abstract class Plant : Entity, IAttackable
         return _sightRays == null || LineOfSight.Sees(_sightRays, _sightOrigin, point);
     }
 
+    // does this plant's light reach a point (Tommy, 2026-11-28): Collider cells and cliffs block it as they block
+    // sight. a plant that needs a clear line uses its sight rays; any other one casts its own once, kept until it moves
+    private float[] _lightRays;
+    private bool _lightCast;
+    private Vector3 _lightOrigin;
+    private bool _lightFromHigh;
+
+    public bool LightReaches(Vector3 point)
+    {
+        if (NeedsLineOfSight) return CanSee(point);
+        bool high = OnHighground;
+        Vector3 here = transform.position;
+        if (!_lightCast || here != _lightOrigin || high != _lightFromHigh)
+        {
+            _lightCast = true;
+            _lightOrigin = here;
+            _lightFromHigh = high;
+            if (_lightRays == null) _lightRays = new float[LineOfSight.Rays];
+            LineOfSight.Cast(here, _lightRays, high);
+        }
+        return LineOfSight.Sees(_lightRays, _lightOrigin, point);
+    }
+
     // a flying insect: the line to it rises from the plant to its body, the way a shot climbs to it (Projectile), so
     // only its part lower than Projectile.FliesOverHeight can be blocked. hidden when the first blocker toward the
     // spot under it comes before that height (Tommy, 2026-11-27: skip a flyer whose shot would crash first)

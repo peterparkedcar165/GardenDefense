@@ -23,6 +23,9 @@ public abstract class PlantAuraBuffEffect : StatusEffect
         this.centerOverride = centerOverride;
     }
 
+    // a light's aura (Calendula's and Tansy's): it ends where Collider cells or cliffs block the light (Tommy, 2026-11-28)
+    protected virtual bool IsLight => false;
+
     // subclasses that need extra per-tick work override this instead of OnTick
     protected virtual void OnAuraTick(float deltaTime) { }
 
@@ -39,6 +42,15 @@ public abstract class PlantAuraBuffEffect : StatusEffect
         {
             duration = 0f;
             return;
+        }
+        if (IsLight)
+        {
+            Plant lightFrom = centerOverride != null ? centerOverride.GetComponent<Plant>() : sourcePlant;
+            if (lightFrom != null && !lightFrom.LightReaches(target.transform.position))
+            {
+                duration = 0f;
+                return;
+            }
         }
         OnAuraTick(deltaTime);
     }

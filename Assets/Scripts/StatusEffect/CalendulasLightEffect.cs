@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class CalendulasLightEffect : PlantAuraBuffEffect
 {
+    protected override bool IsLight => true;
+
     private readonly float attackSpeedBonus;
 
     public CalendulasLightEffect(Entity target, int level, Plant source, float range, float attackSpeedBonus, Transform centerOverride = null)

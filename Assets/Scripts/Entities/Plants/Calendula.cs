@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class Calendula : Aura
 {
+    // her burst and her targeting see walls (Tommy, 2026-11-28): Collider cells and cliffs block them like her light
+    public override bool NeedsLineOfSight => true;
+
     protected override float LightIntensity => 1f;
 
     private CalendulaData CData => data as CalendulaData;
@@ -100,7 +103,7 @@ public class Calendula : Aura
         foreach (Plant plant in Plant.allPlants)
         {
             if (plant == null || !plant.IsAlive) continue;
-            if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange) continue;
+            if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange || !LightReaches(plant.transform.position)) continue;
             plant.ApplyEffect(new CalendulasEmberEffect(plant, 1, this, lightEmissionRange, fireDamageBonus));
         }
     }
@@ -173,7 +176,7 @@ public class Calendula : Aura
                 foreach (Insect insect in insects)
                 {
                     if (insect == null || !insect.IsAlive) continue;
-                    if (Vector2.Distance(transform.position, insect.transform.position) > lightEmissionRange) continue;
+                    if (Vector2.Distance(transform.position, insect.transform.position) > lightEmissionRange || !LightReaches(insect.transform.position)) continue;
                     insect.ApplyEffect(new GuidingLightEffect(insect, GuidingLightInterval * 2f, 1, this));
                 }
 
@@ -183,7 +186,7 @@ public class Calendula : Aura
                     foreach (Insect insect in insects)
                     {
                         if (insect == null || !insect.IsAlive) continue;
-                        if (Vector2.Distance(glowTarget.transform.position, insect.transform.position) > lightEmissionRange) continue;
+                        if (Vector2.Distance(glowTarget.transform.position, insect.transform.position) > lightEmissionRange || !glowTarget.LightReaches(insect.transform.position)) continue;
                         insect.ApplyEffect(new GuidingLightEffect(insect, GuidingLightInterval * 2f, 1, this));
                     }
                 }
@@ -204,7 +207,7 @@ public class Calendula : Aura
                 foreach (Plant plant in Plant.allPlants)
                 {
                     if (plant == null || !plant.IsAlive || plant == this) continue;
-                    if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange) continue;
+                    if (Vector2.Distance(transform.position, plant.transform.position) > lightEmissionRange || !LightReaches(plant.transform.position)) continue;
                     healed.Add(plant);
                     plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, RegenTags);
                 }
@@ -215,7 +218,7 @@ public class Calendula : Aura
                     foreach (Plant plant in Plant.allPlants)
                     {
                         if (plant == null || !plant.IsAlive || plant == this || healed.Contains(plant)) continue;
-                        if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange) continue;
+                        if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange || !glowTarget.LightReaches(plant.transform.position)) continue;
                         healed.Add(plant);
                         plant.Heal(plant.maxHealth * RadiantAuraHealPercent * RadiantAuraInterval, this, RegenTags);
                     }
@@ -236,7 +239,7 @@ public class Calendula : Aura
                 foreach (Plant plant in Plant.allPlants)
                 {
                     if (plant == null || !plant.IsAlive) continue;
-                    if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange) continue;
+                    if (Vector2.Distance(glowTarget.transform.position, plant.transform.position) > lightEmissionRange || !glowTarget.LightReaches(plant.transform.position)) continue;
                     plant.ApplyEffect(new CalendulasEmberEffect(plant, 1, this, lightEmissionRange, fireDamageBonus, glowTarget.transform));
                 }
             }
@@ -370,7 +373,7 @@ public class Calendula : Aura
             {
                 Insect insect = insects[i];
                 if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
-                if ((insect.transform.position - center).sqrMagnitude > radiusSqr) continue;
+                if ((insect.transform.position - center).sqrMagnitude > radiusSqr || !InSight(insect)) continue;
                 DamageInsect(insect);
             }
             insects.Clear();
@@ -387,7 +390,7 @@ public class Calendula : Aura
         {
             Insect insect = insects[i];
             if (insect == null || !insect.IsAlive || hit.Contains(insect)) continue;
-            if ((insect.transform.position - origin).sqrMagnitude > rangeSqr) continue;
+            if ((insect.transform.position - origin).sqrMagnitude > rangeSqr || !InSight(insect)) continue;
             DamageInsect(insect);
         }
         insects.Clear();

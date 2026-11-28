@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class CalendulasEmberEffect : PlantAuraBuffEffect
 {
+    protected override bool IsLight => true;
+
     private readonly float fireDamageBonus;
 
     public CalendulasEmberEffect(Entity target, int level, Plant source, float range, float fireDamageBonus, Transform centerOverride = null)

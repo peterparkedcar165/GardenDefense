@@ -76,6 +76,21 @@ public static class LineOfSight
         }
     }
 
+    // does light from a source reach a point (Tommy, 2026-11-28: every light, gameplay first): Collider cells and cliffs
+    // block it as they block sight, from the source's ground; a light standing in an obstacle's own cell (a lamp tile)
+    // isn't blocked by that cell
+    public static bool LightReaches(Vector2 from, Vector2 to, bool fromHigh)
+    {
+        int n = Physics2D.Linecast(from, to, Filter, Hits);
+        for (int k = 0; k < n; k++)
+        {
+            Collider2D col = Hits[k].collider;
+            if (col == null || !Blocks(col, fromHigh) || col.OverlapPoint(from)) continue;
+            return false;
+        }
+        return true;
+    }
+
     // is point in the clear, along the ray nearest its direction
     public static bool Sees(float[] rays, Vector2 origin, Vector2 point)
     {

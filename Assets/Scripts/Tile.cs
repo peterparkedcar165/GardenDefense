@@ -19,6 +19,22 @@ public class Tile : MonoBehaviour
         new Vector2Int(Mathf.RoundToInt(pos.x * 2), Mathf.RoundToInt(pos.y * 2));
 
     private void Awake()  => allTiles[TileKey(transform.position)] = this;
+
+    // the tile a point is on, or null off the grid (a moving light's ground, DarknessManager)
+    public static Tile At(Vector3 point)
+    {
+        Tile best = null;
+        float bestSqr = 0.51f;
+        int kx = Mathf.FloorToInt(point.x * 2f), ky = Mathf.FloorToInt(point.y * 2f);
+        for (int dx = -1; dx <= 2; dx++)
+            for (int dy = -1; dy <= 2; dy++)
+            {
+                if (!allTiles.TryGetValue(new Vector2Int(kx + dx, ky + dy), out Tile t) || t == null) continue;
+                float sqr = ((Vector2)(t.transform.position - point)).sqrMagnitude;
+                if (sqr < bestSqr) { bestSqr = sqr; best = t; }
+            }
+        return best;
+    }
     // only takes out its own entry: a tile of the next scene may already sit under the same key
     private void OnDestroy()
     {

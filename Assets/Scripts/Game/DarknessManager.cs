@@ -22,7 +22,9 @@ public class DarknessManager : MonoBehaviour
     [Tooltip("how long (seconds) the fade from the setup intensity down to 0 takes")]
     [SerializeField] private float fadeDuration = 0.4f;
 
-    private static readonly List<(Transform t, float radius)> _dynamicSources = new List<(Transform, float)>();
+    // overhead: a light from the sky (Sunray, Zinnia's Artificial Sun) that walls don't block
+    private struct DynamicSource { public Transform t; public float radius; public bool overhead; }
+    private static readonly List<DynamicSource> _dynamicSources = new List<DynamicSource>();
 
     // the darkness this level would have absent any weather override - whatever the scene author
     // set isDark/pitchBlack to (or, on a litDuringSetup cave level, whatever the setup-phase fade
@@ -206,6 +208,11 @@ public class DarknessManager : MonoBehaviour
         public Vector3 position;
         public float radius;
         public float sqrRadius;
+        // who checks whether it reaches a point (IsIlluminated): a plant from its own rays, anything else by a line
+        // from its ground (a flying insect's from above), an overhead light not at all
+        public Plant plant;
+        public bool fromHigh;
+        public bool overhead;
     }
 
     private readonly List<LitSource> _lights = new List<LitSource>();
@@ -216,22 +223,36 @@ public class DarknessManager : MonoBehaviour
         if (_lightsFrame == Time.frameCount) return;
         _lightsFrame = Time.frameCount;
         _lights.Clear();
+        _litCache.Clear();
         foreach (Plant plant in Plant.allPlants)
-            if (plant != null && plant.lightEmissionRange > 0) AddLight(plant.transform.position, plant.lightEmissionRange);
+            if (plant != null && plant.lightEmissionRange > 0) AddLight(plant.transform.position, plant.lightEmissionRange, plant);
         foreach (Insect insect in Insect.allInsects)
-            if (insect != null && insect.IsAlive && insect.lightEmissionRange > 0) AddLight(insect.transform.position, insect.lightEmissionRange);
+            if (insect != null && insect.IsAlive && insect.lightEmissionRange > 0) AddLight(insect.transform.position, insect.lightEmissionRange, null, insect.isFlying);
         foreach (Insect insect in Insect.friendlyInsects)
-            if (insect != null && insect.IsAlive && insect.lightEmissionRange > 0) AddLight(insect.transform.position, insect.lightEmissionRange);
+            if (insect != null && insect.IsAlive && insect.lightEmissionRange > 0) AddLight(insect.transform.position, insect.lightEmissionRange, null, insect.isFlying);
         for (int i = _dynamicSources.Count - 1; i >= 0; i--)
         {
-            var (t, radius) = _dynamicSources[i];
-            if (t == null) { _dynamicSources.RemoveAt(i); continue; }
-            AddLight(t.position, radius);
+            DynamicSource source = _dynamicSources[i];
+            if (source.t == null) { _dynamicSources.RemoveAt(i); continue; }
+            Tile ground = Tile.At(source.t.position);
+            AddLight(source.t.position, source.radius, null, ground != null && ground.isHighground, source.overhead);
         }
     }
 
-    private void AddLight(Vector3 position, float radius) =>
-        _lights.Add(new LitSource { position = position, radius = radius, sqrRadius = radius * radius });
+    private void AddLight(Vector3 position, float radius, Plant plant = null, bool fromHigh = false, bool overhead = false) =>
+        _lights.Add(new LitSource { position = position, radius = radius, sqrRadius = radius * radius, plant = plant, fromHigh = fromHigh, overhead = overhead });
+
+    // Collider cells and cliffs block light as they block sight (Tommy, 2026-11-28: every light source; the glow
+    // itself still draws round, gameplay first)
+    private static bool Reaches(LitSource light, Vector3 point)
+    {
+        if (light.overhead) return true;
+        if (light.plant != null) return light.plant.LightReaches(point);
+        return LineOfSight.LightReaches(light.position, point, light.fromHigh);
+    }
+
+    // the answers this frame by point: the same insect is asked about by every plant's target search
+    private readonly Dictionary<Vector3, bool> _litCache = new Dictionary<Vector3, bool>();
 
     private static float LightFalloff(Vector3 point, Vector3 source, float radius)
     {
@@ -242,7 +263,8 @@ public class DarknessManager : MonoBehaviour
         return 1f - Mathf.SmoothStep(0f, 1f, (Mathf.Sqrt(sqr) - inner) / (radius - inner));
     }
 
-    public static void RegisterLightSource(Transform t, float radius) => _dynamicSources.Add((t, radius));
+    public static void RegisterLightSource(Transform t, float radius, bool overhead = false) =>
+        _dynamicSources.Add(new DynamicSource { t = t, radius = radius, overhead = overhead });
 
     public static void UnregisterLightSource(Transform t) => _dynamicSources.RemoveAll(s => s.t == t);
 
@@ -251,11 +273,14 @@ public class DarknessManager : MonoBehaviour
         if (!isDark) return true;
 
         GatherLights();
-        for (int i = 0; i < _lights.Count; i++)
+        if (_litCache.TryGetValue(position, out bool known)) return known;
+        bool lit = false;
+        for (int i = 0; i < _lights.Count && !lit; i++)
         {
             LitSource light = _lights[i];
-            if ((position - light.position).sqrMagnitude <= light.sqrRadius) return true;
+            if ((position - light.position).sqrMagnitude <= light.sqrRadius && Reaches(light, position)) lit = true;
         }
-        return false;
+        _litCache[position] = lit;
+        return lit;
     }
 }
