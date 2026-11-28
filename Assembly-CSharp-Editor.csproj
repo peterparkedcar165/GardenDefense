@@ -55,6 +55,7 @@
     <Compile Include="Assets\Editor\RestrictedStatTypeDrawer.cs" />
     <Compile Include="Assets\Editor\MainMenuPlanks.cs" />
     <Compile Include="Assets\Editor\RouteBuilder.cs" />
+    <Compile Include="Assets\Editor\ColliderExclusivity.cs" />
     <Compile Include="Assets\Editor\NewLevel.cs" />
   </ItemGroup>
   <ItemGroup>
