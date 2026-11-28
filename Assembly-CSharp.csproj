@@ -115,6 +115,7 @@
     <Compile Include="Assets\Scripts\UI\CursorManager.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\VerdantFervorEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\SeasonedOakMulchEffect.cs" />
+    <Compile Include="Assets\Scripts\Environment\RayFan.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\CalendulasLightEffect.cs" />
     <Compile Include="Assets\Scripts\Mulch\CriticalRejuvenationMulchEffect.cs" />
     <Compile Include="Assets\Scripts\LevelSelector\LoadoutSlot.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Assets\Scripts\StatusEffect\CorrosionEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Cactus.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\WinterMoth.cs" />
+    <Compile Include="Assets\Scripts\Environment\ExactLight.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\KelpData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\WeatherEffects\HardCC\HardCrowdControl.cs" />
     <Compile Include="Assets\Scripts\UI\MirrorGraphic.cs" />
