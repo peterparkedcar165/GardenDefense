@@ -23,6 +23,10 @@ public class CliffBuilder : MonoBehaviour
     public Tilemap boundsMap;
     public Tilemap tops;
     public Tilemap faces;
+    // off for a decoration tier of high ground (Tommy, 2026-11-28: HighgroundGround2 and up, made by Tools > Garden
+    // Defense > Add Highground Tier): its cliffs are drawn but lay no walls, so nothing in play changes
+    [Tooltip("lay the cliff walls in play (line of sight, insects); off for a decoration tier")]
+    public bool buildEdges = true;
 
     // neighbour bits: 0 N, 1 NE, 2 E, 3 SE, 4 S, 5 SW, 6 W, 7 NW (y goes up)
     private static readonly Vector3Int[] Offsets =
@@ -79,7 +83,7 @@ public class CliffBuilder : MonoBehaviour
     {
         Tilemap.tilemapTileChanged += OnTilesChanged;
         Rebuild();
-        if (Application.isPlaying) BuildEdges();
+        if (Application.isPlaying && buildEdges) BuildEdges();
     }
 
     private void OnDisable()

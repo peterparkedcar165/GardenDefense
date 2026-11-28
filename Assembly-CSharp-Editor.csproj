@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\WeatherManagerEditor.cs" />
     <Compile Include="Assets\Editor\MissingScriptCleaner.cs" />
+    <Compile Include="Assets\Editor\HighgroundTiers.cs" />
     <Compile Include="Assets\Editor\RestrictedStatTypeDrawer.cs" />
     <Compile Include="Assets\Editor\MainMenuPlanks.cs" />
     <Compile Include="Assets\Editor\RouteBuilder.cs" />
