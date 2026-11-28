@@ -2077,12 +2077,14 @@ public abstract class Plant : Entity, IAttackable
 
     // ---------- line of sight (Tommy, 2026-11-27) ----------
     // a plant that needs a clear line (straight and homing shooters, Stargazer, Kelp, Rhodiola: NeedsLineOfSight)
-    // can't target a ground insect or an ally it can't see. from low ground, obstacles (by their drawn pixels) and
-    // raised ground (out to its drawn cliff edge) block the line; from high ground only trees, bushes and boulders
-    // standing on high ground do (it sees down past cliffs and over everything on low ground). a flying insect is
-    // hidden only when the low part of the line to it is blocked (InSight). what it sees is its own lines (RayFan, on
-    // the light grid, LightMask), the same ones its light is drawn from. the part of its range it can't see shows red
-    // on its range circle (SightShade)
+    // can't target an insect or an ally it can't see. since 2026-11-28 with heights (Heights, LineOfSight): its eye sits
+    // Heights.Eye over its ground and it sees a body (Heights.Body over its ground, a flyer as high as it flies) when the
+    // straight line to it clears everything standing between them. so from low ground a boulder, bush or forest hides
+    // what's behind it and the ground up on a cliff stays hidden, while a body near the top of a cliff shows over the
+    // edge; from high ground it sees bodies below the cliff and over the boulders and bushes below, but not past a
+    // forest or anything standing up on the high ground. a ground target is read from its own lines (RayFan, on the
+    // light grid, LightMask), the same ones its light is drawn from. the part of its range it can't see shows red on
+    // its range circle (SightShade)
     // melee plants need one too (Tommy, 2026-11-27: Acorn Knight, Bird of Paradise, Cactus)
     public virtual bool NeedsLineOfSight => IsMeleeAttacker;
 
@@ -2094,6 +2096,9 @@ public abstract class Plant : Entity, IAttackable
 
     public bool OnHighground => occupiedTile != null && occupiedTile.isHighground;
 
+    // where its eye and its light sit over low ground: Heights.Eye over its own ground
+    public float EyeZ => Heights.EyeOver(OnHighground);
+
     // out past its range (when it needs a clear line) and its light, by a cell, in half cell steps so small range
     // changes don't cast again
     private float FanReach(float atLeast) =>
@@ -2102,44 +2107,37 @@ public abstract class Plant : Entity, IAttackable
     private RayFan EnsureFan(float atLeast)
     {
         Vector2 here = transform.position;
-        bool high = OnHighground;
-        bool walls = _exactLight != null;
+        float eye = EyeZ;
         float reach = FanReach(atLeast);
-        if (_fan != null && _fan.Fits(here, high, reach, walls)) return _fan;
+        if (_fan != null && _fan.Fits(here, eye, reach)) return _fan;
         if (_fan != null) reach = Mathf.Max(reach, _fan.Reach);
-        _fan = LineOfSight.Cast(here, high, reach, _fan, 2f, walls);
+        _fan = LineOfSight.Cast(here, eye, reach, _fan);
         _sightVersion++;
         return _fan;
     }
 
     private RayFan EnsureFan() => EnsureFan(0f);
 
-    // can this plant see a point on the ground (an ally, or a ground insect's spot)
+    // can this plant see a body standing at a point (an ally, or a ground insect)
     public bool CanSee(Vector3 point)
     {
         if (!NeedsLineOfSight) return true;
         return EnsureFan().Sees(point);
     }
 
-    // does this plant's light reach a point (Tommy, 2026-11-28): along its own lines, the ones its glow is drawn from
-    // (ExactLight) and its sight reads, so what's lit is what looks lit and what it can target. a plant without a light
-    // of its own (a Borrowed Light origin) reads the same kind of lines
+    // does this plant's light reach a body standing at a point (Tommy, 2026-11-28): along its own lines, the ones its
+    // glow is drawn from (ExactLight: its body light lights exactly these) and its sight reads, so what's lit is what
+    // looks lit and what it can target. a plant without a light of its own (a Borrowed Light origin) reads the same
+    // kind of lines
     public bool LightReaches(Vector3 point) => EnsureFan().Sees(point);
 
-    // a flying insect: the line to it rises from the plant to its body, the way a shot climbs to it (Projectile), so
-    // only its part lower than Projectile.FliesOverHeight can be blocked. hidden when the first blocker toward the
-    // spot under it comes before that height (Tommy, 2026-11-27: skip a flyer whose shot would crash first)
+    // an insect: a ground one from its own lines (CanSee), a flying one by the straight line up to its body, the line
+    // its shots fly along (Projectile; Tommy, 2026-11-27: skip a flyer whose shot would crash first)
     public bool InSight(Insect insect)
     {
         if (!insect.isFlying) return CanSee(insect.transform.position);
         if (!NeedsLineOfSight) return true;
-        RayFan fan = EnsureFan();
-        Vector2 toward = (Vector2)insect.transform.position - fan.Origin;
-        float ground = toward.magnitude;
-        if (ground < 0.001f) return true;
-        float height = insect.GetAimPoint().y - insect.transform.position.y;
-        float lowPart = height > Projectile.FliesOverHeight ? ground * Projectile.FliesOverHeight / height : ground;
-        return fan.Clear(fan.Origin + toward / ground * lowPart) >= lowPart - 1e-4f;
+        return LineOfSight.Sees(transform.position, EyeZ, insect.transform.position, LineOfSight.BodyOf(insect));
     }
 
     // the red part of its range circle, kept up to date while the circle shows
@@ -2150,7 +2148,7 @@ public abstract class Plant : Entity, IAttackable
         // F8 on a selected plant: its line of sight readout in the console (LineOfSight.LogReadout)
         if (_isSelected && UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.f8Key.wasPressedThisFrame)
         {
-            LineOfSight.LogReadout($"{name} (needs line of sight: {NeedsLineOfSight})", transform.position, OnHighground, attackRange, NeedsLineOfSight ? EnsureFan() : null, occupiedTile);
+            LineOfSight.LogReadout($"{name} (needs line of sight: {NeedsLineOfSight})", transform.position, EyeZ, attackRange, NeedsLineOfSight ? EnsureFan() : null, occupiedTile);
             Debug.Log($"[LineOfSight] {name}: sight version {_sightVersion}; " + (_sightShade != null ? _sightShade.Describe() : "no red area made yet") +
                       $"; circleRadius '{(circleRadius != null ? circleRadius.name : "none")}' active {(circleRadius != null && circleRadius.gameObject.activeInHierarchy)}");
         }

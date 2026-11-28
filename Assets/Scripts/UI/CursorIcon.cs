@@ -249,9 +249,10 @@ public class CursorIcon : MonoBehaviour
     {
         if (_previewShade == null) _previewShade = SightShade.On(rangePreviewCircle);
         if (!cachedPlant.NeedsLineOfSight) { _previewShade.Hide(); return; }
-        if (_previewFan == null || _previewRaysTile != tile || !_previewFan.Fits(tile.transform.position, tile.isHighground, range, false))
+        float eye = Heights.EyeOver(tile.isHighground);
+        if (_previewFan == null || _previewRaysTile != tile || !_previewFan.Fits(tile.transform.position, eye, range))
         {
-            _previewFan = LineOfSight.Cast(tile.transform.position, tile.isHighground, range + 0.5f, _previewFan, 1f);
+            _previewFan = LineOfSight.Cast(tile.transform.position, eye, range + 0.5f, _previewFan, 1f);
             _previewRaysTile = tile;
             _previewRaysVersion++;
         }
@@ -260,7 +261,7 @@ public class CursorIcon : MonoBehaviour
         // F8 while placing or moving a plant: the preview's line of sight readout in the console
         if (UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.f8Key.wasPressedThisFrame)
         {
-            LineOfSight.LogReadout($"preview of {cachedPlant.name}", tile.transform.position, tile.isHighground, range, _previewFan, tile);
+            LineOfSight.LogReadout($"preview of {cachedPlant.name}", tile.transform.position, eye, range, _previewFan, tile);
             Debug.Log($"[LineOfSight] preview: version {_previewRaysVersion}; " + _previewShade.Describe());
         }
 #endif

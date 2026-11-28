@@ -220,6 +220,21 @@ public class Tile : MonoBehaviour
         LightMask.MarkDirty();
     }
 
+    // a pine forest cell (GridTilemaps.ShapeObstacle): whether a pine stands in it, which decides whether it stops light
+    // and sight (LightMask). its box still stops insects either way
+    public void MarkForest(bool pineStandsHere)
+    {
+        ObstacleZone zone = GetComponentInChildren<ObstacleZone>();
+        if (zone == null) return;
+        zone.forest = true;
+        zone.pineStandsHere = pineStandsHere;
+        // only the tops of pines standing below: no shadow for the lights that move either
+        if (!pineStandsHere)
+            foreach (UnityEngine.Rendering.Universal.ShadowCaster2D caster in zone.GetComponentsInChildren<UnityEngine.Rendering.Universal.ShadowCaster2D>(true))
+                Destroy(caster.gameObject);
+        LightMask.MarkDirty();
+    }
+
     // the cells whose sight and push shape is their art's outline: boulders (the short LowCollider ones too) and bushes
     private static bool OutlinedObstacle(Sprite sprite)
     {

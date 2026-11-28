@@ -74,7 +74,8 @@ public class SightShade : MonoBehaviour
         _version = -1;
     }
 
-    // a texel is red when it's inside the circle and further out than its line gets. false if nothing's hidden
+    // a texel is red when it's inside the circle and a body standing there would be hidden from the middle (RayFan,
+    // with heights). false if nothing's hidden
     private bool Paint(RayFan fan, float range)
     {
         EnsureTables();
@@ -83,7 +84,7 @@ public class SightShade : MonoBehaviour
         for (int i = 0; i < _paint.Length; i++)
         {
             float d = _texelDist[i];
-            bool hidden = d <= 0.5f && d * toWorld > fan.Ground(fan.Index01(_texelTurn[i]));
+            bool hidden = d <= 0.5f && !fan.Lit(fan.Index01(_texelTurn[i]), d * toWorld, RayFan.Kind.Body);
             _paint[i] = hidden ? ShadeColor : default;
             if (hidden) _blocked++;
         }

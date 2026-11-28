@@ -80,7 +80,7 @@ public class Moth : FlyingInsect
             if (insect == null || insect == this || !insect.IsAlive || insect.lightEmissionRange <= 0f) continue;
             float range = insect.lightEmissionRange;
             if ((insect.transform.position - here).sqrMagnitude <= range * range
-                && LineOfSight.LightReaches(insect.transform.position, here, insect.isFlying))
+                && LineOfSight.LightReaches(insect.transform.position, LineOfSight.BodyOf(insect), here))
                 return true;
         }
         return false;

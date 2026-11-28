@@ -258,10 +258,11 @@ public class DarknessManager : MonoBehaviour
         public Vector3 position;
         public float radius;
         public float sqrRadius;
-        // who checks whether it reaches a point (IsIlluminated): a plant from its own rays, anything else by a line
-        // from its ground (a flying insect's from above), an overhead light not at all
+        // who checks whether it reaches a point (IsIlluminated): a plant from its own rays, anything else by a straight
+        // line from its height (z over low ground: an insect's body, a flyer's as high as it flies), an overhead light
+        // not at all
         public Plant plant;
-        public bool fromHigh;
+        public float z;
         public bool overhead;
         // a still light drawn to the pixel (a lamp) answers from its own rays
         public ExactLight exact;
@@ -279,20 +280,21 @@ public class DarknessManager : MonoBehaviour
         foreach (Plant plant in Plant.allPlants)
             if (plant != null && plant.lightEmissionRange > 0) AddLight(plant.transform.position, plant.lightEmissionRange, plant);
         foreach (Insect insect in Insect.allInsects)
-            if (insect != null && insect.IsAlive && insect.lightEmissionRange > 0) AddLight(insect.transform.position, insect.lightEmissionRange, null, insect.isFlying);
+            if (insect != null && insect.IsAlive && insect.lightEmissionRange > 0) AddLight(insect.transform.position, insect.lightEmissionRange, null, LineOfSight.BodyOf(insect));
         foreach (Insect insect in Insect.friendlyInsects)
-            if (insect != null && insect.IsAlive && insect.lightEmissionRange > 0) AddLight(insect.transform.position, insect.lightEmissionRange, null, insect.isFlying);
+            if (insect != null && insect.IsAlive && insect.lightEmissionRange > 0) AddLight(insect.transform.position, insect.lightEmissionRange, null, LineOfSight.BodyOf(insect));
         for (int i = _dynamicSources.Count - 1; i >= 0; i--)
         {
             DynamicSource source = _dynamicSources[i];
             if (source.t == null) { _dynamicSources.RemoveAt(i); continue; }
-            Tile ground = Tile.At(source.t.position);
-            AddLight(source.t.position, source.radius, null, ground != null && ground.isHighground, source.overhead, source.exact);
+            // a lamp as high as it sits, anything else (a shot's or a burn's glow) as high as a body
+            float z = source.exact != null ? source.exact.Z : LineOfSight.BodyAt(source.t.position);
+            AddLight(source.t.position, source.radius, null, z, source.overhead, source.exact);
         }
     }
 
-    private void AddLight(Vector3 position, float radius, Plant plant = null, bool fromHigh = false, bool overhead = false, ExactLight exact = null) =>
-        _lights.Add(new LitSource { position = position, radius = radius, sqrRadius = radius * radius, plant = plant, fromHigh = fromHigh, overhead = overhead, exact = exact });
+    private void AddLight(Vector3 position, float radius, Plant plant = null, float z = Heights.Body, bool overhead = false, ExactLight exact = null) =>
+        _lights.Add(new LitSource { position = position, radius = radius, sqrRadius = radius * radius, plant = plant, z = z, overhead = overhead, exact = exact });
 
     // Collider cells and cliffs block light as they block sight (Tommy, 2026-11-28: every light source), walked at the
     // art's pixel size as the still lights' glow is drawn (LightMask, ExactLight)
@@ -300,8 +302,8 @@ public class DarknessManager : MonoBehaviour
     {
         if (light.overhead) return true;
         if (light.plant != null) return light.plant.LightReaches(point);
-        if (light.exact != null && light.exact.TryReaches(point, light.fromHigh, out bool reached)) return reached;
-        return LineOfSight.LightReaches(light.position, point, light.fromHigh);
+        if (light.exact != null && light.exact.TryReaches(point, out bool reached)) return reached;
+        return LineOfSight.LightReaches(light.position, light.z, point);
     }
 
     // the answers this frame by point: the same insect is asked about by every plant's target search

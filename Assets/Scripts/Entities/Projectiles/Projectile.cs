@@ -209,12 +209,21 @@ public abstract class Projectile : MonoBehaviour
         trackedInsect = target != null ? target.GetComponent<Insect>() : null;
     }
 
-    // line of sight (Tommy, 2026-11-27): a shot by a plant that needs a clear line crashes into the first blocker on
-    // its way and is gone. from low ground that's any obstacle or cliff; from high ground only an obstacle on high
-    // ground (it flies down past cliffs and over obstacles below). a shot whose visual has climbed higher than
-    // FliesOverHeight (on its way up to a flying insect, about 2 up) flies over them all, wherever it is by then
-    public const float FliesOverHeight = 1f;
-    protected virtual bool StopsAtBlockers => source != null && source.NeedsLineOfSight && _visualHeightOffset <= FliesOverHeight;
+    // line of sight (Tommy, 2026-11-27; heights 2026-11-28): a shot by a plant that needs a clear line flies along that
+    // line, straight from the plant's eye (Plant.EyeZ) to its target's body (LineOfSight.BodyOf), and crashes into the
+    // first thing standing above it on the way: no hit, gone. so it gets wherever its plant can see: from high ground
+    // down past cliffs and over the boulders and bushes below, up to a flyer over whatever stays under the line
+    protected virtual bool StopsAtBlockers => source != null && source.NeedsLineOfSight;
+
+    // the shot's height on its way: the line's over where it is, held where it last was once the target is gone
+    private float _lineZ = float.NaN;
+    private float LineZ(Vector2 at)
+    {
+        if (trackedTarget == null) return float.IsNaN(_lineZ) ? source.EyeZ : _lineZ;
+        Vector2 to = trackedTarget.transform.position;
+        float body = trackedInsect != null ? LineOfSight.BodyOf(trackedInsect) : LineOfSight.BodyAt(to);
+        return LineOfSight.HeightAlong(source.transform.position, source.EyeZ, to, body, at);
+    }
 
     // stopped by a blocker: no hit, gone, its particles left to fade
     protected virtual void OnBlocked()
@@ -271,12 +280,19 @@ public abstract class Projectile : MonoBehaviour
         }
 
         Vector3 stepFrom = transform.position;
+        bool stops = StopsAtBlockers;
+        float zFrom = stops ? LineZ(stepFrom) : 0f;
         transform.position += direction * groundSpeed * Time.deltaTime;
-        if (StopsAtBlockers && LineOfSight.Blocked(stepFrom, transform.position, source.OnHighground, out Vector2 blockedAt))
+        if (stops)
         {
-            transform.position = new Vector3(blockedAt.x, blockedAt.y, transform.position.z);
-            OnBlocked();
-            return;
+            float zTo = LineZ(transform.position);
+            _lineZ = zTo;
+            if (LineOfSight.Blocked(stepFrom, zFrom, transform.position, zTo, out Vector2 blockedAt))
+            {
+                transform.position = new Vector3(blockedAt.x, blockedAt.y, transform.position.z);
+                OnBlocked();
+                return;
+            }
         }
         OnBaseMoved();
 

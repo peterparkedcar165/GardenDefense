@@ -105,11 +105,11 @@ public class EmberProjectile : MonoBehaviour
         float left = Vector3.Distance(stepFrom, targetPos);
         transform.position = Vector3.MoveTowards(stepFrom, targetPos, _speed * Time.deltaTime);
         if (left > 0.0001f) _height += (targetHeight - _height) * Mathf.Clamp01(_speed * Time.deltaTime / left);
-        // line of sight (Tommy, 2026-11-27): it crashes into the first blocker on its way (from low ground any
-        // obstacle or cliff, from high ground only an obstacle on high ground), checked where it is on the ground,
-        // unless it has climbed higher than Projectile.FliesOverHeight (on its way up to a flying insect)
-        if (_source != null && heightFrom <= Projectile.FliesOverHeight &&
-            LineOfSight.Blocked((Vector2)stepFrom - Vector2.up * heightFrom, (Vector2)transform.position - Vector2.up * _height, _source.OnHighground, out _))
+        // line of sight (Tommy, 2026-11-27; heights 2026-11-28): it crashes into the first thing standing above its line
+        // (Crashes), checked where it is on the ground
+        Vector2 targetGround = targetInsect != null ? (Vector2)targetInsect.transform.position : (Vector2)((Entity)_target).transform.position;
+        float targetZ = targetInsect != null ? LineOfSight.BodyOf(targetInsect) : LineOfSight.BodyAt(targetGround);
+        if (_source != null && Crashes((Vector2)stepFrom - Vector2.up * heightFrom, (Vector2)transform.position - Vector2.up * _height, targetGround, targetZ))
         {
             Destroy(gameObject);
             return;
@@ -117,6 +117,24 @@ public class EmberProjectile : MonoBehaviour
 
         if (Vector3.Distance(transform.position, targetPos) < 0.15f)
             Detonate();
+    }
+
+    // it flies along a straight line from where it set off (her eye, or the body it bounced off) to its target's body
+    private bool _lineSet;
+    private Vector2 _lineFrom;
+    private float _lineFromZ;
+
+    private bool Crashes(Vector2 groundFrom, Vector2 groundTo, Vector2 targetGround, float targetZ)
+    {
+        if (!_lineSet)
+        {
+            _lineSet = true;
+            _lineFrom = _isBounce ? groundFrom : (Vector2)_source.transform.position;
+            _lineFromZ = _isBounce ? LineOfSight.BodyAt(groundFrom) : _source.EyeZ;
+        }
+        float zFrom = LineOfSight.HeightAlong(_lineFrom, _lineFromZ, targetGround, targetZ, groundFrom);
+        float zTo = LineOfSight.HeightAlong(_lineFrom, _lineFromZ, targetGround, targetZ, groundTo);
+        return LineOfSight.Blocked(groundFrom, zFrom, groundTo, zTo, out _);
     }
 
     private void Detonate()

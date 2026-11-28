@@ -93,23 +93,22 @@ public class IceBeam : MonoBehaviour
         }
     }
 
-    // line of sight (Tommy, 2026-11-27): the beam stops at the first obstacle in its way, like her shots (from low
-    // ground any obstacle or cliff, from high ground only an obstacle on high ground). it rises in a straight line
-    // from her to the target's body, so it runs over the ground toward the target's feet, and the part of it higher
-    // than Projectile.FliesOverHeight (on its way up to a flying insect) passes over them all. gives how far along
-    // the beam it reaches
+    // line of sight (Tommy, 2026-11-27; heights 2026-11-28): the beam stops where something stands above it, like her
+    // shots. it runs straight from her eye (Plant.EyeZ) to the target's body, so over the ground toward the target's
+    // feet, rising or falling on the way. gives how far along the beam it reaches
     private Plant _owner;
     private float ClearLength(Vector3 origin, Vector3 direction, float range, float targetDistance, float targetHeight)
     {
         if (_owner == null) _owner = GetComponentInParent<Plant>();
         if (_owner == null || targetDistance < 0.0001f) return range;
         float length = Mathf.Min(range, LineOfSight.MaxDistance);
-        // the beam's height at a point is targetHeight times how far along to the target it is
-        if (targetHeight > Projectile.FliesOverHeight)
-            length = Mathf.Min(length, targetDistance * Projectile.FliesOverHeight / targetHeight);
         if (length <= 0f) return range;
-        Vector2 groundEnd = (Vector2)(origin + direction * length) - Vector2.up * (targetHeight * length / targetDistance);
-        if (!LineOfSight.Blocked(origin, groundEnd, _owner.OnHighground, out Vector2 at)) return range;
+        Vector2 feet = (Vector2)(origin + direction * targetDistance) - Vector2.up * targetHeight;
+        float eye = _owner.EyeZ;
+        float body = LineOfSight.GroundAt(feet) + Mathf.Max(Heights.Body, targetHeight);
+        float along = length / targetDistance;
+        Vector2 groundEnd = (Vector2)(origin + direction * length) - Vector2.up * (targetHeight * along);
+        if (!LineOfSight.Blocked(origin, eye, groundEnd, Mathf.LerpUnclamped(eye, body, along), out Vector2 at)) return range;
         float groundLength = Vector2.Distance(origin, groundEnd);
         return groundLength > 0.0001f ? length * Vector2.Distance(origin, at) / groundLength : 0f;
     }

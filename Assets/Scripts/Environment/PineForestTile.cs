@@ -80,6 +80,17 @@ public class PineForestTile : TileBase
 
     private Sprite Pick(int mask) => pieces != null && mask >= 0 && mask < pieces.Length ? pieces[mask] : null;
 
+    // whether a pine stands in a cell showing this piece (its foot on the cell's bottom edge, at either corner: mask
+    // bits 4 and 5), not only the tops of pines standing in the cells below it. light and sight (LightMask) count only a
+    // cell a pine stands in, the pines drawn over the cells behind it being up in the air (Tommy, 2026-11-28: trees cast
+    // their shadow from the bottom). the full piece, or one not found, counts as standing
+    public bool PineStandsIn(Sprite piece)
+    {
+        int mask = pieces != null && piece != null ? System.Array.IndexOf(pieces, piece) : -1;
+        if (mask <= 0) return true;
+        return (mask & 48) != 0;
+    }
+
     // the forest's other map: Collider for a cell on Non-Collider_Air and the other way round
     private static Tilemap Other(Tilemap self)
     {
