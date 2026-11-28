@@ -315,6 +315,7 @@
     <Compile Include="Assets\Scripts\Entities\Insects\IShooterInsect.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Zinnia.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\SunMarkEffect.cs" />
+    <Compile Include="Assets\Scripts\Environment\LightMask.cs" />
     <Compile Include="Assets\Scripts\Mulch\WaveCounter.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\IRespirationEffect.cs" />
     <Compile Include="Assets\Scripts\Entities\Insects\BombardierBeetle.cs" />
@@ -575,6 +576,7 @@
     <Compile Include="Assets\Scripts\Skills\AcornKnightShield.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\ElementalEffects\WaterPrimer.cs" />
     <Compile Include="Assets\Scripts\Entities\Plants\Rhodiola.cs" />
+    <Compile Include="Assets\Scripts\Environment\PixelMask.cs" />
     <Compile Include="Assets\Scripts\UI\EntityInfoPanel.cs" />
     <Compile Include="Assets\Scripts\PlantDataTypes\CalendulaData.cs" />
     <Compile Include="Assets\Scripts\StatusEffect\TermiteSwarmEffect.cs" />
