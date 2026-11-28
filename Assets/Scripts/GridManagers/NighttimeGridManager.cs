@@ -14,7 +14,6 @@ public class NighttimeGridManager : MonoBehaviour
     [SerializeField] private Tilemap waterTilemap;
     [SerializeField] private Tilemap dirtTilemap;
     [SerializeField] private Tilemap highgroundGroundTilemap;
-    [SerializeField] private Tilemap highgroundWaterTilemap;
     [SerializeField] private Tilemap lowgroundGroundTilemap;
     [SerializeField] private Tilemap lowgroundWaterTilemap;
 
@@ -44,7 +43,6 @@ public class NighttimeGridManager : MonoBehaviour
                 bool hasWater            = waterTilemap            != null && waterTilemap.HasTile(cell);
                 bool hasDirt             = dirtTilemap             != null && dirtTilemap.HasTile(cell);
                 bool hasHighgroundGround = highgroundGroundTilemap != null && highgroundGroundTilemap.HasTile(cell);
-                bool hasHighgroundWater  = highgroundWaterTilemap  != null && highgroundWaterTilemap.HasTile(cell);
                 bool hasLowgroundGround  = lowgroundGroundTilemap  != null && lowgroundGroundTilemap.HasTile(cell);
                 bool hasLowgroundWater   = lowgroundWaterTilemap   != null && lowgroundWaterTilemap.HasTile(cell);
 
@@ -52,12 +50,12 @@ public class NighttimeGridManager : MonoBehaviour
                 if      (hasCollider)         t.tileType = TileType.Obstacle;
                 else if (hasPath)             t.tileType = TileType.Path;
                 else if (hasWater)            t.tileType = TileType.Water;
-                else if (hasHighgroundWater)  t.tileType = TileType.Water;
                 else if (hasLowgroundWater)   t.tileType = TileType.Water;
                 else if (hasDirt)             t.tileType = TileType.Dirt;
                 else                          t.tileType = TileType.Grass;
 
-                if (hasHighgroundGround || hasHighgroundWater) t.isHighground = true;
+                // water over highground ground is highground water: the HighgroundWater map is gone (Tommy, 2026-11-28)
+                if (hasHighgroundGround) t.isHighground = true;
                 if (hasLowgroundGround  || hasLowgroundWater)  t.isLowground  = true;
 
             }

@@ -3,8 +3,8 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 // cliffs on the borders between cells (Tommy, 2026-11-27: gd_cliffs_border, "option B"). a raised cell is
-// one with a tile on any of raisedMaps (HighgroundGround and HighgroundWater, the maps that already make a
-// cell high ground). every raised cell gets a cliff top piece on tops (its edge outline, rim tufts and the
+// one with a tile on any of raisedMaps (HighgroundGround, the map that makes a cell high ground; HighgroundWater
+// was one too until 2026-11-28). every raised cell gets a cliff top piece on tops (its edge outline, rim tufts and the
 // grass lip over the rocks; a cell raised all round gets none), and every low cell under or beside one gets a
 // rock face piece on faces (the face fills its top 22 px, the rest stays open ground). each piece is picked
 // from the cell's 8 neighbours with the lookup tables that came with the art. nobody paints cliffs by hand:
