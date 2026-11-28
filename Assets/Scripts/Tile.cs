@@ -171,10 +171,12 @@ public class Tile : MonoBehaviour
         zone.AddComponent<ObstacleZone>().blocksSight = _obstacleBlocksSight;
     }
 
-    // an obstacle cell's final shape (Tommy, 2026-11-28; the grid managers call this once the cell's type is set): the
-    // tile art's own pixel outline instead of the box (trees, forest, boulders, bushes alike; PixelMask), its exact pixels
-    // kept for lights (LightMask). one that blocks sight also gets shadow casters of that outline (LightBlockers) for the
-    // lights that move. art without anything solid keeps the box
+    // an obstacle cell's final shape (Tommy, 2026-11-28; the grid managers call this once the cell's type is set). its
+    // art's exact pixels are kept for lights (LightMask: the still lights' glow and every gameplay light check), and one
+    // that blocks sight gets shadow casters of the art's outline (LightBlockers) for the lights that move: trees and
+    // forest too, so light stops at their drawn pixels. for sight, shots and insect pushes a boulder or bush cell blocks
+    // with that outline instead of the box, a tree or forest cell keeps the box (Tommy chose the split so forest walls
+    // stay solid). art without anything solid keeps the box and a square caster
     public void ShapeObstacle(Sprite sprite, Matrix4x4 tileMatrix)
     {
         ObstacleZone zone = GetComponentInChildren<ObstacleZone>();
@@ -187,14 +189,18 @@ public class Tile : MonoBehaviour
         }
         zone.art = art;
         zone.artMatrix = tileMatrix;
-        BoxCollider2D box = zone.GetComponent<BoxCollider2D>();
-        if (box != null)
+        PolygonCollider2D shape = null;
+        if (OutlinedObstacle(sprite))
         {
-            box.enabled = false;
-            Destroy(box);
+            BoxCollider2D box = zone.GetComponent<BoxCollider2D>();
+            if (box != null)
+            {
+                box.enabled = false;
+                Destroy(box);
+            }
+            shape = zone.gameObject.AddComponent<PolygonCollider2D>();
+            shape.pathCount = art.smooth.Count;
         }
-        PolygonCollider2D shape = zone.gameObject.AddComponent<PolygonCollider2D>();
-        shape.pathCount = art.smooth.Count;
         // where the tilemap draws the sprite: the cell's middle, through the tile's own matrix
         Matrix4x4 toWorld = Matrix4x4.Translate(zone.transform.position) * tileMatrix;
         for (int i = 0; i < art.smooth.Count; i++)
@@ -208,10 +214,17 @@ public class Tile : MonoBehaviour
                 path[k] = local;
                 shadow[k] = local;
             }
-            shape.SetPath(i, path);
+            if (shape != null) shape.SetPath(i, path);
             if (zone.blocksSight) LightBlockers.Add(zone.transform, shadow);
         }
         LightMask.MarkDirty();
+    }
+
+    // the cells whose sight and push shape is their art's outline: boulders (the short LowCollider ones too) and bushes
+    private static bool OutlinedObstacle(Sprite sprite)
+    {
+        string name = sprite.name.ToLowerInvariant();
+        return name.Contains("boulder") || name.Contains("bush");
     }
 
     private void OnMouseDown()

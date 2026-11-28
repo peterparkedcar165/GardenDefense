@@ -1,8 +1,8 @@
 using UnityEngine;
 
 // what a plant that needs a clear line can see (Tommy, 2026-11-27). from where it stands, Rays rays go out
-// (one every half degree) to the first blocker: an obstacle tile's outline (its art's solid pixels, Tile.ShapeObstacle;
-// a plain box where a cell has no art) or a cliff's edge (CliffBuilder), both on the Obstacle layer; a LowCollider cell's box never blocks (Tommy, 2026-11-28). from
+// (one every half degree) to the first blocker: an obstacle tile's box (a boulder's or bush's own pixel outline,
+// Tile.ShapeObstacle) or a cliff's edge (CliffBuilder), both on the Obstacle layer; a LowCollider cell's box never blocks (Tommy, 2026-11-28). from
 // high ground only obstacles standing on high ground block
 // (it sees down past cliffs and over everything on low ground). who casts them and when is the plant's business (Plant;
 // a flying insect is hidden only when the low part of the line to it is blocked, Plant.InSight). the same rays decide its targeting and paint the red part of its range
@@ -10,8 +10,8 @@ using UnityEngine;
 public static class LineOfSight
 {
     public const int Rays = 720;
-    // rays 0.16 across: thin slits between obstacles (a box cell is 0.9 of a cell, so two side by side left a 0.1 gap,
-    // two meeting at a corner a 0.14 slit; art outlines can leave thinner ones) don't let sight through. at 0.12 the 45
+    // rays 0.16 across: thin slits between obstacles (a box cell is 0.9 of a cell, so two side by side leave a 0.1 gap,
+    // two meeting at a corner a 0.14 slit; boulder outlines can leave thinner ones) don't let sight through. at 0.12 the 45
     // degree ones went through diagonal tree lines (Tommy saw plants target past obstacles from certain tiles). light
     // is walked thin, pixel by pixel (LightMask)
     private const float RayRadius = 0.08f;
